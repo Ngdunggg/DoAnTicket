@@ -1,6 +1,6 @@
 export const Path = {
     PathHome: "/",
-    PathEventDetail: "/event-detail",
+    PathEventDetail: "/event-detail/:id",
     PathLogin: "/login",
     PathResetPassword: "/reset-password",
     PathMyTicket: "/my-ticket",

@@ -5,6 +5,7 @@ import myTicketRouters from "@modules/my-ticket/router/Routers";
 import PrivateRoute from "@share/auth/PrivateRoute";
 // import LoadingModal from "@share/components/organisms/LoadingModal";
 import PcLayout from "@share/components/templates/PcLayout";
+import ScrollToTop from "@share/components/ScrollToTop";
 import { Path } from "@share/constants/routers";
 import { Outlet, RouteObject } from "react-router-dom";
 // import ErrorBoundary from "../components/ErrorBoundary";
@@ -20,6 +21,7 @@ const MainLayoutWrapper = () => {
                 <GlobalErrorHandler> */}
             <Layout>
                 {/* <ErrorBoundary> */}
+                <ScrollToTop />
                 <Outlet />
                 {/* <LoadingModal /> */}
                 {/* </ErrorBoundary> */}
@@ -33,6 +35,7 @@ const MainLayoutWrapper = () => {
 const PublicLayoutWrapper = () => {
     return (
         <Layout>
+            <ScrollToTop />
             <Outlet />
         </Layout>
     );
