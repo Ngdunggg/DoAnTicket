@@ -109,13 +109,13 @@ const Header = () => {
                             </DivClick>
 
                             {/* Account Popup */}
-                            <div className="fixed top-17 right-20 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-[99999] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div className="fixed top-17 right-20 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-[99999] opacity-0 group-hover:opacity-100 transition-all duration-200">
                                 <div className="py-2">
                                     <DivClick
                                         onClick={() => {
                                             navigate(Path.PathMyTicket);
                                         }}
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200 cursor-pointer"
+                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                     >
                                         <TicketIcon mode={MODE_TICKET.WHITE} />
                                         <Text
@@ -128,7 +128,7 @@ const Header = () => {
 
                                     <DivClick
                                         onClick={() => {}} // TODO: Navigate to my events
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200 cursor-pointer"
+                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                     >
                                         <EventIcon />
                                         <Text
@@ -143,7 +143,7 @@ const Header = () => {
                                         onClick={() => {
                                             navigate(Path.PathMyProfile);
                                         }}
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200 cursor-pointer"
+                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                     >
                                         <UserIcon />
                                         <Text
@@ -156,7 +156,7 @@ const Header = () => {
 
                                     <DivClick
                                         onClick={() => {}} // TODO: Navigate to categories
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200 cursor-pointer"
+                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                     >
                                         <EventIcon />
                                         <Text
@@ -171,7 +171,7 @@ const Header = () => {
                                         onClick={() => {
                                             handleLogout();
                                         }}
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200 cursor-pointer"
+                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                     >
                                         <LogoutIcon />
                                         <Text
@@ -193,7 +193,7 @@ const Header = () => {
                                 modeColor={MODE_COLOR_TEXT.WHITE}
                                 modeWeight={MODE_WEIGHT.LARGE}
                                 modeSize={MODE_SIZE[15]}
-                                className="hover:text-text-yellow transition-colors duration-200 cursor-pointer"
+                                className="hover:text-text-yellow transition-colors duration-200"
                             >
                                 Đăng nhập
                             </Text>
@@ -202,7 +202,7 @@ const Header = () => {
                                 modeColor={MODE_COLOR_TEXT.WHITE}
                                 modeWeight={MODE_WEIGHT.LARGE}
                                 modeSize={MODE_SIZE[15]}
-                                className="hover:text-text-yellow transition-colors duration-200 cursor-pointer"
+                                className="hover:text-text-yellow transition-colors duration-200"
                             >
                                 Đăng ký
                             </Text>
