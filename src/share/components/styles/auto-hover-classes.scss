@@ -1,0 +1,22 @@
+@use "sass:map";
+@use "./color" as *;
+
+@each $name, $value in $colors {
+    .hover-bg-#{$name}:hover {
+        @media (min-width: 1025px) {
+            background-color: #{$value} !important;
+        }
+    }
+
+    .hover-text-#{$name}:hover {
+        @media (min-width: 1025px) {
+            color: #{$value} !important;
+        }
+    }
+
+    .hover-border-#{$name}:hover {
+        @media (min-width: 1025px) {
+            border-color: #{$value} !important;
+        }
+    }
+}
