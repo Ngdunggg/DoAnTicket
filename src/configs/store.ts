@@ -1,8 +1,8 @@
-import rootReducer from "@configs/rootReducer";
-import middleware from "@modules/main/stores/middleware";
-import { configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { persistStore } from "redux-persist";
+import rootReducer from '@configs/rootReducer';
+import middleware from '@modules/main/stores/middleware';
+import { configureStore } from '@reduxjs/toolkit';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { persistStore } from 'redux-persist';
 
 /**
  * Configures the store for the application.
@@ -13,11 +13,11 @@ import { persistStore } from "redux-persist";
  * @returns {Object} - The configured store.
  */
 export const store = configureStore({
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }).concat(middleware),
-  reducer: rootReducer,
+    middleware: getDefaultMiddleware =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }).concat(middleware),
+    reducer: rootReducer,
 });
 
 /**

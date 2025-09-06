@@ -96,9 +96,9 @@ Dự án sử dụng **Atomic Design** pattern:
 ### Import components
 
 ```typescript
-import { Button, MODE_BUTTON } from "@share/components/atoms/Button";
-import { Text, MODE_COLOR_TEXT, MODE_SIZE } from "@share/components/atoms/Text";
-import EventCard from "@share/components/molecules/EventCard";
+import { Button, MODE_BUTTON } from '@share/components/atoms/Button';
+import { Text, MODE_COLOR_TEXT, MODE_SIZE } from '@share/components/atoms/Text';
+import EventCard from '@share/components/molecules/EventCard';
 ```
 
 ### Sử dụng Button
@@ -155,13 +155,13 @@ import EventCard from "@share/components/molecules/EventCard";
 ```typescript
 // Custom classes
 className =
-  "bg-bg-black text-text-yellow hover:text-white transition-colors duration-200";
+    'bg-bg-black text-text-yellow hover:text-white transition-colors duration-200';
 
 // Responsive
-className = "w-full md:w-1/2 lg:w-1/3";
+className = 'w-full md:w-1/2 lg:w-1/3';
 
 // Spacing
-className = "p-4 m-2 gap-4";
+className = 'p-4 m-2 gap-4';
 ```
 
 ## 🔐 Authentication
@@ -174,7 +174,7 @@ const { user } = useAppSelector(state => state.user);
 
 // Dispatch actions
 const dispatch = useAppDispatch();
-dispatch(setToken("token"));
+dispatch(setToken('token'));
 dispatch(setUserInfo(userData));
 ```
 
@@ -192,8 +192,8 @@ import AuthPopup from "@modules/auth/components/AuthPopup";
 ### React Router
 
 ```typescript
-import { useNavigate } from "react-router-dom";
-import { Path } from "@share/constants/routers";
+import { useNavigate } from 'react-router-dom';
+import { Path } from '@share/constants/routers';
 
 const navigate = useNavigate();
 navigate(Path.PathHome); // Navigate to home
@@ -219,13 +219,13 @@ navigate(Path.PathMyTicket); // Navigate to my tickets
 
 ```typescript
 // Mobile first approach
-className = "w-full md:w-1/2 lg:w-1/3";
+className = 'w-full md:w-1/2 lg:w-1/3';
 
 // Hide on mobile
-className = "hidden md:block";
+className = 'hidden md:block';
 
 // Show on mobile only
-className = "block md:hidden";
+className = 'block md:hidden';
 ```
 
 ## 🛠️ Development

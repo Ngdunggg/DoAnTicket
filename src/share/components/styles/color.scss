@@ -1,18 +1,18 @@
-@use "tailwindcss";
-@use "sass:map";
+@use 'tailwindcss';
+@use 'sass:map';
 
 $colors: (
-  "spp": #f9634a,
-  "bg-black": #01060f,
-  "bg-yellow": #fccb62,
-  "text-yellow": #fccb62,
-  "text-black": #01060f,
-  "text-gray": #f7f7f1,
-  "text-gray-2": #6c757d,
-  "text-red": #e03e2d,
-  "text-green": #10b981,
+    'spp': #f9634a,
+    'bg-black': #01060f,
+    'bg-yellow': #fccb62,
+    'text-yellow': #fccb62,
+    'text-black': #01060f,
+    'text-gray': #f7f7f1,
+    'text-gray-2': #6c757d,
+    'text-red': #e03e2d,
+    'text-green': #10b981,
 );
 
 @function getColor($name) {
-  @return map.get($colors, $name);
+    @return map.get($colors, $name);
 }

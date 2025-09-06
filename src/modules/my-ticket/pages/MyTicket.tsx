@@ -1,7 +1,7 @@
-import MyTicketLayout from "../components/MyTicketLayout";
+import MyTicketLayout from '../components/MyTicketLayout';
 
 const MyTicket = () => {
-  return <MyTicketLayout />;
+    return <MyTicketLayout />;
 };
 
 export default MyTicket;
