@@ -1,4 +1,4 @@
-import { Path } from '@share/constants/routers';
+import { SCREEN_PATH } from '@share/constants/routers';
 import { RouteObject } from 'react-router-dom';
 import MyTicket from '../pages/MyTicket';
 
@@ -11,10 +11,10 @@ const myTicketRouters: RouteObject[] = [
             },
             {
                 element: <MyTicket />,
-                path: Path.PathMyProfile,
+                path: SCREEN_PATH.MY_TICKET_PROFILE,
             },
         ],
-        path: Path.PathMyTicket,
+        path: SCREEN_PATH.MY_TICKET,
     },
 ];
 

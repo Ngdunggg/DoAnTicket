@@ -1,6 +1,6 @@
 import HomeLayout from '../components/HomeLayout';
 import { useNavigate } from 'react-router-dom';
-import { Path } from '@share/constants/routers';
+import { SCREEN_PATH } from '@share/constants/routers';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -76,7 +76,7 @@ const Home = () => {
     const handleBookNow = (eventId: string) => {
         console.log('Booking event:', eventId);
         // TODO: Implement booking functionality
-        navigate(`${Path.PathEventDetail.replace(':id', eventId)}`);
+        navigate(`${SCREEN_PATH.EVENT_DETAIL.replace(':event_id', eventId)}`);
     };
 
     return <HomeLayout events={mockEvents} onBookNow={handleBookNow} />;

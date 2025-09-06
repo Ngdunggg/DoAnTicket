@@ -1,4 +1,4 @@
-import { Path } from '@share/constants/routers';
+import { SCREEN_PATH } from '@share/constants/routers';
 import { RouteObject } from 'react-router-dom';
 import Login from '../pages/Login';
 
@@ -10,7 +10,7 @@ const authRouters: RouteObject[] = [
                 index: true,
             },
         ],
-        path: Path.PathLogin,
+        path: SCREEN_PATH.AUTH_LOGIN,
     },
 ];
 

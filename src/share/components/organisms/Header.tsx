@@ -13,7 +13,7 @@ import {
     Text,
 } from '@share/components/atoms/Text';
 import { useNavigate } from 'react-router-dom';
-import { Path } from '@share/constants/routers';
+import { SCREEN_PATH } from '@share/constants/routers';
 import { useAppSelector, useAppDispatch } from '@configs/store';
 import { clearToken } from '@share/auth/stores/authSlice';
 import { clearUserInfo } from '@share/auth/stores/userSlice';
@@ -40,7 +40,7 @@ const Header = () => {
     const handleLogout = () => {
         dispatch(clearToken());
         dispatch(clearUserInfo());
-        navigate(Path.PathHome);
+        navigate(SCREEN_PATH.HOME);
     };
 
     return (
@@ -48,7 +48,7 @@ const Header = () => {
             <div className="bg-bg-black h-20 flex flex-1 items-center justify-between px-20 gap-10">
                 <DivClick
                     onClick={() => {
-                        navigate(Path.PathHome);
+                        navigate(SCREEN_PATH.HOME);
                     }}
                 >
                     <Text
@@ -73,7 +73,7 @@ const Header = () => {
                         Tạo sự kiện
                     </Button>
                     <DivClick
-                        onClick={() => navigate(Path.PathMyTicket)}
+                        onClick={() => navigate(SCREEN_PATH.MY_TICKET)}
                         className="flex items-center gap-2"
                     >
                         <TicketIcon mode={MODE_TICKET.WHITE} />
@@ -121,7 +121,7 @@ const Header = () => {
                                 <div className="py-2">
                                     <DivClick
                                         onClick={() => {
-                                            navigate(Path.PathMyTicket);
+                                            navigate(SCREEN_PATH.MY_TICKET);
                                         }}
                                         className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                     >
@@ -149,7 +149,9 @@ const Header = () => {
 
                                     <DivClick
                                         onClick={() => {
-                                            navigate(Path.PathMyProfile);
+                                            navigate(
+                                                SCREEN_PATH.MY_TICKET_PROFILE
+                                            );
                                         }}
                                         className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                     >

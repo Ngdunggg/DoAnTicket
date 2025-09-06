@@ -1,6 +1,13 @@
-import EventDetailLayout from '../components/EventDetailLayout';
+import { useNavigate } from 'react-router-dom';
+import EventDetailLayout from '../components/DetailEvent/EventDetailLayout';
+import { SCREEN_PATH } from '@share/constants/routers';
+import { getCurrentEventId } from '@share/utils/path';
+import { getRouterPathname } from '@share/utils/routerUtils';
 
 const EventDetail = () => {
+    const pathname = getRouterPathname();
+    const eventId = getCurrentEventId(pathname);
+    const navigate = useNavigate();
     // Mock data cho sự kiện
     const mockEvent = {
         additionalInfo: {
@@ -190,13 +197,23 @@ const EventDetail = () => {
 
     const handleBookNow = () => {
         console.log('Book now clicked');
+        console.log('eventId', eventId);
         // TODO: Implement booking flow
+        if (eventId) {
+            navigate(
+                `${SCREEN_PATH.EVENT_TICKET_SELECTION.replace(':event_id', eventId).replace(':booking_id', '1')}`
+            );
+        }
     };
 
     const handleBuyTickets = (dateId: string) => {
         console.log('Buy tickets for date:', dateId);
-        // TODO: Navigate to ticket selection and payment page
-        // Example: navigate(`/booking/${eventId}/${dateId}`);
+        // Navigate to ticket purchase page
+        if (eventId) {
+            navigate(
+                `${SCREEN_PATH.EVENT_TICKET_SELECTION.replace(':event_id', eventId).replace(':booking_id', '1')}`
+            );
+        }
     };
 
     return (

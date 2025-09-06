@@ -15,12 +15,12 @@ import {
     MODE_WEIGHT,
 } from '@share/components/atoms/Text';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Path } from '@share/constants/routers';
+import { SCREEN_PATH } from '@share/constants/routers';
 
 const ToolBarLeft = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const isProfilePage = location.pathname === Path.PathMyProfile;
+    const isProfilePage = location.pathname === SCREEN_PATH.MY_TICKET_PROFILE;
     return (
         <div className="flex flex-col px-6 gap-10">
             <div className="flex items-center gap-1">
@@ -28,7 +28,7 @@ const ToolBarLeft = () => {
                     modeColor={MODE_COLOR_TEXT.WHITE}
                     modeSize={MODE_SIZE[16]}
                     className="cursor-pointer"
-                    onClick={() => navigate(Path.PathHome)}
+                    onClick={() => navigate(SCREEN_PATH.HOME)}
                 >
                     Trang chủ
                 </Text>
@@ -45,7 +45,7 @@ const ToolBarLeft = () => {
                     }
                     modeSize={MODE_SIZE[16]}
                     className={`${!isProfilePage ? '' : 'cursor-pointer'}`}
-                    onClick={() => navigate(Path.PathMyTicket)}
+                    onClick={() => navigate(SCREEN_PATH.MY_TICKET)}
                 >
                     Vé của tôi
                 </Text>
@@ -95,7 +95,7 @@ const ToolBarLeft = () => {
                             ? 'text-text-yellow'
                             : 'text-white hover:text-text-yellow'
                     }`}
-                    onClick={() => navigate(Path.PathMyProfile)}
+                    onClick={() => navigate(SCREEN_PATH.MY_TICKET_PROFILE)}
                 >
                     <UserIcon
                         mode={
@@ -114,7 +114,7 @@ const ToolBarLeft = () => {
                 </DivClick>
                 <DivClick
                     className="flex items-center gap-2"
-                    onClick={() => navigate(Path.PathMyTicket)}
+                    onClick={() => navigate(SCREEN_PATH.MY_TICKET)}
                 >
                     <TicketIcon
                         mode={

@@ -1,6 +1,7 @@
-import { Path } from '@share/constants/routers';
+import { SCREEN_PATH } from '@share/constants/routers';
 import { RouteObject } from 'react-router-dom';
 import EventDetail from '../pages/EventDetail';
+import TicketPurchase from '../pages/TicketPurchase';
 
 const eventDetailRouters: RouteObject[] = [
     {
@@ -9,8 +10,12 @@ const eventDetailRouters: RouteObject[] = [
                 element: <EventDetail />,
                 index: true,
             },
+            {
+                element: <TicketPurchase />,
+                path: SCREEN_PATH.EVENT_TICKET_SELECTION,
+            },
         ],
-        path: Path.PathEventDetail,
+        path: SCREEN_PATH.EVENT_DETAIL,
     },
 ];
 

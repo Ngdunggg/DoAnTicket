@@ -1,10 +1,46 @@
-export const Path = {
-    PathEventDetail: '/event-detail/:id',
-    PathHome: '/',
-    PathLogin: '/login',
-    PathMyProfile: '/my-ticket/my-profile',
-    PathMyTicket: '/my-ticket',
-    PathResetPassword: '/reset-password',
-    PathRoot: '',
+export const SCREEN_PATH = {
+    // AUTH
+    AUTH_LOGIN: '/login',
+    AUTH_REGISTER: '/register',
+    AUTH_RESET_PASSWORD: '/reset-password',
+
+    // HOME
+    HOME: '/',
+
+    // EVENT
+    EVENT_DETAIL: '/event-detail/:event_id',
+    EVENT_TICKET_PURCHASE: '/event-detail/:event_id/purchase',
+    EVENT_TICKET_SELECTION:
+        '/event-detail/:event_id/booking/:booking_id/selection',
+    EVENT_QUESTION_FORM:
+        '/event-detail/:event_id/booking/:booking_id/question-form',
+    EVENT_PAYMENT: '/event-detail/:event_id/booking/:booking_id/payment',
+
+    // MY TICKET
+    MY_TICKET: '/my-ticket',
+    MY_TICKET_PROFILE: '/my-ticket/my-profile',
+
+    // ROOT
+    ROOT: '',
 } as const;
-export type PathType = (typeof Path)[keyof typeof Path];
+
+export type ScreenPathType = (typeof SCREEN_PATH)[keyof typeof SCREEN_PATH];
+
+export const EVENT_PATH_PATTERNS = [
+    SCREEN_PATH.EVENT_DETAIL,
+    SCREEN_PATH.EVENT_TICKET_PURCHASE,
+    SCREEN_PATH.EVENT_TICKET_SELECTION,
+    SCREEN_PATH.EVENT_QUESTION_FORM,
+    SCREEN_PATH.EVENT_PAYMENT,
+];
+
+export const AUTH_PATH_PATTERNS = [
+    SCREEN_PATH.AUTH_LOGIN,
+    SCREEN_PATH.AUTH_REGISTER,
+    SCREEN_PATH.AUTH_RESET_PASSWORD,
+];
+
+export const MY_TICKET_PATH_PATTERNS = [
+    SCREEN_PATH.MY_TICKET,
+    SCREEN_PATH.MY_TICKET_PROFILE,
+];

@@ -6,7 +6,7 @@ import PrivateRoute from '@share/auth/PrivateRoute';
 // import LoadingModal from "@share/components/organisms/LoadingModal";
 import PcLayout from '@share/components/templates/PcLayout';
 import ScrollToTop from '@share/components/ScrollToTop';
-import { Path } from '@share/constants/routers';
+import { SCREEN_PATH } from '@share/constants/routers';
 import { Outlet, RouteObject } from 'react-router-dom';
 // import ErrorBoundary from "../components/ErrorBoundary";
 // import { ErrorHandler } from "../components/ErrorHandler";
@@ -54,17 +54,17 @@ const mainRoutes: RouteObject[] = [
                     ...eventDetailRouters,
                 ],
                 element: <PublicLayoutWrapper />,
-                path: Path.PathRoot,
+                path: SCREEN_PATH.ROOT,
             },
             // Private routes - cần đăng nhập
             {
                 children: [...myTicketRouters],
                 element: <MainLayoutWrapper />,
-                path: Path.PathRoot,
+                path: SCREEN_PATH.ROOT,
             },
         ],
         // errorElement: <ErrorPage />,
-        path: Path.PathRoot,
+        path: SCREEN_PATH.ROOT,
     },
 ];
 

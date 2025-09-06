@@ -14,7 +14,20 @@ import { useAuthPopup } from '@modules/auth/hooks/useAuthPopup';
 import AuthPopup from '@modules/auth/components/AuthPopup';
 import TicketIcon from '@share/components/atoms/icons/TicketIcon';
 
-const EventHero = (event: any) => {
+interface EventHeroProps {
+    event: {
+        title: string;
+        dateStart: string;
+        dateEnd: string;
+        location: string;
+        image: string;
+    };
+    onBack: () => void;
+    onShare: () => void;
+    onBookNow: () => void;
+}
+
+const EventHero = ({ event, onBack, onShare, onBookNow }: EventHeroProps) => {
     const token = useAppSelector(state => state.auth.token);
     const { closeAuthPopup, isAuthPopupOpen, openAuthPopup } = useAuthPopup();
 
@@ -22,9 +35,20 @@ const EventHero = (event: any) => {
         if (!token) {
             openAuthPopup();
         } else {
-            // Xử lý mua vé khi đã đăng nhập
-            console.log('Xử lý mua vé...');
+            console.log('onBookNow');
+            onBookNow();
         }
+    };
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
     };
 
     return (
@@ -39,7 +63,7 @@ const EventHero = (event: any) => {
                             modeSize={MODE_SIZE[24]}
                             className="font-bold leading-tight"
                         >
-                            VALLEY RHYTHM SEASON CHAPTER 1
+                            {event.title}
                         </Text>
 
                         {/* Date and Time */}
@@ -49,29 +73,21 @@ const EventHero = (event: any) => {
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeSize={MODE_SIZE[16]}
                             >
-                                17:00, 30 Tháng 08, 2025 - 03:00, 31 Tháng 08,
-                                2025
+                                {formatDate(event.dateStart)} -{' '}
+                                {formatDate(event.dateEnd)}
                             </Text>
                         </div>
 
                         {/* Location */}
-                        <div className="flex items-start gap-3">
-                            <MapPinIcon className="w-10 h-10 text-white mt-1" />
-                            <div className="flex flex-col gap-1">
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.YELLOW}
-                                    modeSize={MODE_SIZE[16]}
-                                >
-                                    Valley Beach Club
-                                </Text>
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.WHITE}
-                                    modeSize={MODE_SIZE[14]}
-                                >
-                                    Bãi tắm Sungroup, Khu B, Phường Bãi Cháy,
-                                    Thành Phố Hạ Long, Tỉnh Quảng Ninh
-                                </Text>
-                            </div>
+                        <div className="flex items-center gap-3">
+                            <MapPinIcon className="w-6 h-6 text-white" />
+
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.YELLOW}
+                                modeSize={MODE_SIZE[16]}
+                            >
+                                {event.location}
+                            </Text>
                         </div>
                     </div>
 
@@ -118,8 +134,8 @@ const EventHero = (event: any) => {
                 {/* Right Panel - Event Poster */}
                 <div className="w-2/3 overflow-hidden rounded-r-2xl relative">
                     <img
-                        src="https://images.discovery-prod.axs.com/2025/06/cut-copy-tickets_11-13-25_18_684b100eefe3f.png"
-                        alt="Valley Rhythm Season Chapter 1"
+                        src={event.image}
+                        alt={event.title}
                         className="w-full h-full object-cover"
                     />
                 </div>
