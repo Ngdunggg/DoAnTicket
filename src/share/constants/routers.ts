@@ -1,10 +1,10 @@
 export const Path = {
-    PathHome: "/",
-    PathEventDetail: "/event-detail/:id",
-    PathLogin: "/login",
-    PathResetPassword: "/reset-password",
-    PathMyTicket: "/my-ticket",
-    PathMyProfile: "/my-ticket/my-profile",
-    PathRoot: "",
+  PathEventDetail: "/event-detail/:id",
+  PathHome: "/",
+  PathLogin: "/login",
+  PathMyProfile: "/my-ticket/my-profile",
+  PathMyTicket: "/my-ticket",
+  PathResetPassword: "/reset-password",
+  PathRoot: "",
 } as const;
 export type PathType = (typeof Path)[keyof typeof Path];

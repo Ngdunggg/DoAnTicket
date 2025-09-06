@@ -14,11 +14,11 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
  * This function imports the browser module and starts the mocking process.
  */
 async function startMocking() {
-    if (envConfig.env !== "mock") {
-        return;
-    }
-    const browser = (await import("./mocks/browser")).default;
-    browser.start();
+  if (envConfig.env !== "mock") {
+    return;
+  }
+  const browser = (await import("./mocks/browser")).default;
+  browser.start();
 }
 
 /**
@@ -27,14 +27,14 @@ async function startMocking() {
  * @returns A promise that resolves when the application has started.
  */
 async function startApp(): Promise<void> {
-    await startMocking();
+  await startMocking();
 
-    const rootElement = document.getElementById("root");
-    if (!rootElement) {
-        return;
-    }
+  const rootElement = document.getElementById("root");
+  if (!rootElement) {
+    return;
+  }
 
-    ReactDOM.createRoot(rootElement).render(<ContainerApp />);
+  ReactDOM.createRoot(rootElement).render(<ContainerApp />);
 }
 
 void startApp();

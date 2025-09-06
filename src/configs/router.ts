@@ -1,5 +1,9 @@
 import mainRoutes from "@modules/main/router/Routers";
-import { createBrowserRouter, createHashRouter, RouteObject } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createHashRouter,
+  RouteObject,
+} from "react-router-dom";
 import envConfig from "@configs/env";
 
 /**
@@ -11,5 +15,5 @@ export const routes: RouteObject[] = [...mainRoutes];
  * The router configuration.
  */
 export const routerConfig = envConfig.isBrowserMode
-    ? createBrowserRouter(routes)
-    : createHashRouter(routes);
+  ? createBrowserRouter(routes)
+  : createHashRouter(routes);

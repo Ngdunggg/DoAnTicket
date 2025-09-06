@@ -2,17 +2,17 @@
 @use "sass:map";
 
 $colors: (
-    "spp": #f9634a,
-    "bg-black": #01060F,
-    "bg-yellow": #FCCB62,
-    "text-yellow": #FCCB62,
-    "text-black": #01060F,
-    "text-gray": #F7F7F1, 
-    "text-gray-2": #6C757D,
-    "text-red": #E03E2D,
-    "text-green": #10B981,
+  "spp": #f9634a,
+  "bg-black": #01060f,
+  "bg-yellow": #fccb62,
+  "text-yellow": #fccb62,
+  "text-black": #01060f,
+  "text-gray": #f7f7f1,
+  "text-gray-2": #6c757d,
+  "text-red": #e03e2d,
+  "text-green": #10b981,
 );
 
 @function getColor($name) {
-    @return map.get($colors, $name);
+  @return map.get($colors, $name);
 }

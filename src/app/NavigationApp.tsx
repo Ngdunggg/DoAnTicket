@@ -7,6 +7,6 @@ import { RouterProvider } from "react-router-dom";
  * @returns The rendered RouterProvider component.
  */
 export default function NavigationApp() {
-    // useNetworkStatus();
-    return <RouterProvider router={routerConfig} />;
+  // useNetworkStatus();
+  return <RouterProvider router={routerConfig} />;
 }

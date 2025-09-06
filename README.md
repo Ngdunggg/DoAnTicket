@@ -5,15 +5,18 @@
 ## 🚀 Cài đặt và chạy dự án
 
 ### Yêu cầu hệ thống
+
 - Node.js >= 16.0.0
 - npm >= 8.0.0
 
 ### Cài đặt dependencies
+
 ```bash
 npm install
 ```
 
 ### Chạy dự án
+
 ```bash
 # Development mode
 npm run dev
@@ -65,28 +68,33 @@ src/
 Dự án sử dụng **Atomic Design** pattern:
 
 ### Atoms (Components cơ bản)
+
 - **Button**: Button với nhiều mode (BLACK, WHITE, YELLOW)
 - **Text**: Text với các mode màu sắc, kích thước, font weight
 - **DivClick**: Div có thể click được
 - **Icons**: Các icon components (ArrowIcon, CalendarIcon, etc.)
 
 ### Molecules (Kết hợp atoms)
+
 - **SearchBar**: Thanh tìm kiếm
 - **EventCard**: Card hiển thị thông tin sự kiện
 - **FormField**: Field form với validation
 
 ### Organisms (Kết hợp molecules)
+
 - **Header**: Header với navigation và user menu
 - **Footer**: Footer với thông tin liên hệ
 - **MainLayout**: Layout chính
 - **EventGrid**: Grid hiển thị danh sách sự kiện
 
 ### Templates
+
 - **PcLayout**: Layout cho desktop
 
 ## 🔧 Cách sử dụng Components
 
 ### Import components
+
 ```typescript
 import { Button, MODE_BUTTON } from "@share/components/atoms/Button";
 import { Text, MODE_COLOR_TEXT, MODE_SIZE } from "@share/components/atoms/Text";
@@ -94,6 +102,7 @@ import EventCard from "@share/components/molecules/EventCard";
 ```
 
 ### Sử dụng Button
+
 ```typescript
 <Button
     mode={MODE_BUTTON.BLACK}
@@ -105,6 +114,7 @@ import EventCard from "@share/components/molecules/EventCard";
 ```
 
 ### Sử dụng Text
+
 ```typescript
 <Text
     modeColor={MODE_COLOR_TEXT.WHITE}
@@ -117,6 +127,7 @@ import EventCard from "@share/components/molecules/EventCard";
 ```
 
 ### Sử dụng EventCard
+
 ```typescript
 <EventCard
     title="Sự kiện âm nhạc"
@@ -131,6 +142,7 @@ import EventCard from "@share/components/molecules/EventCard";
 ## 🎨 Màu sắc và Styling
 
 ### Màu chính
+
 - **Primary Black**: `#01060F` (bg-bg-black, text-text-black)
 - **Primary Yellow**: `#FCCB62` (bg-bg-yellow, text-text-yellow)
 - **White**: `#FFFFFF` (text-white)
@@ -139,31 +151,35 @@ import EventCard from "@share/components/molecules/EventCard";
 - **Red**: `#E03E2D` (text-red)
 
 ### Sử dụng Tailwind CSS
+
 ```typescript
 // Custom classes
-className="bg-bg-black text-text-yellow hover:text-white transition-colors duration-200"
+className =
+  "bg-bg-black text-text-yellow hover:text-white transition-colors duration-200";
 
 // Responsive
-className="w-full md:w-1/2 lg:w-1/3"
+className = "w-full md:w-1/2 lg:w-1/3";
 
 // Spacing
-className="p-4 m-2 gap-4"
+className = "p-4 m-2 gap-4";
 ```
 
 ## 🔐 Authentication
 
 ### Redux Store
+
 ```typescript
 // Lấy thông tin user
-const { user } = useAppSelector((state) => state.user);
+const { user } = useAppSelector(state => state.user);
 
 // Dispatch actions
 const dispatch = useAppDispatch();
-dispatch(setToken('token'));
+dispatch(setToken("token"));
 dispatch(setUserInfo(userData));
 ```
 
 ### Auth Components
+
 ```typescript
 import AuthPopup from "@modules/auth/components/AuthPopup";
 
@@ -174,6 +190,7 @@ import AuthPopup from "@modules/auth/components/AuthPopup";
 ## 🧭 Navigation
 
 ### React Router
+
 ```typescript
 import { useNavigate } from "react-router-dom";
 import { Path } from "@share/constants/routers";
@@ -184,6 +201,7 @@ navigate(Path.PathMyTicket); // Navigate to my tickets
 ```
 
 ### Routes
+
 - `/` - Home page
 - `/event/:id` - Event detail
 - `/my-tickets` - My tickets
@@ -192,25 +210,28 @@ navigate(Path.PathMyTicket); // Navigate to my tickets
 ## 📱 Responsive Design
 
 ### Breakpoints
+
 - **Mobile**: < 768px
 - **Tablet**: 768px - 1024px
 - **Desktop**: > 1024px
 
 ### Responsive Classes
+
 ```typescript
 // Mobile first approach
-className="w-full md:w-1/2 lg:w-1/3"
+className = "w-full md:w-1/2 lg:w-1/3";
 
 // Hide on mobile
-className="hidden md:block"
+className = "hidden md:block";
 
 // Show on mobile only
-className="block md:hidden"
+className = "block md:hidden";
 ```
 
 ## 🛠️ Development
 
 ### Scripts
+
 ```bash
 # Development
 npm run dev
@@ -226,6 +247,7 @@ npm run type-check
 ```
 
 ### Code Style
+
 - Sử dụng TypeScript strict mode
 - ESLint + Prettier cho code formatting
 - Atomic Design pattern cho components
@@ -244,16 +266,19 @@ npm run type-check
 ## 🚀 Deployment
 
 ### Build production
+
 ```bash
 npm run build
 ```
 
 ### Preview build
+
 ```bash
 npm run preview
 ```
 
 ### Deploy
+
 Copy thư mục `dist/` lên server web (Nginx, Apache, etc.)
 
 ## 📝 Notes

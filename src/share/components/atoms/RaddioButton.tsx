@@ -1,4 +1,7 @@
-import { RadioButton as PrimeRadioButton, RadioButtonProps } from "primereact/radiobutton";
+import {
+  RadioButton as PrimeRadioButton,
+  RadioButtonProps,
+} from "primereact/radiobutton";
 
 /**
  * Custom RadioButton component that wraps PrimeReact's RadioButton.
@@ -10,13 +13,13 @@ import { RadioButton as PrimeRadioButton, RadioButtonProps } from "primereact/ra
  * @returns {JSX.Element} The styled RadioButton component.
  */
 interface IRadioButtonProps extends Omit<RadioButtonProps, "className"> {
-    className?: string;
+  className?: string;
 }
 
 const RadioButton = ({ className = "", ...props }: IRadioButtonProps) => {
-    const classNames = ` ${className}`;
+  const classNames = ` ${className}`;
 
-    return <PrimeRadioButton {...props} className={classNames} />;
+  return <PrimeRadioButton {...props} className={classNames} />;
 };
 
 export default RadioButton;

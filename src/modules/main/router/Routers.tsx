@@ -15,53 +15,53 @@ import { Outlet, RouteObject } from "react-router-dom";
 
 const Layout = PcLayout;
 const MainLayoutWrapper = () => {
-    return (
-        <PrivateRoute>
-            {/* <ErrorHandler>
+  return (
+    <PrivateRoute>
+      {/* <ErrorHandler>
                 <GlobalErrorHandler> */}
-            <Layout>
-                {/* <ErrorBoundary> */}
-                <ScrollToTop />
-                <Outlet />
-                {/* <LoadingModal /> */}
-                {/* </ErrorBoundary> */}
-            </Layout>
-            {/* </GlobalErrorHandler>
+      <Layout>
+        {/* <ErrorBoundary> */}
+        <ScrollToTop />
+        <Outlet />
+        {/* <LoadingModal /> */}
+        {/* </ErrorBoundary> */}
+      </Layout>
+      {/* </GlobalErrorHandler>
             </ErrorHandler> */}
-        </PrivateRoute>
-    );
+    </PrivateRoute>
+  );
 };
 
 const PublicLayoutWrapper = () => {
-    return (
-        <Layout>
-            <ScrollToTop />
-            <Outlet />
-        </Layout>
-    );
+  return (
+    <Layout>
+      <ScrollToTop />
+      <Outlet />
+    </Layout>
+  );
 };
 /**
  * Represents the main routes configuration.
  */
 const mainRoutes: RouteObject[] = [
-    {
-        children: [
-            // Public routes - không cần đăng nhập
-            {
-                children: [...homeRouters, ...authRouters, ...eventDetailRouters],
-                element: <PublicLayoutWrapper />,
-                path: Path.PathRoot,
-            },
-            // Private routes - cần đăng nhập
-            {
-                children: [...myTicketRouters],
-                element: <MainLayoutWrapper />,
-                path: Path.PathRoot,
-            },
-        ],
-        // errorElement: <ErrorPage />,
+  {
+    children: [
+      // Public routes - không cần đăng nhập
+      {
+        children: [...homeRouters, ...authRouters, ...eventDetailRouters],
+        element: <PublicLayoutWrapper />,
         path: Path.PathRoot,
-    },
+      },
+      // Private routes - cần đăng nhập
+      {
+        children: [...myTicketRouters],
+        element: <MainLayoutWrapper />,
+        path: Path.PathRoot,
+      },
+    ],
+    // errorElement: <ErrorPage />,
+    path: Path.PathRoot,
+  },
 ];
 
 export default mainRoutes;

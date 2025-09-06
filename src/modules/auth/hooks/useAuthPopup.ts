@@ -1,19 +1,19 @@
 import { useState, useCallback } from "react";
 
 export const useAuthPopup = () => {
-    const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
+  const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
 
-    const openAuthPopup = useCallback(() => {
-        setIsAuthPopupOpen(true);
-    }, []);
+  const openAuthPopup = useCallback(() => {
+    setIsAuthPopupOpen(true);
+  }, []);
 
-    const closeAuthPopup = useCallback(() => {
-        setIsAuthPopupOpen(false);
-    }, []);
+  const closeAuthPopup = useCallback(() => {
+    setIsAuthPopupOpen(false);
+  }, []);
 
-    return {
-        isAuthPopupOpen,
-        openAuthPopup,
-        closeAuthPopup,
-    };
+  return {
+    closeAuthPopup,
+    isAuthPopupOpen,
+    openAuthPopup,
+  };
 };

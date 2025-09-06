@@ -5,9 +5,9 @@ import { useEffect } from "react";
  * Sử dụng trong các page components để đảm bảo trang luôn bắt đầu từ đầu
  */
 const useScrollToTop = () => {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 };
 
 export default useScrollToTop;

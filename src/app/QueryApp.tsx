@@ -5,11 +5,13 @@ import { ReactNode } from "react";
 
 const queryAppClient = new QueryClient(queryConfig);
 
-export default function QueryApp({ children }: Readonly<{ children: ReactNode }>) {
-    return (
-        <QueryClientProvider client={queryAppClient}>
-            {children}
-            <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-    );
+export default function QueryApp({
+  children,
+}: Readonly<{ children: ReactNode }>) {
+  return (
+    <QueryClientProvider client={queryAppClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
 }

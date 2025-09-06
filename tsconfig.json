@@ -1,27 +1,27 @@
 {
-    "compilerOptions": {
-        "baseUrl": "./src",
-        "composite": true,
-        "esModuleInterop": true,
-        "jsx": "react-jsx",
-        "paths": {
-            "@app/*": ["app/*"],
-            "@assets/*": ["assets/*"],
-            "@configs/*": ["configs/*"],
-            "@css/*": ["assets/css/*"],
-            "@mocks/*": ["mocks/*"],
-            "@modules/*": ["modules/*"],
-            "@share/*": ["share/*"]
-        },
-        "resolveJsonModule": true
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "composite": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@assets/*": ["assets/*"],
+      "@configs/*": ["configs/*"],
+      "@css/*": ["assets/css/*"],
+      "@mocks/*": ["mocks/*"],
+      "@modules/*": ["modules/*"],
+      "@share/*": ["share/*"]
     },
-    "files": [],
-    "references": [
-        {
-            "path": "./tsconfig.app.json"
-        },
-        {
-            "path": "./tsconfig.node.json"
-        }
-    ]
+    "resolveJsonModule": true
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

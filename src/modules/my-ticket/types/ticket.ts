@@ -1,10 +1,11 @@
 export interface TicketData {
-    id: string;
-    eventName: string;
-    eventDateTime: string; // ISO 8601 format
-    venue: string;
-    ticketType: string;
-    seatNumber: string;
-    price: number;
-    image: string;
+  eventDateTime: string;
+  eventName: string;
+  id: string;
+  image: string;
+  price: number;
+  seatNumber: string;
+  ticketType: string;
+  // ISO 8601 format
+  venue: string;
 }

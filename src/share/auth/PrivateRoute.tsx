@@ -3,7 +3,7 @@ import { ReactNode, useState, useEffect } from "react";
 import AuthPopup from "@modules/auth/components/AuthPopup";
 
 type PrivateRouteProps = {
-    children: ReactNode;
+  children: ReactNode;
 };
 
 /**
@@ -16,30 +16,27 @@ type PrivateRouteProps = {
  * @returns The rendered children components if a token is present, otherwise shows auth popup.
  */
 export const PrivateRoute = ({ children }: PrivateRouteProps) => {
-    const token = useAppSelector((state) => state.auth.token);
-    const [showPopup, setShowPopup] = useState(false);
+  const token = useAppSelector(state => state.auth.token);
+  const [showPopup, setShowPopup] = useState(false);
 
-    useEffect(() => {
-        if (!token) {
-            setShowPopup(true);
-        }
-    }, [token]);
+  useEffect(() => {
+    if (!token) {
+      setShowPopup(true);
+    }
+  }, [token]);
 
-    const handleClosePopup = () => {
-        // if (token) {
-            setShowPopup(false);
-        //  
-    };
+  const handleClosePopup = () => {
+    // if (token) {
+    setShowPopup(false);
+    //
+  };
 
-    return (
-        <>
-            {children}
-            <AuthPopup 
-                isOpen={showPopup && !token} 
-                onClose={handleClosePopup} 
-            />
-        </>
-    );
+  return (
+    <>
+      {children}
+      <AuthPopup isOpen={showPopup && !token} onClose={handleClosePopup} />
+    </>
+  );
 };
 
 export default PrivateRoute;

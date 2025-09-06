@@ -13,11 +13,11 @@ import { persistStore } from "redux-persist";
  * @returns {Object} - The configured store.
  */
 export const store = configureStore({
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            serializableCheck: false,
-        }).concat(middleware),
-    reducer: rootReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(middleware),
+  reducer: rootReducer,
 });
 
 /**
