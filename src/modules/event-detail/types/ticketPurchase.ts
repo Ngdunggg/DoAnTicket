@@ -1,27 +1,27 @@
 export interface TicketType {
+    available: number;
+    description: string;
     id: string;
+    maxPerOrder: number;
     name: string;
     price: number;
-    description: string;
-    available: number;
-    maxPerOrder: number;
 }
 
 export interface SelectedTicket {
-    ticketType: TicketType;
     quantity: number;
+    ticketType: TicketType;
 }
 
 export interface TicketPurchaseState {
-    selectedTickets: SelectedTicket[];
-    totalAmount: number;
     eventId: string;
     eventTitle: string;
+    selectedTickets: SelectedTicket[];
+    totalAmount: number;
 }
 
 export interface PaymentInfo {
-    fullName: string;
     email: string;
-    phone: string;
+    fullName: string;
     paymentMethod: 'card' | 'bank_transfer' | 'momo';
+    phone: string;
 }

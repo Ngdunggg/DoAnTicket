@@ -138,7 +138,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
         const modeInput = getModeInput(mode);
         const sizeClasses = getModeSize(modeSize);
         const classNames = `h-11 w-full ${modeInput} ${className}`;
-        const styledText = `font !${sizeClasses} leading-[26px] tracking-[0px] !font-[400] !text-spp-text`;
+        const styledText = `font !${sizeClasses} leading-[26px] tracking-[0px] !font-[400]`;
         const wrapStyle = `w-full ${wrapClassName}`;
 
         if (isIcon) {
@@ -170,7 +170,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
                         {isShowClear && (
                             <DivClick
                                 data-testid="icon-clear-input"
-                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer z-10 focus:outline rounded-full focus:outline-none focus:ring-1 focus:ring-spp-checkbox-checked-bg"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer z-10 focus:outline rounded-full focus:outline-none focus:ring-1 focus:ring-bg-yellow"
                                 onClick={onClearInput}
                                 tabIndex={0}
                                 ref={iconClearRef}
@@ -212,7 +212,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
                     />
                     {isShowClear && (
                         <DivClick
-                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer z-10 focus:outline focus:outline-spp-attention-3 rounded-full"
+                            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer z-10 focus:outline focus:outline-bg-yellow rounded-full"
                             onClick={onClearInput}
                             tabIndex={0}
                             ref={iconClearRef}

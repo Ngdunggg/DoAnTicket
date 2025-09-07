@@ -3,11 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import {
     TicketType,
     SelectedTicket,
-    PaymentInfo,
     TicketPurchaseState,
 } from '../types/ticketPurchase';
-import TicketSelection from '../components/BookingEvent/TicketSelection';
-import PaymentSummary from '../components/BookingEvent/PaymentSummary';
+import TicketSelectionLeft from '../components/BookingEvent/TicketSelectionLeft';
+import TicketInfoRight from '../components/BookingEvent/TicketInfoRight';
 import { Text } from '@share/components/atoms/Text';
 import BackIcon from '@share/components/atoms/icons/BackIcon';
 import {
@@ -19,6 +18,7 @@ import { MODE_BACK } from '@share/components/atoms/icons/BackIcon';
 import { getRouterPathname } from '@share/utils/routerUtils';
 import { getCurrentEventId } from '@share/utils/path';
 import DivClick from '@share/components/atoms/DivClick';
+import { SCREEN_PATH } from '@share/constants/routers';
 
 const TicketPurchase = () => {
     const pathname = getRouterPathname();
@@ -28,49 +28,43 @@ const TicketPurchase = () => {
     // Mock data - trong thực tế sẽ fetch từ API
     const [ticketTypes] = useState<TicketType[]>([
         {
+            available: 50,
+            description: 'Vé vào cửa thường, không bao gồm đồ uống',
             id: '1',
+            maxPerOrder: 5,
             name: 'Vé thường',
             price: 150000,
-            description: 'Vé vào cửa thường, không bao gồm đồ uống',
-            available: 50,
-            maxPerOrder: 5,
         },
         {
+            available: 20,
+            description: 'Vé VIP với ghế ngồi ưu tiên và đồ uống miễn phí',
             id: '2',
+            maxPerOrder: 3,
             name: 'Vé VIP',
             price: 300000,
-            description: 'Vé VIP với ghế ngồi ưu tiên và đồ uống miễn phí',
-            available: 20,
-            maxPerOrder: 3,
         },
         {
-            id: '3',
-            name: 'Vé VVIP',
-            price: 500000,
+            available: 10,
             description:
                 'Vé VVIP với ghế ngồi tốt nhất, đồ uống và snack miễn phí',
-            available: 10,
+            id: '3',
             maxPerOrder: 2,
+            name: 'Vé VVIP',
+            price: 500000,
         },
     ]);
 
     const [selectedTickets, setSelectedTickets] = useState<SelectedTicket[]>(
         []
     );
-    const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
-        fullName: '',
-        email: '',
-        phone: '',
-        paymentMethod: 'card',
-    });
     const [isLoading, setIsLoading] = useState(false);
 
     // Mock event data - trong thực tế sẽ fetch từ API
     const eventData = {
-        id: eventId || '1',
-        title: 'Concert Nhạc Trẻ 2024',
         date: '2024-12-25',
+        id: eventId || '1',
         location: 'Nhà hát Hòa Bình, TP.HCM',
+        title: 'Concert Nhạc Trẻ 2024',
     };
 
     const totalAmount = selectedTickets.reduce((total, selectedTicket) => {
@@ -83,24 +77,28 @@ const TicketPurchase = () => {
         setIsLoading(true);
 
         try {
-            // Mock payment processing
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Tạo purchase state để chuyển đến trang xác nhận
+            // Tạo purchase state để chuyển đến trang thanh toán
             const purchaseState: TicketPurchaseState = {
-                selectedTickets,
-                totalAmount,
                 eventId: eventData.id,
                 eventTitle: eventData.title,
+                selectedTickets,
+                totalAmount,
             };
-
-            // Navigate to confirmation page (sẽ tạo sau)
-            navigate(`/event/${eventId}/purchase/confirmation`, {
-                state: purchaseState,
-            });
+            if (eventId) {
+                // Navigate to payment page
+                navigate(
+                    SCREEN_PATH.EVENT_QUESTION_FORM.replace(
+                        ':event_id',
+                        eventId
+                    ).replace(':booking_id', '1'),
+                    {
+                        state: purchaseState,
+                    }
+                );
+            }
         } catch (error) {
-            console.error('Payment failed:', error);
-            alert('Thanh toán thất bại. Vui lòng thử lại.');
+            console.error('Navigation failed:', error);
+            alert('Có lỗi xảy ra. Vui lòng thử lại.');
         } finally {
             setIsLoading(false);
         }
@@ -128,7 +126,7 @@ const TicketPurchase = () => {
                     <div />
                 </div>
                 {/* Ticket Selection */}
-                <TicketSelection
+                <TicketSelectionLeft
                     ticketTypes={ticketTypes}
                     selectedTickets={selectedTickets}
                     onTicketChange={setSelectedTickets}
@@ -137,13 +135,18 @@ const TicketPurchase = () => {
 
             {/* Payment Summary */}
             <div className="bg-bg-gray">
-                <PaymentSummary
-                    selectedTickets={selectedTickets}
-                    totalAmount={totalAmount}
-                    paymentInfo={paymentInfo}
-                    onPaymentInfoChange={setPaymentInfo}
-                    onPayment={handlePayment}
+                <TicketInfoRight
+                    eventInfo={{
+                        date: eventData.date,
+                        id: eventData.id,
+                        location: eventData.location,
+                        title: eventData.title,
+                    }}
                     isLoading={isLoading}
+                    onPayment={handlePayment}
+                    selectedTickets={selectedTickets}
+                    ticketTypes={ticketTypes}
+                    totalAmount={totalAmount}
                 />
             </div>
         </div>

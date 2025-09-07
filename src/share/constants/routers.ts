@@ -4,17 +4,16 @@ export const SCREEN_PATH = {
     AUTH_REGISTER: '/register',
     AUTH_RESET_PASSWORD: '/reset-password',
 
-    // HOME
-    HOME: '/',
-
     // EVENT
     EVENT_DETAIL: '/event-detail/:event_id',
-    EVENT_TICKET_PURCHASE: '/event-detail/:event_id/purchase',
-    EVENT_TICKET_SELECTION:
-        '/event-detail/:event_id/booking/:booking_id/selection',
+
+    EVENT_PAYMENT: '/event-detail/:event_id/booking/:booking_id/payment',
     EVENT_QUESTION_FORM:
         '/event-detail/:event_id/booking/:booking_id/question-form',
-    EVENT_PAYMENT: '/event-detail/:event_id/booking/:booking_id/payment',
+    EVENT_TICKET_SELECTION:
+        '/event-detail/:event_id/booking/:booking_id/selection',
+    // HOME
+    HOME: '/',
 
     // MY TICKET
     MY_TICKET: '/my-ticket',
@@ -28,7 +27,6 @@ export type ScreenPathType = (typeof SCREEN_PATH)[keyof typeof SCREEN_PATH];
 
 export const EVENT_PATH_PATTERNS = [
     SCREEN_PATH.EVENT_DETAIL,
-    SCREEN_PATH.EVENT_TICKET_PURCHASE,
     SCREEN_PATH.EVENT_TICKET_SELECTION,
     SCREEN_PATH.EVENT_QUESTION_FORM,
     SCREEN_PATH.EVENT_PAYMENT,

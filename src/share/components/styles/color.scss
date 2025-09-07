@@ -5,12 +5,15 @@ $colors: (
     'spp': #f9634a,
     'bg-black': #01060f,
     'bg-yellow': #fccb62,
+    'bg-input-focus': #dbcaa6,
     'text-yellow': #fccb62,
     'text-black': #01060f,
     'text-gray': #f7f7f1,
     'text-gray-2': #6c757d,
     'text-red': #e03e2d,
     'text-green': #10b981,
+    'attention': #ffa726,
+    'default-input-border': #d1d5db,
 );
 
 @function getColor($name) {

@@ -7,24 +7,24 @@ import {
     MODE_WEIGHT,
 } from '@share/components/atoms/Text';
 
-interface TicketSelectionProps {
-    ticketTypes: TicketType[];
+interface TicketSelectionLeftProps {
+    onTicketChange: (_tickets: SelectedTicket[]) => void;
     selectedTickets: SelectedTicket[];
-    onTicketChange: (tickets: SelectedTicket[]) => void;
+    ticketTypes: TicketType[];
 }
 
-const TicketSelection = ({
-    ticketTypes,
-    selectedTickets,
+const TicketSelectionLeft = ({
     onTicketChange,
-}: TicketSelectionProps) => {
+    selectedTickets,
+    ticketTypes,
+}: TicketSelectionLeftProps) => {
     const updateTicketQuantity = (ticketType: TicketType, quantity: number) => {
         const updatedTickets = selectedTickets.filter(
             t => t.ticketType.id !== ticketType.id
         );
 
         if (quantity > 0) {
-            updatedTickets.push({ ticketType, quantity });
+            updatedTickets.push({ quantity, ticketType });
         }
 
         onTicketChange(updatedTickets);
@@ -39,8 +39,8 @@ const TicketSelection = ({
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
             currency: 'VND',
+            style: 'currency',
         }).format(price);
     };
 
@@ -166,4 +166,4 @@ const TicketSelection = ({
     );
 };
 
-export default TicketSelection;
+export default TicketSelectionLeft;

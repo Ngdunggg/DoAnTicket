@@ -32,6 +32,59 @@
 }
 
 /* ==========================================================================
+  Custom input
+  ========================================================================== */
+@media (min-width: 1025px) {
+    .custom-input-text:enabled:hover {
+        outline: 0 none;
+        outline-offset: 0;
+        border-color: getColor('bg-yellow');
+        background-color: getColor('bg-input-focus');
+    }
+}
+@media (max-width: 1024px) {
+    .custom-input-text:enabled:hover {
+        outline: 0 none;
+        outline-offset: 0;
+        border-color: getColor('default-input-border');
+        background-color: white;
+    }
+}
+
+.custom-input-text:enabled:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: none;
+    border-color: getColor('bg-yellow');
+    background-color: getColor('bg-input-focus');
+}
+
+/* ==========================================================================
+  Error message styles
+  ========================================================================== */
+.p-error-message {
+    color: getColor('attention');
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.p-inputtext.input-invalid {
+    border-color: getColor('attention') !important;
+    background-color: #fffdf2 !important;
+}
+
+.input-invalid {
+    border-color: getColor('attention') !important;
+    background-color: #fffdf2 !important;
+}
+
+/* DatePicker specific error state */
+.p-calendar .p-inputtext.input-invalid {
+    border-color: getColor('attention') !important;
+    background-color: #fffdf2 !important;
+}
+
+/* ==========================================================================
   Custom scrollbar for specific elements
   ========================================================================== */
 .custom-scrollbar::-webkit-scrollbar {

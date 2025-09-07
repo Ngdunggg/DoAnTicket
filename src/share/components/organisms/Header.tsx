@@ -13,6 +13,7 @@ import {
     Text,
 } from '@share/components/atoms/Text';
 import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useAppSelector, useAppDispatch } from '@configs/store';
 import { clearToken } from '@share/auth/stores/authSlice';
@@ -28,6 +29,7 @@ import LogoutIcon from '../atoms/icons/LogoutIcon';
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false);
 
     // Lấy thông tin user và token từ Redux store
     const { user } = useAppSelector(state => state.user);
@@ -95,8 +97,14 @@ const Header = () => {
                         </Text>
                     </DivClick>
                     {user ? (
-                        <div className="group relative">
-                            <DivClick className="flex items-center py-2 gap-2">
+                        <div className="relative">
+                            <DivClick
+                                className="flex items-center py-2 gap-2 cursor-pointer"
+                                onMouseEnter={() => setIsAccountPopupOpen(true)}
+                                onMouseLeave={() =>
+                                    setIsAccountPopupOpen(false)
+                                }
+                            >
                                 <img
                                     src={user.avatar}
                                     alt="avatar"
@@ -117,82 +125,113 @@ const Header = () => {
                             </DivClick>
 
                             {/* Account Popup */}
-                            <div className="fixed top-17 right-20 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-[99999] opacity-0 group-hover:opacity-100 transition-all duration-200">
-                                <div className="py-2">
-                                    <DivClick
-                                        onClick={() => {
-                                            navigate(SCREEN_PATH.MY_TICKET);
-                                        }}
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
-                                    >
-                                        <TicketIcon mode={MODE_TICKET.WHITE} />
-                                        <Text
-                                            modeColor={MODE_COLOR_TEXT.WHITE}
-                                            modeSize={MODE_SIZE[14]}
+                            {isAccountPopupOpen && (
+                                <div
+                                    className="fixed top-17 right-20 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-[99999] transition-all duration-200"
+                                    onMouseEnter={() =>
+                                        setIsAccountPopupOpen(true)
+                                    }
+                                    onMouseLeave={() =>
+                                        setIsAccountPopupOpen(false)
+                                    }
+                                >
+                                    <div className="py-2">
+                                        <DivClick
+                                            onClick={() => {
+                                                setIsAccountPopupOpen(false);
+                                                navigate(SCREEN_PATH.MY_TICKET);
+                                            }}
+                                            className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
-                                            Vé của tôi
-                                        </Text>
-                                    </DivClick>
+                                            <TicketIcon
+                                                mode={MODE_TICKET.WHITE}
+                                            />
+                                            <Text
+                                                modeColor={
+                                                    MODE_COLOR_TEXT.WHITE
+                                                }
+                                                modeSize={MODE_SIZE[14]}
+                                            >
+                                                Vé của tôi
+                                            </Text>
+                                        </DivClick>
 
-                                    <DivClick
-                                        onClick={() => {}} // TODO: Navigate to my events
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
-                                    >
-                                        <EventIcon />
-                                        <Text
-                                            modeColor={MODE_COLOR_TEXT.WHITE}
-                                            modeSize={MODE_SIZE[14]}
+                                        <DivClick
+                                            onClick={() => {
+                                                setIsAccountPopupOpen(false);
+                                                // TODO: Navigate to my events
+                                            }}
+                                            className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
-                                            Sự kiện của tôi
-                                        </Text>
-                                    </DivClick>
+                                            <EventIcon />
+                                            <Text
+                                                modeColor={
+                                                    MODE_COLOR_TEXT.WHITE
+                                                }
+                                                modeSize={MODE_SIZE[14]}
+                                            >
+                                                Sự kiện của tôi
+                                            </Text>
+                                        </DivClick>
 
-                                    <DivClick
-                                        onClick={() => {
-                                            navigate(
-                                                SCREEN_PATH.MY_TICKET_PROFILE
-                                            );
-                                        }}
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
-                                    >
-                                        <UserIcon />
-                                        <Text
-                                            modeColor={MODE_COLOR_TEXT.WHITE}
-                                            modeSize={MODE_SIZE[14]}
+                                        <DivClick
+                                            onClick={() => {
+                                                setIsAccountPopupOpen(false);
+                                                navigate(
+                                                    SCREEN_PATH.MY_TICKET_PROFILE
+                                                );
+                                            }}
+                                            className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
-                                            Thông tin tài khoản
-                                        </Text>
-                                    </DivClick>
+                                            <UserIcon />
+                                            <Text
+                                                modeColor={
+                                                    MODE_COLOR_TEXT.WHITE
+                                                }
+                                                modeSize={MODE_SIZE[14]}
+                                            >
+                                                Thông tin tài khoản
+                                            </Text>
+                                        </DivClick>
 
-                                    <DivClick
-                                        onClick={() => {}} // TODO: Navigate to categories
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
-                                    >
-                                        <EventIcon />
-                                        <Text
-                                            modeColor={MODE_COLOR_TEXT.WHITE}
-                                            modeSize={MODE_SIZE[14]}
+                                        <DivClick
+                                            onClick={() => {
+                                                setIsAccountPopupOpen(false);
+                                                // TODO: Navigate to categories
+                                            }}
+                                            className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
-                                            Thể loại
-                                        </Text>
-                                    </DivClick>
+                                            <EventIcon />
+                                            <Text
+                                                modeColor={
+                                                    MODE_COLOR_TEXT.WHITE
+                                                }
+                                                modeSize={MODE_SIZE[14]}
+                                            >
+                                                Thể loại
+                                            </Text>
+                                        </DivClick>
 
-                                    <DivClick
-                                        onClick={() => {
-                                            handleLogout();
-                                        }}
-                                        className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
-                                    >
-                                        <LogoutIcon />
-                                        <Text
-                                            modeColor={MODE_COLOR_TEXT.WHITE}
-                                            modeSize={MODE_SIZE[14]}
+                                        <DivClick
+                                            onClick={() => {
+                                                setIsAccountPopupOpen(false);
+                                                handleLogout();
+                                            }}
+                                            className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
-                                            Đăng xuất
-                                        </Text>
-                                    </DivClick>
+                                            <LogoutIcon />
+                                            <Text
+                                                modeColor={
+                                                    MODE_COLOR_TEXT.WHITE
+                                                }
+                                                modeSize={MODE_SIZE[14]}
+                                            >
+                                                Đăng xuất
+                                            </Text>
+                                        </DivClick>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     ) : (
                         <DivClick

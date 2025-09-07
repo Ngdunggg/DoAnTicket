@@ -6,7 +6,7 @@ import {
 } from '@share/components/atoms/Text';
 import Button, { MODE_BUTTON } from '@share/components/atoms/Button';
 import FormField from '@share/components/molecules/FormField';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DivClick from '@share/components/atoms/DivClick';
 import CameraIcon, {
     MODE_CAMERA,

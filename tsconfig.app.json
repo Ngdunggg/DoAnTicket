@@ -21,5 +21,8 @@
         "useDefineForClassFields": true
     },
     "extends": "./tsconfig.json",
-    "include": ["src"]
+    "include": [
+        "src",
+        "src/modules/event-detail/components/BookingEvent/TicketInfoRight.tsx"
+    ]
 }
