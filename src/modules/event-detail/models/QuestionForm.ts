@@ -1,7 +1,7 @@
-import { BaseHttpResponse } from '@share/models/response';
+import { BaseHttpResponse } from '@share/models/common/response';
 import { validateMaxLength, validatePhoneNumber } from '@share/utils/zodUtils';
 import { z } from 'zod';
-import { User } from '../../../share/models/user';
+import { User } from '../../../share/models/auth/user';
 import { EMAIL_REGEX } from '@share/constants/regax';
 /**
  * Represents the login schema for authentication.

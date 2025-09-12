@@ -3,7 +3,7 @@ import { MODE_WEIGHT } from '@share/components/atoms/Text';
 import Button, { MODE_BUTTON } from '@share/components/atoms/Button';
 import TicketCard from './TicketCard';
 import { useMemo, useState } from 'react';
-import { TicketData } from '../types/ticket';
+import { TicketData } from '../../types/ticket';
 
 const MyTicketRight = () => {
     const [activeTab, setActiveTab] = useState<'upcoming' | 'past'>('upcoming');

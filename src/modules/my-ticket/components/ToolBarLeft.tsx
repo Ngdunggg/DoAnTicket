@@ -79,7 +79,7 @@ const ToolBarLeft = () => {
                         Tài khoản của
                     </Text>
                     <Text
-                        modeColor={MODE_COLOR_TEXT.GRAY}
+                        modeColor={MODE_COLOR_TEXT.WHITE}
                         modeWeight={MODE_WEIGHT.LARGE}
                         modeSize={MODE_SIZE[16]}
                     >

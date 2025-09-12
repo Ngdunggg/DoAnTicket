@@ -13,7 +13,7 @@ import {
     Text,
 } from '@share/components/atoms/Text';
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useAppSelector, useAppDispatch } from '@configs/store';
 import { clearToken } from '@share/auth/stores/authSlice';
@@ -25,11 +25,14 @@ import ChevronIcon, {
 import EventIcon from '../atoms/icons/EventIcon';
 import UserIcon from '../atoms/icons/UserIcon';
 import LogoutIcon from '../atoms/icons/LogoutIcon';
+import { useAuthPopup } from '@modules/auth/hooks/useAuthPopup';
+import AuthPopup from '@modules/auth/components/AuthPopup';
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false);
+    const { closeAuthPopup, isAuthPopupOpen, openAuthPopup } = useAuthPopup();
 
     // Lấy thông tin user và token từ Redux store
     const { user } = useAppSelector(state => state.user);
@@ -235,7 +238,9 @@ const Header = () => {
                         </div>
                     ) : (
                         <DivClick
-                            onClick={() => {}} //TODO
+                            onClick={() => {
+                                openAuthPopup();
+                            }}
                             className="flex items-center py-2 gap-2"
                         >
                             <Text
@@ -259,7 +264,8 @@ const Header = () => {
                     )}
                 </div>
             </div>
-            <HeaderIcon />
+            <HeaderIcon className="!h-10" />
+            <AuthPopup isOpen={isAuthPopupOpen} onClose={closeAuthPopup} />
         </div>
     );
 };

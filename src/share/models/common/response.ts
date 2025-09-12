@@ -2,9 +2,10 @@
  * Represents a basic result.
  * This type is used to define the structure of a basic result object.
  */
-type BasicResult = {
+export type BasicResult = {
     code?: string;
     error_msg_id?: string;
+    total_count?: string;
 };
 
 /**

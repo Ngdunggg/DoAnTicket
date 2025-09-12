@@ -39,30 +39,21 @@ interface EventDetailLayoutProps {
         requirements: string[];
         title: string;
     };
-    onBack: () => void;
     onBookNow: () => void;
-    onBuyTickets: (dateId: string) => void;
-    onShare: () => void;
+    onBuyTickets: (_dateId: string) => void;
     tickets: EventDate[];
 }
 
 const EventDetailLayout = ({
     event,
-    onBack,
     onBookNow,
     onBuyTickets,
-    onShare,
     tickets,
 }: EventDetailLayoutProps) => {
     return (
         <div className="flex flex-col flex-1">
             {/* Hero Section */}
-            <EventHero
-                event={event}
-                onBack={onBack}
-                onShare={onShare}
-                onBookNow={onBookNow}
-            />
+            <EventHero event={event} onBookNow={onBookNow} />
 
             {/* Description Section */}
             <EventDescription

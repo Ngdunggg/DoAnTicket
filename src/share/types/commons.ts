@@ -1,4 +1,4 @@
-import { User } from '@share/models/user';
+import { User } from '@share/models/auth/user';
 
 export type PageSize = { offset: number; size: number };
 export type CustomError = {

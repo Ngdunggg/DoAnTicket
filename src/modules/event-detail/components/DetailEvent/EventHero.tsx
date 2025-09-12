@@ -16,18 +16,16 @@ import TicketIcon from '@share/components/atoms/icons/TicketIcon';
 
 interface EventHeroProps {
     event: {
-        title: string;
-        dateStart: string;
         dateEnd: string;
-        location: string;
+        dateStart: string;
         image: string;
+        location: string;
+        title: string;
     };
-    onBack: () => void;
-    onShare: () => void;
     onBookNow: () => void;
 }
 
-const EventHero = ({ event, onBack, onShare, onBookNow }: EventHeroProps) => {
+const EventHero = ({ event, onBookNow }: EventHeroProps) => {
     const token = useAppSelector(state => state.auth.token);
     const { closeAuthPopup, isAuthPopupOpen, openAuthPopup } = useAuthPopup();
 
@@ -44,10 +42,10 @@ const EventHero = ({ event, onBack, onShare, onBookNow }: EventHeroProps) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('vi-VN', {
             day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
             hour: '2-digit',
             minute: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
         });
     };
 

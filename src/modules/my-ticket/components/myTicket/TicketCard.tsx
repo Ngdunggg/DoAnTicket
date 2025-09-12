@@ -5,7 +5,7 @@ import {
     MODE_WEIGHT,
     Text,
 } from '@share/components/atoms/Text';
-import { TicketData } from '../types/ticket';
+import { TicketData } from '../../types/ticket';
 import CalendarIcon from '@share/components/atoms/icons/CalendarIcon';
 import MapPinIcon from '@share/components/atoms/icons/MapPinIcon';
 import TicketIcon, {
@@ -16,7 +16,7 @@ import MoreIcon from '@share/components/atoms/icons/MoreIcon';
 import DivClick from '@share/components/atoms/DivClick';
 
 interface TicketCardProps {
-    formatDateTime: (dateTimeString: string) => { date: string; time: string };
+    formatDateTime: (_dateTimeString: string) => { date: string; time: string };
     ticket: TicketData;
 }
 

@@ -1,7 +1,7 @@
-function HeaderIcon() {
+function HeaderIcon({ className }: { className?: string }) {
     return (
         <svg
-            className="w-full h-auto"
+            className={`w-full h-auto ${className}`}
             viewBox="0 0 1728 39"
             fill="none"
             preserveAspectRatio="none"

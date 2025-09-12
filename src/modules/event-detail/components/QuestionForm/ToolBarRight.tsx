@@ -3,9 +3,6 @@ import DoubleChevronIcon, {
 } from '@share/components/atoms/icons/DoubleChevronIcon';
 import { SelectedTicket } from '../../types/ticketPurchase';
 import Button, { MODE_BUTTON } from '@share/components/atoms/Button';
-import TicketIcon, {
-    MODE_TICKET,
-} from '@share/components/atoms/icons/TicketIcon';
 import { Text } from '@share/components/atoms/Text';
 import {
     MODE_COLOR_TEXT,

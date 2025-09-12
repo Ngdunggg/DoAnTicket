@@ -1,6 +1,6 @@
-import ToolBarLeft from './ToolBarLeft';
+import ToolBarLeft from '../ToolBarLeft';
 import MyTicketRight from './MyTicketRight';
-import ProfileForm from './ProfileForm';
+import ProfileForm from '../profile/ProfileForm';
 import { useLocation } from 'react-router-dom';
 import { SCREEN_PATH } from '@share/constants/routers';
 

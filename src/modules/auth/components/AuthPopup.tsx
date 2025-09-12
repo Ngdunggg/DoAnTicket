@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     MODE_COLOR_TEXT,
     MODE_SIZE,
@@ -14,35 +14,40 @@ import WavyLineIcon, {
     MODE_WAVY_LINE,
 } from '@share/components/atoms/icons/WavyLineIcon';
 import GoogleIcon from '@share/components/atoms/icons/GoogleIcon';
+import InputValidate from '@share/components/molecules/InputValidate';
+import useAuthFormLogin from '../hooks/useAuthFormLogin';
+import { AUTH_MODE } from '@share/constants/commons';
+import { RegisterInput } from '@share/schemas/auth/login';
 
 interface AuthPopupProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-const AuthPopup: React.FC<AuthPopupProps> = ({ isOpen, onClose }) => {
+const AuthPopup = ({ isOpen, onClose }: AuthPopupProps) => {
     const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [name, setName] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
     const dispatch = useAppDispatch();
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    // Sử dụng hook với mode tương ứng
+    const currentMode = isLogin ? AUTH_MODE.LOGIN : AUTH_MODE.REGISTER;
+    const { authForm, schemaCreateAccount } = useAuthFormLogin(
+        undefined,
+        currentMode
+    );
 
+    const handleSubmit = authForm.handleSubmit(data => {
         if (isLogin) {
             // Xử lý đăng nhập
-            console.log('Đăng nhập:', { email, password });
+            console.log('Đăng nhập:', {
+                email: data.email,
+                password: data.password,
+            });
             // Giả lập đăng nhập thành công
             const fakeToken = 'fake-token-123';
             const fakeUser = {
-                email: email,
-                full_name: email.split('@')[0],
-                id: 'user-123', // Lấy tên từ email
+                email: data.email,
+                full_name: data.email.split('@')[0],
+                id: 'user-123',
             };
 
             dispatch(setToken(fakeToken));
@@ -50,16 +55,12 @@ const AuthPopup: React.FC<AuthPopupProps> = ({ isOpen, onClose }) => {
             onClose();
         } else {
             // Xử lý đăng ký
-            if (password !== confirmPassword) {
-                alert('Mật khẩu xác nhận không khớp!');
-                return;
-            }
-            console.log('Đăng ký:', { email, name, password });
+            console.log('Đăng ký:', data);
             // Giả lập đăng ký thành công
             const fakeToken = 'fake-token-456';
             const fakeUser = {
-                email: email,
-                full_name: name,
+                email: data.email,
+                full_name: (data as RegisterInput).name,
                 id: 'user-456',
             };
 
@@ -67,7 +68,7 @@ const AuthPopup: React.FC<AuthPopupProps> = ({ isOpen, onClose }) => {
             dispatch(setUserInfo(fakeUser));
             onClose();
         }
-    };
+    });
 
     const handleGoogleLogin = () => {
         console.log('Đăng nhập bằng Google');
@@ -83,6 +84,12 @@ const AuthPopup: React.FC<AuthPopupProps> = ({ isOpen, onClose }) => {
         dispatch(setToken(googleToken));
         dispatch(setUserInfo(googleUser));
         onClose();
+    };
+
+    const handleToggleMode = () => {
+        setIsLogin(!isLogin);
+        // Reset form khi chuyển đổi mode
+        authForm.reset();
     };
 
     if (!isOpen) return null;
@@ -127,167 +134,79 @@ const AuthPopup: React.FC<AuthPopupProps> = ({ isOpen, onClose }) => {
                             className="flex flex-col gap-4"
                         >
                             {!isLogin && (
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <div className="flex flex-col gap-2">
+                                    <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                         Họ và tên
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={name}
-                                        onChange={e => setName(e.target.value)}
-                                        className="w-full px-4 py-3 bg-bg-black border border-bg-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-bg-yellow focus:border-transparent text-white placeholder-gray-400"
+                                    </Text>
+                                    <InputValidate
+                                        control={authForm.control}
+                                        inputName={'name' as never}
+                                        schema={schemaCreateAccount}
                                         placeholder="Nhập họ và tên"
                                         required
                                     />
                                 </div>
                             )}
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                            {!isLogin && (
+                                <div className="flex flex-col gap-2">
+                                    <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                        Số điện thoại
+                                    </Text>
+                                    <InputValidate
+                                        control={authForm.control}
+                                        inputName={'phone' as never}
+                                        schema={schemaCreateAccount}
+                                        placeholder="Nhập số điện thoại"
+                                        required
+                                    />
+                                </div>
+                            )}
+
+                            <div className="flex flex-col gap-2">
+                                <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                     Email
-                                </label>
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                    className="w-full px-4 py-3 bg-bg-black border border-bg-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-bg-yellow focus:border-transparent text-white placeholder-gray-400"
+                                </Text>
+                                <InputValidate
+                                    control={authForm.control}
+                                    inputName="email"
+                                    schema={schemaCreateAccount}
                                     placeholder="Nhập email"
                                     required
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                            <div className="flex flex-col gap-2">
+                                <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                     Mật khẩu
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type={
-                                            showPassword ? 'text' : 'password'
-                                        }
-                                        value={password}
-                                        onChange={e =>
-                                            setPassword(e.target.value)
-                                        }
-                                        className="w-full px-4 py-3 bg-bg-black border border-bg-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-bg-yellow focus:border-transparent text-white placeholder-gray-400 pr-12"
-                                        placeholder="Nhập mật khẩu"
-                                        required
-                                    />
-                                    <DivClick
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-                                    >
-                                        {showPassword ? (
-                                            <svg
-                                                className="w-5 h-5"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
-                                                />
-                                            </svg>
-                                        ) : (
-                                            <svg
-                                                className="w-5 h-5"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                />
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                                />
-                                            </svg>
-                                        )}
-                                    </DivClick>
-                                </div>
+                                </Text>
+                                <InputValidate
+                                    control={authForm.control}
+                                    inputName="password"
+                                    schema={schemaCreateAccount}
+                                    placeholder="Nhập mật khẩu"
+                                    required
+                                    isPassword
+                                />
                             </div>
 
                             {!isLogin && (
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                <div className="flex flex-col gap-2">
+                                    <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                         Xác nhận mật khẩu
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            type={
-                                                showConfirmPassword
-                                                    ? 'text'
-                                                    : 'password'
-                                            }
-                                            value={confirmPassword}
-                                            onChange={e =>
-                                                setConfirmPassword(
-                                                    e.target.value
-                                                )
-                                            }
-                                            className="w-full px-4 py-3 bg-bg-black border border-bg-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-bg-yellow focus:border-transparent text-white placeholder-gray-400 pr-12"
-                                            placeholder="Nhập lại mật khẩu"
-                                            required
-                                        />
-                                        <DivClick
-                                            onClick={() =>
-                                                setShowConfirmPassword(
-                                                    !showConfirmPassword
-                                                )
-                                            }
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-                                        >
-                                            {showConfirmPassword ? (
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
-                                                    />
-                                                </svg>
-                                            ) : (
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                                    />
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                                    />
-                                                </svg>
-                                            )}
-                                        </DivClick>
-                                    </div>
+                                    </Text>
+                                    <InputValidate
+                                        control={authForm.control}
+                                        inputName={'passwordConfirm' as never}
+                                        schema={schemaCreateAccount}
+                                        placeholder="Nhập lại mật khẩu"
+                                        required
+                                        isPassword
+                                    />
                                 </div>
                             )}
                         </form>
+
                         <Button
                             mode={MODE_BUTTON.YELLOW}
                             className="w-full"
@@ -312,7 +231,7 @@ const AuthPopup: React.FC<AuthPopupProps> = ({ isOpen, onClose }) => {
                                     : 'Đã có tài khoản? '}
                             </Text>
                             <DivClick
-                                onClick={() => setIsLogin(!isLogin)}
+                                onClick={handleToggleMode}
                                 className="inline-block"
                             >
                                 <Text

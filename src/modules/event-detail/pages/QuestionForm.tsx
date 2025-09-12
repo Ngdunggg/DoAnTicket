@@ -45,32 +45,34 @@ const QuestionForm = () => {
     };
 
     const handleContinue = async () => {
-        setIsLoading(true);
+        // Sử dụng handleSubmit để validate form trước khi tiếp tục
+        questionForm.handleSubmit(async validData => {
+            setIsLoading(true);
 
-        try {
-            // Tạo state để chuyển đến trang thanh toán
-            const formValues = questionForm.getValues();
-            const paymentState = {
-                ...purchaseState,
-                bookingForm: formValues,
-            };
+            try {
+                // Tạo state để chuyển đến trang thanh toán
+                const paymentState = {
+                    ...purchaseState,
+                    bookingForm: validData,
+                };
 
-            // Navigate to payment page
-            navigate(
-                SCREEN_PATH.EVENT_PAYMENT.replace(
-                    ':event_id',
-                    eventId || ''
-                ).replace(':booking_id', '1'),
-                {
-                    state: paymentState,
-                }
-            );
-        } catch (error) {
-            console.error('Navigation failed:', error);
-            alert('Có lỗi xảy ra. Vui lòng thử lại.');
-        } finally {
-            setIsLoading(false);
-        }
+                // Navigate to payment page
+                navigate(
+                    SCREEN_PATH.EVENT_PAYMENT.replace(
+                        ':event_id',
+                        eventId || ''
+                    ).replace(':booking_id', '1'),
+                    {
+                        state: paymentState,
+                    }
+                );
+            } catch (error) {
+                console.error('Navigation failed:', error);
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            } finally {
+                setIsLoading(false);
+            }
+        })();
     };
 
     if (!purchaseState) {

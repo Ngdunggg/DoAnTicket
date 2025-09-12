@@ -46,15 +46,6 @@ const Payment = () => {
         title: 'Concert Nhạc Trẻ 2024',
     };
 
-    const isFormValid = () => {
-        return (
-            paymentState?.bookingForm?.email.trim() !== '' &&
-            paymentState?.bookingForm?.phone.trim() !== '' &&
-            paymentState?.selectedTickets.length > 0 &&
-            selectedPaymentMethod !== PAYMENT_METHOD.VNPAY
-        );
-    };
-
     const handlePayment = async () => {
         setIsLoading(true);
 
@@ -118,7 +109,6 @@ const Payment = () => {
                             selectedTickets={paymentState.selectedTickets}
                             totalAmount={paymentState.totalAmount}
                             onPayment={handlePayment}
-                            isFormValid={isFormValid()}
                             isLoading={isLoading}
                         />
                     </div>

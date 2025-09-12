@@ -17,7 +17,6 @@ interface SelectedTicket {
 }
 
 interface PaymentSummaryProps {
-    isFormValid: boolean;
     isLoading: boolean;
     onPayment: () => void;
     selectedTickets: SelectedTicket[];
@@ -25,7 +24,6 @@ interface PaymentSummaryProps {
 }
 
 const PaymentSummary = ({
-    isFormValid,
     isLoading,
     onPayment,
     selectedTickets,
@@ -166,7 +164,7 @@ const PaymentSummary = ({
                 {/* Payment Button */}
                 <Button
                     onClick={onPayment}
-                    disabled={!isFormValid || isLoading}
+                    disabled={isLoading}
                     mode={MODE_BUTTON.YELLOW}
                     className="w-full py-4"
                 >

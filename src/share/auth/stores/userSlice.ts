@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '@share/models/user';
+import { User } from '@share/models/auth/user';
 import { UserState } from '@share/types/commons';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';

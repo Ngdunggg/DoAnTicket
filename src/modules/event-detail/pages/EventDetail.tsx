@@ -185,16 +185,6 @@ const EventDetail = () => {
         },
     ];
 
-    const handleBack = () => {
-        console.log('Back to previous page');
-        // TODO: Implement navigation
-    };
-
-    const handleShare = () => {
-        console.log('Share event');
-        // TODO: Implement share functionality
-    };
-
     const handleBookNow = () => {
         console.log('Book now clicked');
         console.log('eventId', eventId);
@@ -220,8 +210,6 @@ const EventDetail = () => {
         <EventDetailLayout
             event={mockEvent}
             tickets={mockTickets}
-            onBack={handleBack}
-            onShare={handleShare}
             onBookNow={handleBookNow}
             onBuyTickets={handleBuyTickets}
         />

@@ -5,7 +5,7 @@ import {
     MODE_WEIGHT,
     Text,
 } from '@share/components/atoms/Text';
-import { TicketData } from '../types/ticket';
+import { TicketData } from '../../types/ticket';
 import { QRCodeSVG } from 'qrcode.react';
 import DivClick from '@share/components/atoms/DivClick';
 import WavyLineIcon, {
@@ -13,7 +13,7 @@ import WavyLineIcon, {
 } from '@share/components/atoms/icons/WavyLineIcon';
 
 interface QRPopupProps {
-    formatDateTime: (dateTimeString: string) => { date: string; time: string };
+    formatDateTime: (_dateTimeString: string) => { date: string; time: string };
     isOpen: boolean;
     onClose: () => void;
     ticket: TicketData | null;
