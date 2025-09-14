@@ -6,7 +6,7 @@ import { useAuthPopup } from '../hooks/useAuthPopup';
 import AuthPopup from '../components/AuthPopup';
 
 const Login = () => {
-    const { closeAuthPopup, isAuthPopupOpen, openAuthPopup } = useAuthPopup();
+    const { openAuthPopup } = useAuthPopup();
 
     return (
         <PcLayout>
@@ -50,7 +50,7 @@ const Login = () => {
                 </div>
 
                 {/* Auth Popup */}
-                <AuthPopup isOpen={isAuthPopupOpen} onClose={closeAuthPopup} />
+                <AuthPopup />
             </div>
         </PcLayout>
     );

@@ -125,7 +125,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
 
         const modeInputClasses: Record<ModeInputType, string> = {
             default: 'custom-input-text',
-            rounded: '!rounded-[26px] box-shadow-spp custom-input-text',
+            rounded: '!rounded-[26px] box-shadow-ticket custom-input-text',
         };
 
         const getModeInput = (mode: ModeInputType): string => {
@@ -147,7 +147,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
                     <div className="relative">
                         <IconField iconPosition={iconPosition}>
                             <InputIcon
-                                className={`flex items-center ml-2 ${iconClassName}`}
+                                className={`flex items-center ${iconClassName}`}
                             >
                                 {icon}
                             </InputIcon>
@@ -177,7 +177,7 @@ const Input = forwardRef<HTMLInputElement, IInputProps>(
                             >
                                 {iconClear ?? (
                                     <XCircleIcon
-                                        mode={MODE_X_CIRCLE_ICON.ORANGE}
+                                        mode={MODE_X_CIRCLE_ICON.BLACK}
                                     />
                                 )}
                             </DivClick>

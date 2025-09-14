@@ -1,5 +1,5 @@
 import { useAppSelector } from '@configs/store';
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import AuthPopup from '@modules/auth/components/AuthPopup';
 import { useAuthPopup } from '@modules/auth/hooks/useAuthPopup';
 
@@ -18,7 +18,7 @@ type PrivateRouteProps = {
  */
 export const PrivateRoute = ({ children }: PrivateRouteProps) => {
     const token = useAppSelector(state => state.auth.token);
-    const { closeAuthPopup, isAuthPopupOpen, openAuthPopup } = useAuthPopup();
+    const { openAuthPopup } = useAuthPopup();
 
     useEffect(() => {
         if (!token) {
@@ -29,10 +29,7 @@ export const PrivateRoute = ({ children }: PrivateRouteProps) => {
     return (
         <>
             {children}
-            <AuthPopup
-                isOpen={isAuthPopupOpen && !token}
-                onClose={closeAuthPopup}
-            />
+            <AuthPopup />
         </>
     );
 };

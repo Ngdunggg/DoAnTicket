@@ -72,27 +72,3 @@ export const createAccountSchema = (mode: AuthMode = AUTH_MODE.LOGIN) => {
     // For login mode, only email and password
     return z.object(baseSchema);
 };
-
-/**
- * Type definition for the login form input data.
- */
-export type LoginInput = {
-    email: string;
-    password: string;
-};
-
-/**
- * Type definition for the register form input data.
- */
-export type RegisterInput = {
-    email: string;
-    name: string;
-    password: string;
-    passwordConfirm: string;
-    phone: string;
-};
-
-/**
- * Union type for authentication form input data.
- */
-export type AuthInput = LoginInput | RegisterInput;

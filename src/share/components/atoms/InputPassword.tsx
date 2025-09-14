@@ -94,7 +94,10 @@ const InputPassword = forwardRef<HTMLInputElement, IInputPasswordProps>(
 
         if (isIcon) {
             return (
-                <IconField iconPosition={iconPosition}>
+                <IconField
+                    iconPosition={iconPosition}
+                    className="custom-password-input"
+                >
                     <InputIcon
                         className={`flex items-center ml-2 ${iconClassName}`}
                     >
@@ -130,7 +133,7 @@ const InputPassword = forwardRef<HTMLInputElement, IInputPasswordProps>(
         }
 
         return (
-            <div className="relative w-full">
+            <div className="relative w-full custom-password-input">
                 <InputText
                     {...props}
                     ref={ref}

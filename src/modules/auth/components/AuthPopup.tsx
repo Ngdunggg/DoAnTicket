@@ -7,92 +7,118 @@ import {
 } from '@share/components/atoms/Text';
 import Button, { MODE_BUTTON } from '@share/components/atoms/Button';
 import { useAppDispatch } from '@configs/store';
-import { setToken } from '@share/auth/stores/authSlice';
-import { setUserInfo } from '@share/auth/stores/userSlice';
 import DivClick from '@share/components/atoms/DivClick';
 import WavyLineIcon, {
     MODE_WAVY_LINE,
 } from '@share/components/atoms/icons/WavyLineIcon';
 import GoogleIcon from '@share/components/atoms/icons/GoogleIcon';
 import InputValidate from '@share/components/molecules/InputValidate';
-import useAuthFormLogin from '../hooks/useAuthFormLogin';
-import { AUTH_MODE } from '@share/constants/commons';
-import { RegisterInput } from '@share/schemas/auth/login';
+import { CreateAccountRequest } from '@share/models/auth/createAccount';
+import {
+    mockLogin,
+    mockRegister,
+    mockGoogleLogin,
+    dispatchAuthData,
+} from '../mocks/authMock';
+import { useAuthPopup } from '../hooks/useAuthPopup';
 
-interface AuthPopupProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
-
-const AuthPopup = ({ isOpen, onClose }: AuthPopupProps) => {
-    const [isLogin, setIsLogin] = useState(true);
+const AuthPopup = () => {
+    const {
+        authForm,
+        closeAuthPopup,
+        isAuthPopupOpen,
+        isLogin,
+        schemaCreateAccount,
+        setIsLoginStore,
+    } = useAuthPopup();
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useAppDispatch();
 
-    // Sử dụng hook với mode tương ứng
-    const currentMode = isLogin ? AUTH_MODE.LOGIN : AUTH_MODE.REGISTER;
-    const { authForm, schemaCreateAccount } = useAuthFormLogin(
-        undefined,
-        currentMode
+    const handleSubmit = authForm.handleSubmit(
+        data => {
+            // Form validation đã pass, xử lý logic
+            if (isLogin) {
+                handleLogin(data);
+            } else {
+                handleRegister(data as CreateAccountRequest);
+            }
+        },
+        errors => {
+            // Form validation failed
+            console.log('Validation errors:', errors);
+        }
     );
 
-    const handleSubmit = authForm.handleSubmit(data => {
-        if (isLogin) {
-            // Xử lý đăng nhập
+    const handleLogin = async (data: { email: string; password: string }) => {
+        setIsLoading(true);
+
+        try {
             console.log('Đăng nhập:', {
                 email: data.email,
                 password: data.password,
             });
-            // Giả lập đăng nhập thành công
-            const fakeToken = 'fake-token-123';
-            const fakeUser = {
-                email: data.email,
-                full_name: data.email.split('@')[0],
-                id: 'user-123',
-            };
 
-            dispatch(setToken(fakeToken));
-            dispatch(setUserInfo(fakeUser));
-            onClose();
-        } else {
-            // Xử lý đăng ký
-            console.log('Đăng ký:', data);
-            // Giả lập đăng ký thành công
-            const fakeToken = 'fake-token-456';
-            const fakeUser = {
-                email: data.email,
-                full_name: (data as RegisterInput).name,
-                id: 'user-456',
-            };
+            // TODO: Thay thế bằng API call thật
+            // const response = await loginAPI(data);
 
-            dispatch(setToken(fakeToken));
-            dispatch(setUserInfo(fakeUser));
-            onClose();
+            // Sử dụng mock function
+            const response = await mockLogin(data);
+            dispatchAuthData(dispatch, response);
+            closeAuthPopup();
+        } catch (error) {
+            console.error('Lỗi đăng nhập:', error);
+        } finally {
+            setIsLoading(false);
         }
-    });
+    };
 
-    const handleGoogleLogin = () => {
-        console.log('Đăng nhập bằng Google');
-        // Xử lý đăng nhập Google
-        const googleToken = 'google-token-123';
-        const googleUser = {
-            avatar: 'https://static.ticketbox.vn/avatar.png',
-            email: 'user@gmail.com',
-            full_name: 'Google User',
-            id: 'google-user-123',
-        };
+    const handleRegister = async (data: CreateAccountRequest) => {
+        setIsLoading(true);
 
-        dispatch(setToken(googleToken));
-        dispatch(setUserInfo(googleUser));
-        onClose();
+        try {
+            console.log('Đăng ký:', data);
+
+            // TODO: Thay thế bằng API call thật
+            // const response = await registerAPI(data);
+
+            // Sử dụng mock function
+            const response = await mockRegister(data);
+            dispatchAuthData(dispatch, response);
+            closeAuthPopup();
+        } catch (error) {
+            console.error('Lỗi đăng ký:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        setIsLoading(true);
+
+        try {
+            console.log('Đăng nhập bằng Google');
+
+            // TODO: Thay thế bằng Google OAuth API call thật
+            // const response = await googleLoginAPI();
+
+            // Sử dụng mock function
+            const response = await mockGoogleLogin();
+            dispatchAuthData(dispatch, response);
+            closeAuthPopup();
+        } catch (error) {
+            console.error('Lỗi đăng nhập Google:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleToggleMode = () => {
-        setIsLogin(!isLogin);
+        setIsLoginStore(!isLogin);
         // Reset form khi chuyển đổi mode
         authForm.reset();
     };
 
-    if (!isOpen) return null;
+    if (!isAuthPopupOpen) return null;
 
     return (
         <div className="fixed inset-0 h-screen bg-black/70 flex items-center justify-center z-50">
@@ -108,7 +134,7 @@ const AuthPopup = ({ isOpen, onClose }: AuthPopupProps) => {
                             >
                                 {isLogin ? 'Đăng nhập' : 'Đăng ký'}
                             </Text>
-                            <DivClick onClick={onClose}>
+                            <DivClick onClick={closeAuthPopup}>
                                 <Text
                                     modeColor={MODE_COLOR_TEXT.BLACK}
                                     modeSize={MODE_SIZE[24]}
@@ -121,105 +147,104 @@ const AuthPopup = ({ isOpen, onClose }: AuthPopupProps) => {
                     {/* Wavy line outside the container */}
                     <WavyLineIcon
                         mode={MODE_WAVY_LINE.YELLOW}
-                        className="w-[927px] bottom-[-20px] h-10 absolute"
+                        className="w-[927px] bottom-[-18px] h-10 absolute"
                     />
                 </div>
 
                 {/* Content Container */}
                 <div className="bg-bg-black-2 rounded-b-2xl w-full border border-bg-gray border-t-0">
-                    <div className="p-8 flex flex-col gap-6">
+                    <div className="px-8 py-4 flex flex-col gap-2">
                         {/* Form */}
                         <form
                             onSubmit={handleSubmit}
                             className="flex flex-col gap-4"
                         >
-                            {!isLogin && (
+                            <div className="flex flex-col gap-4">
+                                {!isLogin && (
+                                    <div className="flex flex-col gap-2">
+                                        <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                            Họ và tên
+                                        </Text>
+                                        <InputValidate
+                                            control={authForm.control}
+                                            inputName={'name' as never}
+                                            schema={schemaCreateAccount}
+                                            placeholder="Nhập họ và tên"
+                                        />
+                                    </div>
+                                )}
+
+                                {!isLogin && (
+                                    <div className="flex flex-col gap-2">
+                                        <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                            Số điện thoại
+                                        </Text>
+                                        <InputValidate
+                                            control={authForm.control}
+                                            inputName={'phone' as never}
+                                            schema={schemaCreateAccount}
+                                            placeholder="Nhập số điện thoại"
+                                        />
+                                    </div>
+                                )}
+
                                 <div className="flex flex-col gap-2">
                                     <Text modeColor={MODE_COLOR_TEXT.WHITE}>
-                                        Họ và tên
+                                        Email
                                     </Text>
                                     <InputValidate
                                         control={authForm.control}
-                                        inputName={'name' as never}
+                                        inputName="email"
                                         schema={schemaCreateAccount}
-                                        placeholder="Nhập họ và tên"
-                                        required
+                                        placeholder="Nhập email"
                                     />
                                 </div>
-                            )}
 
-                            {!isLogin && (
                                 <div className="flex flex-col gap-2">
                                     <Text modeColor={MODE_COLOR_TEXT.WHITE}>
-                                        Số điện thoại
+                                        Mật khẩu
                                     </Text>
                                     <InputValidate
                                         control={authForm.control}
-                                        inputName={'phone' as never}
+                                        inputName="password"
                                         schema={schemaCreateAccount}
-                                        placeholder="Nhập số điện thoại"
-                                        required
-                                    />
-                                </div>
-                            )}
-
-                            <div className="flex flex-col gap-2">
-                                <Text modeColor={MODE_COLOR_TEXT.WHITE}>
-                                    Email
-                                </Text>
-                                <InputValidate
-                                    control={authForm.control}
-                                    inputName="email"
-                                    schema={schemaCreateAccount}
-                                    placeholder="Nhập email"
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col gap-2">
-                                <Text modeColor={MODE_COLOR_TEXT.WHITE}>
-                                    Mật khẩu
-                                </Text>
-                                <InputValidate
-                                    control={authForm.control}
-                                    inputName="password"
-                                    schema={schemaCreateAccount}
-                                    placeholder="Nhập mật khẩu"
-                                    required
-                                    isPassword
-                                />
-                            </div>
-
-                            {!isLogin && (
-                                <div className="flex flex-col gap-2">
-                                    <Text modeColor={MODE_COLOR_TEXT.WHITE}>
-                                        Xác nhận mật khẩu
-                                    </Text>
-                                    <InputValidate
-                                        control={authForm.control}
-                                        inputName={'passwordConfirm' as never}
-                                        schema={schemaCreateAccount}
-                                        placeholder="Nhập lại mật khẩu"
-                                        required
+                                        placeholder="Nhập mật khẩu"
                                         isPassword
                                     />
                                 </div>
-                            )}
-                        </form>
 
-                        <Button
-                            mode={MODE_BUTTON.YELLOW}
-                            className="w-full"
-                            type="submit"
-                        >
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.BLACK}
-                                modeSize={MODE_SIZE[16]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
+                                {!isLogin && (
+                                    <div className="flex flex-col gap-2">
+                                        <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                            Xác nhận mật khẩu
+                                        </Text>
+                                        <InputValidate
+                                            control={authForm.control}
+                                            inputName={
+                                                'passwordConfirm' as never
+                                            }
+                                            schema={schemaCreateAccount}
+                                            placeholder="Nhập lại mật khẩu"
+                                            isPassword
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                            <Button
+                                mode={MODE_BUTTON.YELLOW}
+                                className="w-full"
+                                type="submit"
+                                disabled={isLoading}
                             >
-                                {isLogin ? 'Đăng nhập' : 'Đăng ký'}
-                            </Text>
-                        </Button>
+                                <Text
+                                    modeColor={MODE_COLOR_TEXT.BLACK}
+                                    modeSize={MODE_SIZE[16]}
+                                    modeWeight={MODE_WEIGHT.MEDIUM}
+                                >
+                                    {isLogin ? 'Đăng nhập' : 'Đăng ký'}
+                                </Text>
+                            </Button>
+                        </form>
                         {/* Toggle between login and register */}
                         <div className="text-center">
                             <Text
@@ -262,6 +287,7 @@ const AuthPopup = ({ isOpen, onClose }: AuthPopupProps) => {
                                     mode={MODE_BUTTON.WHITE}
                                     className="w-full py-4 flex items-center justify-center gap-3"
                                     onClick={handleGoogleLogin}
+                                    disabled={isLoading}
                                     icon={<GoogleIcon />}
                                 >
                                     <Text

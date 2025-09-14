@@ -27,7 +27,7 @@ interface EventHeroProps {
 
 const EventHero = ({ event, onBookNow }: EventHeroProps) => {
     const token = useAppSelector(state => state.auth.token);
-    const { closeAuthPopup, isAuthPopupOpen, openAuthPopup } = useAuthPopup();
+    const { openAuthPopup } = useAuthPopup();
 
     const handleBuyTicket = () => {
         if (!token) {
@@ -139,7 +139,7 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                 </div>
             </div>
             {/* Auth Popup */}
-            <AuthPopup isOpen={isAuthPopupOpen} onClose={closeAuthPopup} />
+            <AuthPopup />
         </div>
     );
 };

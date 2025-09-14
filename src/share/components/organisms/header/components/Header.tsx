@@ -4,7 +4,6 @@ import HeaderIcon from '@share/components/atoms/icons/HeaderIcon';
 import TicketIcon, {
     MODE_TICKET,
 } from '@share/components/atoms/icons/TicketIcon';
-import SearchBar from '@share/components/molecules/SearchBar';
 import {
     MODE_COLOR_TEXT,
     MODE_LEADING,
@@ -12,50 +11,43 @@ import {
     MODE_WEIGHT,
     Text,
 } from '@share/components/atoms/Text';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { SCREEN_PATH } from '@share/constants/routers';
-import { useAppSelector, useAppDispatch } from '@configs/store';
-import { clearToken } from '@share/auth/stores/authSlice';
-import { clearUserInfo } from '@share/auth/stores/userSlice';
 import ChevronIcon, {
     MODE_CHEVRON,
     MODE_CHEVRON_DIRECTION,
-} from '../atoms/icons/ChevronIcon';
-import EventIcon from '../atoms/icons/EventIcon';
-import UserIcon from '../atoms/icons/UserIcon';
-import LogoutIcon from '../atoms/icons/LogoutIcon';
-import { useAuthPopup } from '@modules/auth/hooks/useAuthPopup';
+} from '../../../atoms/icons/ChevronIcon';
+import EventIcon from '../../../atoms/icons/EventIcon';
+import UserIcon from '../../../atoms/icons/UserIcon';
+import LogoutIcon from '../../../atoms/icons/LogoutIcon';
 import AuthPopup from '@modules/auth/components/AuthPopup';
+import InputValidate from '@share/components/molecules/InputValidate';
+import useHeaderHandler from '../hooks/useHeaderHandler';
+import SearchIcon from '@share/components/atoms/icons/SearchIcon';
+import { isNotNullOrUndefinedOrBlank } from '@share/utils/validate';
+import SuggestSearchPopup from './SuggestSearchPopup';
 
 const Header = () => {
-    const navigate = useNavigate();
-    const dispatch = useAppDispatch();
-    const [isAccountPopupOpen, setIsAccountPopupOpen] = useState(false);
-    const { closeAuthPopup, isAuthPopupOpen, openAuthPopup } = useAuthPopup();
-
-    // Lấy thông tin user và token từ Redux store
-    const { user } = useAppSelector(state => state.user);
-
-    const handleSearch = (value: string) => {
-        console.log('Searching for:', value);
-        // TODO: Implement search functionality
-    };
-
-    const handleLogout = () => {
-        dispatch(clearToken());
-        dispatch(clearUserInfo());
-        navigate(SCREEN_PATH.HOME);
-    };
+    const {
+        handleClickCategory,
+        handleClickCreateEvent,
+        handleClickLogo,
+        handleClickMyProfile,
+        handleClickMyTicket,
+        handleLogout,
+        isAccountPopupOpen,
+        isSearchPopupOpen,
+        openAuthPopup,
+        schemaSearch,
+        searchForm,
+        setIsAccountPopupOpenStore,
+        setIsSearchPopupOpenStore,
+        setSearchTextStore,
+        user,
+    } = useHeaderHandler();
 
     return (
         <div className="overflow-x-hidden fixed z-10 w-full top-0">
             <div className="bg-bg-black h-20 flex flex-1 items-center justify-between px-20 gap-10">
-                <DivClick
-                    onClick={() => {
-                        navigate(SCREEN_PATH.HOME);
-                    }}
-                >
+                <DivClick onClick={handleClickLogo}>
                     <Text
                         modeColor={MODE_COLOR_TEXT.WHITE}
                         modeSize={MODE_SIZE[32]}
@@ -65,20 +57,67 @@ const Header = () => {
                         TicketVN
                     </Text>
                 </DivClick>
-                <SearchBar
-                    placeholder="Tìm kiếm sự kiện..."
-                    onSearch={handleSearch}
-                />
+                <div className="w-full max-w-[calc(100%-950px)] min-w-[300px]">
+                    <InputValidate
+                        control={searchForm.control}
+                        inputName="search"
+                        schema={schemaSearch}
+                        placeholder="Hôm nay có gì ..."
+                        // onSubmit={searchForm.handleSubmit(handleSearch)}
+                        className="!h-10.5 flex items-center justify-center"
+                        iconClassName="bottom-2.5"
+                        icon={<SearchIcon />}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                                const searchValue =
+                                    searchForm.getValues('search');
+                                setSearchTextStore?.(searchValue || '');
+                            }
+                        }}
+                        onBlurIgnoreClearIcon={() => {
+                            const searchValue = searchForm.getValues('search');
+                            setSearchTextStore?.(searchValue || '');
+                        }}
+                        onFocus={() => {
+                            // When focusing on search input, ensure we're in SEARCH view if there's search text
+                            const currentSearchText =
+                                searchForm.getValues('search');
+                            setIsSearchPopupOpenStore(true);
+                            if (currentSearchText?.trim()) {
+                                // Set search text to store to trigger search
+                                setSearchTextStore?.(currentSearchText);
+                                // Ensure we're in SEARCH view mode
+                                // if (viewMode !== MODE_CHATROOM_VIEW.SEARCH) {
+                                //     setChatRoomViewStore(
+                                //         MODE_CHATROOM_VIEW.SEARCH
+                                //     );
+                                // }
+                            }
+                        }}
+                        isShowClear={isNotNullOrUndefinedOrBlank(
+                            searchForm.watch('search')
+                        )}
+                        onClearInput={() => {
+                            searchForm.setValue('search', '');
+                            setSearchTextStore?.('');
+                            // Reset view mode to CHAT when clearing search
+                            // if (viewMode === MODE_CHATROOM_VIEW.SEARCH) {
+                            //     setChatRoomViewStore(MODE_CHATROOM_VIEW.CHAT);
+                            // }
+                        }}
+                        // TODO
+                    />
+                </div>
                 <div className="flex gap-12">
                     <Button
-                        onClick={() => {}} //TODO
+                        onClick={handleClickCreateEvent}
                         mode={MODE_BUTTON.BLACK}
                         className="!w-[155px] !h-[35px] !text-[15px]"
                     >
                         Tạo sự kiện
                     </Button>
                     <DivClick
-                        onClick={() => navigate(SCREEN_PATH.MY_TICKET)}
+                        onClick={handleClickMyTicket}
                         className="flex items-center gap-2"
                     >
                         <TicketIcon mode={MODE_TICKET.WHITE} />
@@ -90,7 +129,10 @@ const Header = () => {
                             Vé của tôi
                         </Text>
                     </DivClick>
-                    <DivClick className="flex items-center gap-2">
+                    <DivClick
+                        className="flex items-center gap-2"
+                        onClick={handleClickCategory}
+                    >
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
                             modeSize={MODE_SIZE[15]}
@@ -103,9 +145,11 @@ const Header = () => {
                         <div className="relative">
                             <DivClick
                                 className="flex items-center py-2 gap-2 cursor-pointer"
-                                onMouseEnter={() => setIsAccountPopupOpen(true)}
+                                onMouseEnter={() =>
+                                    setIsAccountPopupOpenStore(true)
+                                }
                                 onMouseLeave={() =>
-                                    setIsAccountPopupOpen(false)
+                                    setIsAccountPopupOpenStore(false)
                                 }
                             >
                                 <img
@@ -132,17 +176,19 @@ const Header = () => {
                                 <div
                                     className="fixed top-17 right-20 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-[99999] transition-all duration-200"
                                     onMouseEnter={() =>
-                                        setIsAccountPopupOpen(true)
+                                        setIsAccountPopupOpenStore(true)
                                     }
                                     onMouseLeave={() =>
-                                        setIsAccountPopupOpen(false)
+                                        setIsAccountPopupOpenStore(false)
                                     }
                                 >
                                     <div className="py-2">
                                         <DivClick
                                             onClick={() => {
-                                                setIsAccountPopupOpen(false);
-                                                navigate(SCREEN_PATH.MY_TICKET);
+                                                setIsAccountPopupOpenStore(
+                                                    false
+                                                );
+                                                handleClickMyTicket();
                                             }}
                                             className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
@@ -161,8 +207,10 @@ const Header = () => {
 
                                         <DivClick
                                             onClick={() => {
-                                                setIsAccountPopupOpen(false);
-                                                // TODO: Navigate to my events
+                                                setIsAccountPopupOpenStore(
+                                                    false
+                                                );
+                                                handleClickCreateEvent();
                                             }}
                                             className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
@@ -179,10 +227,10 @@ const Header = () => {
 
                                         <DivClick
                                             onClick={() => {
-                                                setIsAccountPopupOpen(false);
-                                                navigate(
-                                                    SCREEN_PATH.MY_TICKET_PROFILE
+                                                setIsAccountPopupOpenStore(
+                                                    false
                                                 );
+                                                handleClickMyProfile();
                                             }}
                                             className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
@@ -199,8 +247,10 @@ const Header = () => {
 
                                         <DivClick
                                             onClick={() => {
-                                                setIsAccountPopupOpen(false);
-                                                // TODO: Navigate to categories
+                                                setIsAccountPopupOpenStore(
+                                                    false
+                                                );
+                                                handleClickCategory();
                                             }}
                                             className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
@@ -217,7 +267,9 @@ const Header = () => {
 
                                         <DivClick
                                             onClick={() => {
-                                                setIsAccountPopupOpen(false);
+                                                setIsAccountPopupOpenStore(
+                                                    false
+                                                );
                                                 handleLogout();
                                             }}
                                             className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
@@ -265,7 +317,8 @@ const Header = () => {
                 </div>
             </div>
             <HeaderIcon className="!h-10" />
-            <AuthPopup isOpen={isAuthPopupOpen} onClose={closeAuthPopup} />
+            <AuthPopup />
+            <SuggestSearchPopup isOpen={isSearchPopupOpen} />
         </div>
     );
 };
