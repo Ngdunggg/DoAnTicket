@@ -137,7 +137,11 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                         {suggestEventsMock.map(item => (
-                            <EventCard {...item} key={item.id} />
+                            <EventCard
+                                {...item}
+                                key={item.id}
+                                onBookNow={() => {}}
+                            />
                         ))}
                     </div>
 

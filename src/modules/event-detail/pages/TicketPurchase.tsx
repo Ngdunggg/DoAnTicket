@@ -19,12 +19,15 @@ import { getRouterPathname } from '@share/utils/routerUtils';
 import { getCurrentEventId } from '@share/utils/path';
 import DivClick from '@share/components/atoms/DivClick';
 import { SCREEN_PATH } from '@share/constants/routers';
+import { useAppSelector } from '@configs/store';
+import { isNotNullOrUndefinedOrBlank } from '@share/utils/validate';
 
 const TicketPurchase = () => {
     const pathname = getRouterPathname();
     const eventId = getCurrentEventId(pathname);
     const navigate = useNavigate();
-
+    const { token } = useAppSelector(state => state.auth);
+    const { user } = useAppSelector(state => state.user);
     // Mock data - trong thực tế sẽ fetch từ API
     const [ticketTypes] = useState<TicketType[]>([
         {
@@ -107,6 +110,14 @@ const TicketPurchase = () => {
     const handleBack = () => {
         navigate(`/event-detail/${eventId}`);
     };
+
+    if (
+        !isNotNullOrUndefinedOrBlank(token) ||
+        !isNotNullOrUndefinedOrBlank(user)
+    ) {
+        navigate(SCREEN_PATH.HOME);
+        return null;
+    }
 
     return (
         <div className="min-h-screen bg-bg-black-2 flex flex-1 w-full  gap-10">

@@ -5,21 +5,18 @@ import EventHeaderInfo from '@share/components/organisms/EventHeaderInfo';
 import FormBooking from '../components/QuestionForm/FormBooking';
 import ToolBarRight from '../components/QuestionForm/ToolBarRight';
 import useFormQuestionHandler from '../components/QuestionForm/hooks/useFormQuestionHandler';
-import { Text } from '@share/components/atoms/Text';
-import {
-    MODE_COLOR_TEXT,
-    MODE_SIZE,
-    MODE_WEIGHT,
-} from '@share/components/atoms/Text';
 import { getCurrentEventId } from '@share/utils/path';
 import { SCREEN_PATH } from '@share/constants/routers';
+import { useAppSelector } from '@configs/store';
+import { isNotNullOrUndefinedOrBlank } from '@share/utils/validate';
 
 const QuestionForm = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const pathname = location.pathname;
     const eventId = getCurrentEventId(pathname);
-
+    const { token } = useAppSelector(state => state.auth);
+    const { user } = useAppSelector(state => state.user);
     // Lấy thông tin từ state được truyền từ TicketPurchase
     const purchaseState = location.state as TicketPurchaseState;
 
@@ -75,18 +72,12 @@ const QuestionForm = () => {
         })();
     };
 
-    if (!purchaseState) {
-        return (
-            <div className="min-h-screen bg-bg-black-2 flex items-center justify-center">
-                <Text
-                    modeColor={MODE_COLOR_TEXT.WHITE}
-                    modeSize={MODE_SIZE[18]}
-                    modeWeight={MODE_WEIGHT.MEDIUM}
-                >
-                    Không tìm thấy thông tin đơn hàng
-                </Text>
-            </div>
-        );
+    if (
+        !purchaseState ||
+        !isNotNullOrUndefinedOrBlank(token) ||
+        !isNotNullOrUndefinedOrBlank(user)
+    ) {
+        return null;
     }
 
     return (

@@ -1,5 +1,9 @@
 import authRouters from '@modules/auth/router/Routers';
-import eventDetailRouters from '@modules/event-detail/router/Routers';
+import {
+    eventDetailPublicRouters,
+    eventDetailPrivateRouters,
+} from '@modules/event-detail/router/Routers';
+import eventsRouters from '@modules/events/router/Routers';
 import homeRouters from '@modules/home/router/Routers';
 import myTicketRouters from '@modules/my-ticket/router/Routers';
 import PrivateRoute from '@share/auth/PrivateRoute';
@@ -51,14 +55,15 @@ const mainRoutes: RouteObject[] = [
                 children: [
                     ...homeRouters,
                     ...authRouters,
-                    ...eventDetailRouters,
+                    ...eventDetailPublicRouters,
+                    ...eventsRouters,
                 ],
                 element: <PublicLayoutWrapper />,
                 path: SCREEN_PATH.ROOT,
             },
             // Private routes - cần đăng nhập
             {
-                children: [...myTicketRouters],
+                children: [...myTicketRouters, ...eventDetailPrivateRouters],
                 element: <MainLayoutWrapper />,
                 path: SCREEN_PATH.ROOT,
             },

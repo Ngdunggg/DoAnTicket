@@ -24,6 +24,7 @@ const useHeaderHandler = () => {
     const { isAccountPopupOpen, isSearchPopupOpen, searchText } =
         useSearchStoreSelector();
     const { user } = useAppSelector(state => state.user);
+    const { token } = useAppSelector(state => state.auth);
     // #endregion
 
     // #region Dependencies
@@ -50,18 +51,34 @@ const useHeaderHandler = () => {
     };
 
     const handleClickCreateEvent = () => {
+        if (!token || !user) {
+            openAuthPopup();
+            return;
+        }
         // TODO: Implement create event functionality
     };
 
     const handleClickMyTicket = () => {
+        if (!token || !user) {
+            openAuthPopup();
+            return;
+        }
         navigate(SCREEN_PATH.MY_TICKET);
     };
 
     const handleClickMyEvents = () => {
+        if (!token || !user) {
+            openAuthPopup();
+            return;
+        }
         // TODO: Implement my events functionality
     };
 
     const handleClickMyProfile = () => {
+        if (!token || !user) {
+            openAuthPopup();
+            return;
+        }
         navigate(SCREEN_PATH.MY_TICKET_PROFILE);
     };
 

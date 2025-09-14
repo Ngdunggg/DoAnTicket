@@ -25,7 +25,7 @@ const EventCard = ({
 }: EventCardProps) => {
     return (
         <DivClick
-            className="rounded-lg overflow-hidden  duration-300"
+            className="rounded-lg overflow-hidden duration-300 hover:scale-105"
             onClick={onBookNow}
         >
             <div className="h-50 flex items-center justify-center">

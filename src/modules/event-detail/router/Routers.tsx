@@ -5,13 +5,23 @@ import Payment from '../pages/Payment';
 import QuestionForm from '../pages/QuestionForm';
 import TicketPurchase from '../pages/TicketPurchase';
 
-const eventDetailRouters: RouteObject[] = [
+// Public routes - không cần đăng nhập
+const eventDetailPublicRouters: RouteObject[] = [
     {
         children: [
             {
                 element: <EventDetail />,
                 index: true,
             },
+        ],
+        path: SCREEN_PATH.EVENT_DETAIL,
+    },
+];
+
+// Private routes - cần đăng nhập
+const eventDetailPrivateRouters: RouteObject[] = [
+    {
+        children: [
             {
                 element: <TicketPurchase />,
                 path: SCREEN_PATH.EVENT_TICKET_SELECTION,
@@ -29,4 +39,5 @@ const eventDetailRouters: RouteObject[] = [
     },
 ];
 
-export default eventDetailRouters;
+export { eventDetailPrivateRouters, eventDetailPublicRouters };
+export default eventDetailPublicRouters;

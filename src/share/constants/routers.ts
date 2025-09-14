@@ -6,6 +6,7 @@ export const SCREEN_PATH = {
 
     // EVENT
     EVENT_DETAIL: '/event-detail/:event_id',
+    EVENT_LIST: '/events',
 
     EVENT_PAYMENT: '/event-detail/:event_id/booking/:booking_id/payment',
     EVENT_QUESTION_FORM:

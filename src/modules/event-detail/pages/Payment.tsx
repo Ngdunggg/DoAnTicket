@@ -4,14 +4,11 @@ import { TicketPurchaseState } from '../types/ticketPurchase';
 import EventHeaderInfo from '@share/components/organisms/EventHeaderInfo';
 import PaymentForm from '../components/Payment/PaymentForm';
 import PaymentSummary from '../components/Payment/PaymentSummary';
-import { Text } from '@share/components/atoms/Text';
-import {
-    MODE_COLOR_TEXT,
-    MODE_SIZE,
-    MODE_WEIGHT,
-} from '@share/components/atoms/Text';
 import { getCurrentEventId } from '@share/utils/path';
 import PAYMENT_METHOD from '@share/constants/paymentMethod';
+import { useAppSelector } from '@configs/store';
+import { isNotNullOrUndefinedOrBlank } from '@share/utils/validate';
+import { SCREEN_PATH } from '@share/constants/routers';
 
 interface BookingFormData {
     agreeToTerms: boolean;
@@ -28,7 +25,8 @@ const Payment = () => {
     const navigate = useNavigate();
     const pathname = location.pathname;
     const eventId = getCurrentEventId(pathname);
-
+    const { token } = useAppSelector(state => state.auth);
+    const { user } = useAppSelector(state => state.user);
     // Lấy thông tin từ state được truyền từ QuestionForm
     const paymentState = location.state as PaymentState;
 
@@ -45,6 +43,15 @@ const Payment = () => {
         location: 'Nhà hát Hòa Bình, TP.HCM',
         title: 'Concert Nhạc Trẻ 2024',
     };
+
+    if (
+        !paymentState ||
+        !isNotNullOrUndefinedOrBlank(token) ||
+        !isNotNullOrUndefinedOrBlank(user)
+    ) {
+        navigate(SCREEN_PATH.HOME);
+        return null;
+    }
 
     const handlePayment = async () => {
         setIsLoading(true);
@@ -71,20 +78,6 @@ const Payment = () => {
     const handlePaymentMethodSelect = (method: string) => {
         setSelectedPaymentMethod(method);
     };
-
-    if (!paymentState) {
-        return (
-            <div className="min-h-screen bg-bg-black-2 flex items-center justify-center">
-                <Text
-                    modeColor={MODE_COLOR_TEXT.WHITE}
-                    modeSize={MODE_SIZE[18]}
-                    modeWeight={MODE_WEIGHT.MEDIUM}
-                >
-                    Không tìm thấy thông tin đơn hàng
-                </Text>
-            </div>
-        );
-    }
 
     return (
         <div className="min-h-screen bg-bg-black-2 flex flex-1 w-full pb-10">
