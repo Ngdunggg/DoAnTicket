@@ -1,23 +1,20 @@
-export const MODE_CALENDAR = {
+export const MODE_FILTER = {
     DEFAULT: 'DEFAULT',
     WHITE: 'WHITE',
-    YELLOW: 'YELLOW',
 } as const;
-type ModeCalendarType = (typeof MODE_CALENDAR)[keyof typeof MODE_CALENDAR];
+type ModeFilterType = (typeof MODE_FILTER)[keyof typeof MODE_FILTER];
 
-const CalendarIcon = ({
-    mode = MODE_CALENDAR.DEFAULT,
+const FilterIcon = ({
+    mode = MODE_FILTER.DEFAULT,
     size = 24,
 }: {
-    mode?: ModeCalendarType;
+    mode?: ModeFilterType;
     size?: number;
 }) => {
     const getFillColor = () => {
         switch (mode) {
-            case MODE_CALENDAR.WHITE:
+            case MODE_FILTER.WHITE:
                 return '#FFFFFF';
-            case MODE_CALENDAR.YELLOW:
-                return '#FCCB62';
             default:
                 return '#01060F';
         }
@@ -27,14 +24,13 @@ const CalendarIcon = ({
             width={size}
             height={size}
             viewBox="0 0 24 24"
-            fill="none"
+            fill={getFillColor()}
             xmlns="http://www.w3.org/2000/svg"
         >
             <path
-                d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z"
+                d="M22 3H2L10 12.46V19L14 21V12.46L22 3Z"
                 stroke={getFillColor()}
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
@@ -42,4 +38,4 @@ const CalendarIcon = ({
     );
 };
 
-export default CalendarIcon;
+export default FilterIcon;

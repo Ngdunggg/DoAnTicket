@@ -130,7 +130,7 @@ const Button = ({
             disabled={disabled || loading || loadingOnClick}
         >
             <div
-                className={`flex justify-center items-center gap-[5px] w-full ${classChildren}`}
+                className={`flex justify-center items-center gap-[8px] w-full ${classChildren}`}
             >
                 {/* {loading || loadingOnClick ? <ImSpinner8 className="animate-spin" /> : renderIcon()} */}
                 {loading || loadingOnClick ? <></> : renderIcon()}

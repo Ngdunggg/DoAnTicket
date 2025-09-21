@@ -55,7 +55,7 @@ const useHeaderHandler = () => {
             openAuthPopup();
             return;
         }
-        // TODO: Implement create event functionality
+        navigate(SCREEN_PATH.CREATE_EVENT);
     };
 
     const handleClickMyTicket = () => {
@@ -71,7 +71,7 @@ const useHeaderHandler = () => {
             openAuthPopup();
             return;
         }
-        // TODO: Implement my events functionality
+        navigate(SCREEN_PATH.MANAGER_EVENT);
     };
 
     const handleClickMyProfile = () => {
@@ -82,12 +82,7 @@ const useHeaderHandler = () => {
         navigate(SCREEN_PATH.MY_TICKET_PROFILE);
     };
 
-    const handleClickCategory = () => {
-        // TODO: Implement category functionality
-    };
-
     return {
-        handleClickCategory,
         handleClickCreateEvent,
         handleClickLogo,
         handleClickMyEvents,
@@ -99,6 +94,7 @@ const useHeaderHandler = () => {
         openAuthPopup,
         schemaSearch,
         searchForm,
+        searchText,
         setIsAccountPopupOpenStore,
         setIsSearchPopupOpenStore,
         setIsSearchStore,

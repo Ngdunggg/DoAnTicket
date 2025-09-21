@@ -23,7 +23,7 @@ interface Event {
 
 interface SpecialEventsSectionProps {
     events: Event[];
-    onBookNow: (eventId: string) => void;
+    onBookNow: (_eventId: string) => void;
 }
 
 const SpecialEventsSection = ({

@@ -1,9 +1,7 @@
+import EventListContainer from '../components/EventListContainer';
+
 const EventList = () => {
-    return (
-        <div>
-            <h1>Event List</h1>
-        </div>
-    );
+    return <EventListContainer />;
 };
 
 export default EventList;

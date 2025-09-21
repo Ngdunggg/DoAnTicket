@@ -10,15 +10,26 @@ import EventCard from '@share/components/molecules/EventCard';
 import { useEffect, useRef } from 'react';
 import useSearchStoreAction from '../hooks/useSearchStoreAction';
 import useSearchStoreSelector from '../hooks/useSearchStoreSelector';
+import useSuggetSearchHandler from '../hooks/useSuggetSearchHandler';
 
 type SuggestSearchPopupProps = {
     isOpen: boolean;
 };
 
+interface Event {
+    date: string;
+    id: string;
+    image: string;
+    location: string;
+    price: string;
+    title: string;
+}
+
 const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
     const popupRef = useRef<HTMLDivElement>(null);
     const { isSearchPopupOpen } = useSearchStoreSelector();
     const { setIsSearchPopupOpenStore } = useSearchStoreAction();
+    const { handleClickEvent, handleMoreEvent } = useSuggetSearchHandler();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -38,6 +49,7 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isOpen, isSearchPopupOpen]);
+
     const hostSearch = [
         {
             id: 1,
@@ -53,7 +65,7 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
         },
     ];
 
-    const suggestEventsMock = [
+    const suggestEventsMock: Event[] = [
         {
             date: '15/12/2024',
             id: '1',
@@ -109,7 +121,7 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
     return (
         <div
             ref={popupRef}
-            className="fixed inset-0 top-18 left-62 [@media(min-width:1390px)]:left-76 min-w-[350px] max-h-[calc(100%-100px)] max-w-[calc(100%-550px)] rounded-2xl bg-bg-gray-2 z-20"
+            className="fixed inset-0 top-18 left-62 lg:left-66 xl:left-80 [@media(min-width:1390px)]:left-90 min-w-[350px] max-h-[calc(100%-100px)] max-w-[calc(100%-550px)] rounded-2xl bg-bg-gray-2 z-20"
         >
             <div className="flex flex-col gap-4 px-6 py-4 w-full h-full overflow-y-auto scrollbar-hide">
                 <div className="flex flex-col gap-2">
@@ -117,7 +129,10 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
                         <DivClick
                             className="flex items-center gap-6 px-4 py-2 hover:bg-bg-black/50 rounded-full transition-colors"
                             key={item.id}
-                            onClick={() => {}}
+                            onClick={() => {
+                                handleMoreEvent(); // TODO:
+                                setIsSearchPopupOpenStore(false);
+                            }}
                         >
                             <TrendingUpIcon size={22} />
                             <Text modeColor={MODE_COLOR_TEXT.WHITE}>
@@ -127,7 +142,7 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
                     ))}
                 </div>
                 <div className="min-h-[1px] w-full bg-white my-2" />
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 px-3">
                     <Text
                         modeColor={MODE_COLOR_TEXT.WHITE}
                         modeWeight={MODE_WEIGHT.LARGE}
@@ -140,7 +155,9 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
                             <EventCard
                                 {...item}
                                 key={item.id}
-                                onBookNow={() => {}}
+                                onBookNow={() => {
+                                    handleClickEvent(item.id.toString());
+                                }}
                             />
                         ))}
                     </div>
@@ -148,7 +165,9 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
                     <div className="flex justify-center">
                         <Button
                             mode={MODE_BUTTON.YELLOW}
-                            onClick={() => {}}
+                            onClick={() => {
+                                handleMoreEvent();
+                            }}
                             className="w-[150px]"
                         >
                             <Text

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import MainLayout from '@share/components/organisms/MainLayout';
+import MainLayout from '@share/components/organisms/layout/MainLayout';
 
 const PcLayout = ({ children }: { children: ReactNode }) => {
     return (

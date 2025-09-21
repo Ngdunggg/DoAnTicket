@@ -4,17 +4,26 @@ export const SCREEN_PATH = {
     AUTH_REGISTER: '/register',
     AUTH_RESET_PASSWORD: '/reset-password',
 
+    // MANAGER EVENT
+    CREATE_EVENT: '/organizer/create-event',
+
     // EVENT
     EVENT_DETAIL: '/event-detail/:event_id',
-    EVENT_LIST: '/events',
 
+    EVENT_LIST: '/events',
     EVENT_PAYMENT: '/event-detail/:event_id/booking/:booking_id/payment',
     EVENT_QUESTION_FORM:
         '/event-detail/:event_id/booking/:booking_id/question-form',
     EVENT_TICKET_SELECTION:
         '/event-detail/:event_id/booking/:booking_id/selection',
+
     // HOME
     HOME: '/',
+    // MANAGER EVENT
+    MANAGER_EVENT: '/organizer/events',
+    MANAGER_EVENT_DETAIL: '/organizer/events/:event_id',
+    MANAGER_LEGAL: '/organizer/legal-document',
+    MANAGER_REPORT: '/organizer/report',
 
     // MY TICKET
     MY_TICKET: '/my-ticket',
@@ -31,6 +40,7 @@ export const EVENT_PATH_PATTERNS = [
     SCREEN_PATH.EVENT_TICKET_SELECTION,
     SCREEN_PATH.EVENT_QUESTION_FORM,
     SCREEN_PATH.EVENT_PAYMENT,
+    SCREEN_PATH.MANAGER_EVENT_DETAIL,
 ];
 
 export const AUTH_PATH_PATTERNS = [

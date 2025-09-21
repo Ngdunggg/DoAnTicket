@@ -1,5 +1,4 @@
 import HeroSection from './HeroSection';
-import FeaturedEventsSection from './FeaturedEventsSection';
 import SpecialEventsSection from './SpecialEventsSection';
 import OtherEventsSection from './OtherEventsSection';
 import TrendingEventsSection from './TrendingEventsSection';
@@ -19,7 +18,7 @@ interface TrendingEvent extends Event {
 
 interface HomeLayoutProps {
     events: Event[];
-    onBookNow: (eventId: string) => void;
+    onBookNow: (_eventId: string) => void;
 }
 
 const HomeLayout = ({ events, onBookNow }: HomeLayoutProps) => {

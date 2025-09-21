@@ -27,9 +27,9 @@ import SuggestSearchPopup from './SuggestSearchPopup';
 
 const Header = () => {
     const {
-        handleClickCategory,
         handleClickCreateEvent,
         handleClickLogo,
+        handleClickMyEvents,
         handleClickMyProfile,
         handleClickMyTicket,
         handleLogout,
@@ -86,12 +86,6 @@ const Header = () => {
                             if (currentSearchText?.trim()) {
                                 // Set search text to store to trigger search
                                 setSearchTextStore?.(currentSearchText);
-                                // Ensure we're in SEARCH view mode
-                                // if (viewMode !== MODE_CHATROOM_VIEW.SEARCH) {
-                                //     setChatRoomViewStore(
-                                //         MODE_CHATROOM_VIEW.SEARCH
-                                //     );
-                                // }
                             }
                         }}
                         isShowClear={isNotNullOrUndefinedOrBlank(
@@ -100,10 +94,6 @@ const Header = () => {
                         onClearInput={() => {
                             searchForm.setValue('search', '');
                             setSearchTextStore?.('');
-                            // Reset view mode to CHAT when clearing search
-                            // if (viewMode === MODE_CHATROOM_VIEW.SEARCH) {
-                            //     setChatRoomViewStore(MODE_CHATROOM_VIEW.CHAT);
-                            // }
                         }}
                         // TODO
                     />
@@ -129,18 +119,6 @@ const Header = () => {
                             Vé của tôi
                         </Text>
                     </DivClick>
-                    <DivClick
-                        className="flex items-center gap-2"
-                        onClick={handleClickCategory}
-                    >
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.WHITE}
-                            modeSize={MODE_SIZE[15]}
-                            className="hover:text-text-yellow transition-colors duration-200"
-                        >
-                            Thể loại
-                        </Text>
-                    </DivClick>
                     {user ? (
                         <div className="relative">
                             <DivClick
@@ -152,11 +130,13 @@ const Header = () => {
                                     setIsAccountPopupOpenStore(false)
                                 }
                             >
-                                <img
-                                    src={user.avatar}
-                                    alt="avatar"
-                                    className="w-8 h-8 rounded-full"
-                                />
+                                <div className="border border-white rounded-full">
+                                    <img
+                                        src={user.avatar}
+                                        alt="avatar"
+                                        className="w-9 h-9 rounded-full p-0.5"
+                                    />
+                                </div>
                                 <Text
                                     modeColor={MODE_COLOR_TEXT.WHITE}
                                     modeSize={MODE_SIZE[15]}
@@ -210,7 +190,7 @@ const Header = () => {
                                                 setIsAccountPopupOpenStore(
                                                     false
                                                 );
-                                                handleClickCreateEvent();
+                                                handleClickMyEvents();
                                             }}
                                             className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                         >
@@ -242,26 +222,6 @@ const Header = () => {
                                                 modeSize={MODE_SIZE[14]}
                                             >
                                                 Thông tin tài khoản
-                                            </Text>
-                                        </DivClick>
-
-                                        <DivClick
-                                            onClick={() => {
-                                                setIsAccountPopupOpenStore(
-                                                    false
-                                                );
-                                                handleClickCategory();
-                                            }}
-                                            className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
-                                        >
-                                            <EventIcon />
-                                            <Text
-                                                modeColor={
-                                                    MODE_COLOR_TEXT.WHITE
-                                                }
-                                                modeSize={MODE_SIZE[14]}
-                                            >
-                                                Thể loại
                                             </Text>
                                         </DivClick>
 

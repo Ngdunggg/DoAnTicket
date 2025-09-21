@@ -6,7 +6,9 @@ import {
     Text,
 } from '@share/components/atoms/Text';
 import { TicketData } from '../../types/ticket';
-import CalendarIcon from '@share/components/atoms/icons/CalendarIcon';
+import CalendarIcon, {
+    MODE_CALENDAR,
+} from '@share/components/atoms/icons/CalendarIcon';
 import MapPinIcon from '@share/components/atoms/icons/MapPinIcon';
 import TicketIcon, {
     MODE_TICKET,
@@ -116,7 +118,10 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
 
                         {/* Date and Time */}
                         <div className="flex items-center gap-2">
-                            <CalendarIcon className="w-3 h-3 text-bg-yellow" />
+                            <CalendarIcon
+                                mode={MODE_CALENDAR.YELLOW}
+                                size={14}
+                            />
                             <Text
                                 modeColor={MODE_COLOR_TEXT.GRAY}
                                 modeSize={MODE_SIZE[14]}
