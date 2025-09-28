@@ -5,7 +5,7 @@ import {
     MODE_WEIGHT,
     MODE_COLOR_TEXT,
 } from '@share/components/atoms/Text';
-import { EventStats, TicketType } from '@share/types/ticket';
+import { EventStats } from '@share/types/ticket';
 import {
     PieChart,
     Pie,
@@ -23,10 +23,9 @@ import {
 
 interface ChartsSectionProps {
     stats: EventStats;
-    ticketTypes: TicketType[];
 }
 
-const ChartsSection = ({ stats, ticketTypes }: ChartsSectionProps) => {
+const ChartsSection = ({ stats }: ChartsSectionProps) => {
     // Dữ liệu cho biểu đồ tròn (vé đã bán vs còn lại)
     const pieData = [
         { color: '#10B981', name: 'Đã bán', value: stats.totalTicketsSold },
@@ -58,14 +57,6 @@ const ChartsSection = ({ stats, ticketTypes }: ChartsSectionProps) => {
         { date: '20/12', purchases: 11, views: 160 },
         { date: '21/12', purchases: 16, views: 210 },
     ];
-
-    const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            currency: 'VND',
-            minimumFractionDigits: 0,
-            style: 'currency',
-        }).format(value);
-    };
 
     const CustomTooltip = ({ active, label, payload }: any) => {
         if (active && payload && payload.length) {

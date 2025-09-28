@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Text,
     MODE_COLOR_TEXT,
@@ -30,12 +30,11 @@ interface EventDate {
     tickets: TicketType[];
 }
 
-interface TicketSectionProps {
-    onBuyTickets: (_dateId: string) => void;
+interface EventPreviewTicketsProps {
     ticketsData: EventDate[];
 }
 
-const TicketSection = ({ onBuyTickets, ticketsData }: TicketSectionProps) => {
+const EventPreviewTickets = ({ ticketsData }: EventPreviewTicketsProps) => {
     const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
 
     const formatDate = (dateString: string) => {
@@ -61,11 +60,6 @@ const TicketSection = ({ onBuyTickets, ticketsData }: TicketSectionProps) => {
         });
     };
 
-    const handleBuyTickets = (dateId: string, event: React.MouseEvent) => {
-        event.stopPropagation(); // Ngăn sự kiện bubble lên
-        onBuyTickets(dateId);
-    };
-
     return (
         <div className="px-4 py-8 bg-white">
             <div className="flex flex-col bg-bg-black rounded-2xl p-2 box-shadow-ticket">
@@ -79,7 +73,6 @@ const TicketSection = ({ onBuyTickets, ticketsData }: TicketSectionProps) => {
                 </Text>
 
                 {/* Date List */}
-
                 {ticketsData.map(date => {
                     const isExpanded = expandedDates.has(date.id);
 
@@ -116,8 +109,8 @@ const TicketSection = ({ onBuyTickets, ticketsData }: TicketSectionProps) => {
                                 </div>
                                 <Button
                                     mode={MODE_BUTTON.DECORATIVE_YELLOW}
-                                    onClick={e => handleBuyTickets(date.id, e)}
                                     icon={<TicketIcon />}
+                                    disabled
                                 >
                                     <Text
                                         modeColor={MODE_COLOR_TEXT.BLACK}
@@ -276,4 +269,4 @@ const TicketSection = ({ onBuyTickets, ticketsData }: TicketSectionProps) => {
     );
 };
 
-export default TicketSection;
+export default EventPreviewTickets;

@@ -54,7 +54,7 @@ const useMenuManager = () => {
         },
     ];
 
-    const isActive = (path: string) => currentPath === path;
+    const isActive = (path: string) => currentPath.includes(path);
 
     return {
         isActive,

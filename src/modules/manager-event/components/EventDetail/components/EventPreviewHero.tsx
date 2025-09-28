@@ -11,12 +11,9 @@ import CalendarIcon, {
 } from '@share/components/atoms/icons/CalendarIcon';
 import MapPinIcon from '@share/components/atoms/icons/MapPinIcon';
 import ArrowRightIcon from '@share/components/atoms/icons/ArrowRightIcon';
-import { useAppSelector } from '@configs/store';
-import { useAuthPopup } from '@modules/auth/hooks/useAuthPopup';
-import AuthPopup from '@modules/auth/components/AuthPopup';
 import TicketIcon from '@share/components/atoms/icons/TicketIcon';
 
-interface EventHeroProps {
+interface EventPreviewHeroProps {
     event: {
         dateEnd: string;
         dateStart: string;
@@ -24,20 +21,16 @@ interface EventHeroProps {
         location: string;
         title: string;
     };
-    onBookNow: () => void;
+    minPrice?: number;
 }
 
-const EventHero = ({ event, onBookNow }: EventHeroProps) => {
-    const token = useAppSelector(state => state.auth.token);
-    const { openAuthPopup } = useAuthPopup();
-
+const EventPreviewHero = ({
+    event,
+    minPrice = 299000,
+}: EventPreviewHeroProps) => {
     const handleBuyTicket = () => {
-        if (!token) {
-            openAuthPopup();
-        } else {
-            console.log('onBookNow');
-            onBookNow();
-        }
+        // Disabled in preview mode
+        console.log('Preview mode - action disabled');
     };
 
     const formatDate = (dateString: string) => {
@@ -105,7 +98,7 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                                 modeSize={MODE_SIZE[18]}
                                 className="font-bold"
                             >
-                                299.000 ₫
+                                {minPrice.toLocaleString('vi-VN')} ₫
                             </Text>
                             <ArrowRightIcon className=" text-white" />
                         </div>
@@ -114,6 +107,7 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                             icon={<TicketIcon />}
                             mode={MODE_BUTTON.DECORATIVE_YELLOW}
                             onClick={handleBuyTicket}
+                            disabled
                         >
                             <Text
                                 modeWeight={MODE_WEIGHT.MEDIUM}
@@ -140,10 +134,8 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                     />
                 </div>
             </div>
-            {/* Auth Popup */}
-            <AuthPopup />
         </div>
     );
 };
 
-export default EventHero;
+export default EventPreviewHero;

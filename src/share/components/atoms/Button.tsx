@@ -74,7 +74,7 @@ const Button = ({
         decorativeYellow: 'decorative-yellow-btn',
         none: '!bg-transparent !border-none !text-text-white hover:!text-text-yellow',
         white: '!bg-white !border-bg-black-2 hover:!bg-white !text-text-black transition-all duration-200',
-        yellow: '!bg-bg-yellow !border-bg-yellow hover:!border-bg-yellow hover:!text-text-black !text-text-black transition-all duration-300 ',
+        yellow: '!bg-bg-yellow !border-bg-yellow hover:!bg-bg-yellow/70 hover:!border-bg-yellow/70 hover:!text-text-black !text-text-black transition-all duration-300 ',
     };
 
     const sizeIconClasses: Record<SizeIconType, string> = {

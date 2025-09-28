@@ -1,5 +1,5 @@
 import { Event } from '@share/types/event';
-import useEventListStoreAction from './useEventListStoreAction';
+import useEventListStoreAction from '../components/EventList/hooks/useEventListStoreAction';
 import { useEffect } from 'react';
 
 const useFetchEventList = () => {

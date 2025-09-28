@@ -19,6 +19,9 @@ import {
 } from '@share/components/atoms/Text';
 import useHeaderHandler from '@share/components/organisms/header/hooks/useHeaderHandler';
 import useMenuManager from '@share/components/organisms/layout/hooks/useMenuManager';
+import useCreateEventStoreAction from './CreateAndEditEvent/hooks/useCreateEventStoreAction';
+import { SCREEN_PATH } from '@share/constants/routers';
+import { useNavigate } from 'react-router-dom';
 
 const HeaderBar = () => {
     const { isActive, menuItems } = useMenuManager();
@@ -31,6 +34,8 @@ const HeaderBar = () => {
         setIsAccountPopupOpenStore,
         user,
     } = useHeaderHandler();
+    const { setIsOpenCreateEventStore } = useCreateEventStoreAction();
+    const navigate = useNavigate();
 
     return (
         <div className="flex justify-between items-center bg-bg-gray py-3 px-4">
@@ -42,6 +47,7 @@ const HeaderBar = () => {
                                 modeColor={MODE_COLOR_TEXT.WHITE}
                                 modeSize={MODE_SIZE[26]}
                                 modeWeight={MODE_WEIGHT.LARGE}
+                                key={item.id}
                             >
                                 {item.label}
                             </Text>
@@ -52,7 +58,10 @@ const HeaderBar = () => {
                 <Button
                     mode={MODE_BUTTON.YELLOW}
                     icon={<PlusIcon mode={MODE_PLUS.BLACK} />}
-                    className=""
+                    onClick={() => {
+                        setIsOpenCreateEventStore(true);
+                        navigate(SCREEN_PATH.CREATE_EVENT);
+                    }}
                 >
                     Tạo sự kiện
                 </Button>

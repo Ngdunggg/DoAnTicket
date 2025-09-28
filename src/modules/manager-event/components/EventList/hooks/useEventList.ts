@@ -1,4 +1,4 @@
-import useEventListStoreSelector from '@modules/manager-event/hooks/useEventListStoreSelector';
+import useEventListStoreSelector from '@modules/manager-event/components/EventList/hooks/useEventListStoreSelector';
 import { FILTER_STATUS } from '@share/constants/commons';
 import { useMemo } from 'react';
 import useToolBarEvent from './useToolBarEvent';
