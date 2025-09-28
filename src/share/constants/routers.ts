@@ -23,14 +23,16 @@ export const SCREEN_PATH = {
     MANAGER_EVENT: '/organizer/events',
     MANAGER_EVENT_DETAIL: '/organizer/events/:event_id',
     MANAGER_LEGAL: '/organizer/legal-document',
+    MANAGER_LEGAL_BUSINESS: '/organizer/legal-document/business',
+    MANAGER_LEGAL_IMAGE: '/organizer/legal-document/contentImage',
     MANAGER_REPORT: '/organizer/report',
-
+    MANAGER_REPORT_DETAIL: '/organizer/report/:event_id',
     // MY TICKET
     MY_TICKET: '/my-ticket',
     MY_TICKET_PROFILE: '/my-ticket/my-profile',
 
     // ROOT
-    ROOT: '',
+    ROOT: '/',
 } as const;
 
 export type ScreenPathType = (typeof SCREEN_PATH)[keyof typeof SCREEN_PATH];
@@ -41,6 +43,7 @@ export const EVENT_PATH_PATTERNS = [
     SCREEN_PATH.EVENT_QUESTION_FORM,
     SCREEN_PATH.EVENT_PAYMENT,
     SCREEN_PATH.MANAGER_EVENT_DETAIL,
+    SCREEN_PATH.MANAGER_REPORT_DETAIL,
 ];
 
 export const AUTH_PATH_PATTERNS = [

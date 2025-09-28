@@ -1,11 +1,14 @@
 import ToolBar from './ToolBar';
-import EventListCard from './EventListCard';
+import EventListCard from '@share/components/organisms/EventListCard';
 import useToolBarEvent from './hooks/useToolBarEvent';
 import useEventList from './hooks/useEventList';
+import { SCREEN_PATH } from '@share/constants/routers';
+import { useNavigate } from 'react-router-dom';
 
 const EventList = () => {
     const { searchText } = useToolBarEvent();
     const { filteredEvents } = useEventList();
+    const navigate = useNavigate();
 
     const handleEdit = (eventId: string) => {
         console.log('Edit event:', eventId);
@@ -20,6 +23,13 @@ const EventList = () => {
     const handleDelete = (eventId: string) => {
         console.log('Delete event:', eventId);
         // TODO: Show confirmation dialog and delete
+    };
+
+    const handleCardClick = (eventId: string) => {
+        navigate(
+            SCREEN_PATH.MANAGER_EVENT_DETAIL.replace(':event_id', eventId)
+        );
+        // TODO: Navigate to event detail page
     };
 
     return (
@@ -42,6 +52,9 @@ const EventList = () => {
                                     onEdit={handleEdit}
                                     onView={handleView}
                                     onDelete={handleDelete}
+                                    onCardClick={() =>
+                                        handleCardClick(event.id)
+                                    }
                                 />
                             ))
                     ) : (

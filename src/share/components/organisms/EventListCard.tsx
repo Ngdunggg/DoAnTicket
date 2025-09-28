@@ -7,27 +7,31 @@ import {
 } from '@share/components/atoms/Text';
 import DivClick from '@share/components/atoms/DivClick';
 import MoreIcon from '@share/components/atoms/icons/MoreIcon';
-import { SCREEN_PATH } from '@share/constants/routers';
-import { useNavigate } from 'react-router-dom';
 import { Event } from '@share/types/event';
 import { FILTER_STATUS } from '@share/constants/commons';
 
 interface EventListCardProps {
+    className?: string;
     event: Event;
+    onCardClick?: (_eventId: string) => void;
     onDelete?: (_eventId: string) => void;
     onEdit?: (_eventId: string) => void;
     onView?: (_eventId: string) => void;
+    showMenu?: boolean;
 }
 
 const EventListCard = ({
+    className = '',
     event,
+    onCardClick,
     onDelete,
     onEdit,
     onView,
+    showMenu = true,
 }: EventListCardProps) => {
-    const [showMenu, setShowMenu] = useState(false);
+    const [showDropdownMenu, setShowDropdownMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
-    const navigate = useNavigate();
+
     // Đóng menu khi click ra ngoài
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -35,7 +39,7 @@ const EventListCard = ({
                 menuRef.current &&
                 !menuRef.current.contains(event.target as Node)
             ) {
-                setShowMenu(false);
+                setShowDropdownMenu(false);
             }
         };
 
@@ -71,18 +75,16 @@ const EventListCard = ({
         }
     };
 
-    const handleViewDetailEvent = (eventId: string) => {
-        navigate(
-            SCREEN_PATH.MANAGER_EVENT_DETAIL.replace(':event_id', eventId)
-        );
+    const handleCardClick = () => {
+        if (onCardClick) {
+            onCardClick(event.id);
+        }
     };
 
     return (
         <DivClick
-            className="flex bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-bg-yellow/30 transition-all duration-300 group"
-            onClick={() => {
-                handleViewDetailEvent(event.id);
-            }}
+            className={`flex bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-bg-yellow/30 transition-all duration-300 group ${className}`}
+            onClick={handleCardClick}
         >
             {/* Event Image */}
             <div className="relative w-76 h-50 rounded-l-lg overflow-hidden flex-shrink-0">
@@ -157,76 +159,84 @@ const EventListCard = ({
             </div>
 
             {/* Actions */}
-            <div className="flex gap-2 mt-2 pr-2">
-                {/* Three Dots Menu Button */}
-                <div className="relative" ref={menuRef}>
-                    <DivClick
-                        onClick={e => {
-                            e?.stopPropagation();
-                            setShowMenu(!showMenu);
-                        }}
-                        className="p-2 rounded-full hover:bg-white/10 transition-colors"
-                    >
-                        <MoreIcon size={20} />
-                    </DivClick>
+            {showMenu && (
+                <div className="flex gap-2 mt-2 pr-2">
+                    {/* Three Dots Menu Button */}
+                    <div className="relative" ref={menuRef}>
+                        <DivClick
+                            onClick={e => {
+                                e?.stopPropagation();
+                                setShowDropdownMenu(!showDropdownMenu);
+                            }}
+                            className="p-2 rounded-full hover:bg-white/10 transition-colors"
+                        >
+                            <MoreIcon size={20} />
+                        </DivClick>
 
-                    {/* Dropdown Menu */}
-                    {showMenu && (
-                        <div className="absolute right-0 top-8 mt-2 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-10">
-                            <DivClick
-                                onClick={e => {
-                                    e?.stopPropagation();
-                                    setShowMenu(false);
-                                    onView?.(event.id);
-                                }}
-                                className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3"
-                            >
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.WHITE}
-                                    modeSize={MODE_SIZE[14]}
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                >
-                                    Xem sự kiện
-                                </Text>
-                            </DivClick>
+                        {/* Dropdown Menu */}
+                        {showDropdownMenu && (
+                            <div className="absolute right-0 top-8 mt-2 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-10">
+                                {onView && (
+                                    <DivClick
+                                        onClick={e => {
+                                            e?.stopPropagation();
+                                            setShowDropdownMenu(false);
+                                            onView(event.id);
+                                        }}
+                                        className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3"
+                                    >
+                                        <Text
+                                            modeColor={MODE_COLOR_TEXT.WHITE}
+                                            modeSize={MODE_SIZE[14]}
+                                            modeWeight={MODE_WEIGHT.MEDIUM}
+                                        >
+                                            Xem sự kiện
+                                        </Text>
+                                    </DivClick>
+                                )}
 
-                            <DivClick
-                                onClick={e => {
-                                    e?.stopPropagation();
-                                    setShowMenu(false);
-                                    onEdit?.(event.id);
-                                }}
-                                className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3"
-                            >
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.WHITE}
-                                    modeSize={MODE_SIZE[14]}
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                >
-                                    Chỉnh sửa
-                                </Text>
-                            </DivClick>
+                                {onEdit && (
+                                    <DivClick
+                                        onClick={e => {
+                                            e?.stopPropagation();
+                                            setShowDropdownMenu(false);
+                                            onEdit(event.id);
+                                        }}
+                                        className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3"
+                                    >
+                                        <Text
+                                            modeColor={MODE_COLOR_TEXT.WHITE}
+                                            modeSize={MODE_SIZE[14]}
+                                            modeWeight={MODE_WEIGHT.MEDIUM}
+                                        >
+                                            Chỉnh sửa
+                                        </Text>
+                                    </DivClick>
+                                )}
 
-                            <DivClick
-                                onClick={e => {
-                                    e?.stopPropagation();
-                                    setShowMenu(false);
-                                    onDelete?.(event.id);
-                                }}
-                                className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3"
-                            >
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.RED}
-                                    modeSize={MODE_SIZE[14]}
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                >
-                                    Xóa sự kiện
-                                </Text>
-                            </DivClick>
-                        </div>
-                    )}
+                                {onDelete && (
+                                    <DivClick
+                                        onClick={e => {
+                                            e?.stopPropagation();
+                                            setShowDropdownMenu(false);
+                                            onDelete(event.id);
+                                        }}
+                                        className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3"
+                                    >
+                                        <Text
+                                            modeColor={MODE_COLOR_TEXT.RED}
+                                            modeSize={MODE_SIZE[14]}
+                                            modeWeight={MODE_WEIGHT.MEDIUM}
+                                        >
+                                            Xóa sự kiện
+                                        </Text>
+                                    </DivClick>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
         </DivClick>
     );
 };

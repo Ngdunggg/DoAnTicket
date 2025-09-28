@@ -1,5 +1,5 @@
-import useEventListStoreAction from '@modules/manager-event/hooks/useEventListStoreAction';
-import useEventListStoreSelector from '@modules/manager-event/hooks/useEventListStoreSelector';
+import useEventListStoreAction from '@modules/manager-event/components/EventList/hooks/useEventListStoreAction';
+import useEventListStoreSelector from '@modules/manager-event/components/EventList/hooks/useEventListStoreSelector';
 import useHeaderHandler from '@share/components/organisms/header/hooks/useHeaderHandler';
 
 const useToolBarEvent = () => {
@@ -8,6 +8,7 @@ const useToolBarEvent = () => {
     const { resetManagerEventListStateStore, setActiveFilterStore } =
         useEventListStoreAction();
     const { activeFilter } = useEventListStoreSelector();
+
     return {
         activeFilter,
         resetManagerEventListStateStore,

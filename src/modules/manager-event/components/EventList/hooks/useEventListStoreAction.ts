@@ -3,7 +3,7 @@ import {
     resetManagerEventListState,
     setActiveFilter,
     setAllEvents,
-} from '../stores/eventListSlice';
+} from '../../../stores/eventListSlice';
 import { FilterStatus } from '@share/constants/commons';
 import { Event } from '@share/types/event';
 

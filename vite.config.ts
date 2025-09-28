@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => ({
         '**/*.jpeg',
         '**/*.svg',
         '**/*.gif',
+        '**/*.pdf',
     ],
 
     base: './',
@@ -25,6 +26,9 @@ export default defineConfig(({ mode }) => ({
                     const [name] = assetInfo.names;
                     if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(name)) {
                         return 'assets/images/[name].[hash][extname]';
+                    }
+                    if (/\.(pdf)$/i.test(name)) {
+                        return 'assets/pdf/[name].[hash][extname]';
                     }
                     if (/\.(css|scss)$/i.test(name)) {
                         return 'assets/[name].[hash][extname]';

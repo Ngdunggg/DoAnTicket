@@ -1,7 +1,7 @@
 import { EventDetailData, TicketType, EventStats } from '@share/types/ticket';
 import { Event } from '@share/types/event';
 import { useEffect, useState } from 'react';
-import useEventListStoreSelector from './useEventListStoreSelector';
+import useEventListStoreSelector from '../components/EventList/hooks/useEventListStoreSelector';
 
 const useFetchEventDetail = (eventId: string) => {
     const [eventDetail, setEventDetail] = useState<EventDetailData | null>(
@@ -86,7 +86,7 @@ const useFetchEventDetail = (eventId: string) => {
             setTimeout(() => {
                 setEventDetail(eventDetailData);
                 setLoading(false);
-            }, 500);
+            }, 300);
         };
 
         if (eventId) {
