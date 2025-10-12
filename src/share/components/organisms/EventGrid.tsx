@@ -1,22 +1,20 @@
 import EventCard from '@share/components/molecules/EventCard';
-
-interface Event {
-    date: string;
-    id: string;
-    image?: string;
-    location: string;
-    price: string;
-    title: string;
-}
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_FORMAT_ISO } from '@share/constants/dateTime';
+import { Event } from '@share/types/event';
+import {
+    getEventImage,
+    getMinPrice,
+} from '@modules/event-detail/utils/eventUtils';
 
 interface EventGridProps {
     events: Event[];
-    onBookNow?: (eventId: string) => void;
+    onViewEvent?: (_eventId: string) => void;
 }
 
-const EventGrid = ({ events, onBookNow }: EventGridProps) => {
-    const handleBookNow = (eventId: string) => {
-        onBookNow?.(eventId);
+const EventGrid = ({ events, onViewEvent }: EventGridProps) => {
+    const handleViewEvent = (eventId: string) => {
+        onViewEvent?.(eventId);
     };
 
     return (
@@ -25,11 +23,14 @@ const EventGrid = ({ events, onBookNow }: EventGridProps) => {
                 <EventCard
                     key={event.id}
                     title={event.title}
-                    date={event.date}
-                    location={event.location}
-                    price={event.price}
-                    image={event.image}
-                    onBookNow={() => handleBookNow(event.id)}
+                    date={formatDateTime(event.start_time, DATE_FORMAT_ISO)}
+                    price={
+                        event.ticket_types.length > 0
+                            ? getMinPrice(event)
+                            : 'Liên hệ'
+                    }
+                    image={getEventImage(event)}
+                    onViewEvent={() => handleViewEvent(event.id)}
                 />
             ))}
         </div>

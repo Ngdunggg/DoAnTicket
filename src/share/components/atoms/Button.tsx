@@ -1,5 +1,6 @@
 import { Button as Btn, ButtonProps } from 'primereact/button';
 import React, { ReactNode, useState } from 'react';
+import ImSpinnerIcon from './icons/ImSpinnerIcon';
 /**
  * Const representing different button modes.
  */
@@ -132,8 +133,11 @@ const Button = ({
             <div
                 className={`flex justify-center items-center gap-[8px] w-full ${classChildren}`}
             >
-                {/* {loading || loadingOnClick ? <ImSpinner8 className="animate-spin" /> : renderIcon()} */}
-                {loading || loadingOnClick ? <></> : renderIcon()}
+                {loading || loadingOnClick ? (
+                    <ImSpinnerIcon className="animate-spin" />
+                ) : (
+                    renderIcon()
+                )}
                 {restProps?.children}
             </div>
         </Btn>

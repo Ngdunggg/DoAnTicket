@@ -11,10 +11,10 @@ export type LoginUser = {
     phone_number: string;
     role: string;
     status: string;
-    token: string;
 };
 
 export type LoginModel = {
+    token: string;
     user: LoginUser;
 };
 

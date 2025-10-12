@@ -10,8 +10,58 @@ import TicketIcon from '@share/components/atoms/icons/TicketIcon';
 import DivClick from '@share/components/atoms/DivClick';
 import BackIcon, { MODE_BACK } from '@share/components/atoms/icons/BackIcon';
 import ArrowIcon, { MODE_ARROW } from '@share/components/atoms/icons/ArrowIcon';
+import { Event } from '@share/types/event';
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_FORMAT_ISO } from '@share/constants/dateTime';
+import { useState, useEffect } from 'react';
+import Image from '@share/components/atoms/Image';
+import {
+    getEventImage,
+    getEventLocation,
+} from '@modules/event-detail/utils/eventUtils';
 
-const HeroSection = () => {
+interface HeroSectionProps {
+    featuredEvents: Event[];
+    onViewEvent: (_eventId: string) => void;
+}
+
+const AUTO_PLAY_INTERVAL = 30000;
+
+const HeroSection = ({ featuredEvents, onViewEvent }: HeroSectionProps) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const currentEvent = featuredEvents[currentIndex] || featuredEvents[0];
+
+    const handlePrevious = () => {
+        setCurrentIndex(prev =>
+            prev === 0 ? featuredEvents.length - 1 : prev - 1
+        );
+    };
+
+    const handleNext = () => {
+        setCurrentIndex(prev =>
+            prev === featuredEvents.length - 1 ? 0 : prev + 1
+        );
+    };
+
+    const handleBookTicket = () => {
+        if (currentEvent) {
+            onViewEvent(currentEvent.id);
+        }
+    };
+
+    // Auto-play: tự động chuyển slide
+    useEffect(() => {
+        if (featuredEvents.length <= 1) return; // Không cần auto-play nếu chỉ có 1 event
+
+        const interval = setInterval(() => {
+            setCurrentIndex(prev =>
+                prev === featuredEvents.length - 1 ? 0 : prev + 1
+            );
+        }, AUTO_PLAY_INTERVAL);
+
+        return () => clearInterval(interval);
+    }, [featuredEvents.length, AUTO_PLAY_INTERVAL]);
     return (
         <>
             <div className="bg-bg-black w-full h-[600px] flex justify-between py-10">
@@ -22,8 +72,17 @@ const HeroSection = () => {
                             modeColor={MODE_COLOR_TEXT.WHITE}
                             modeSize={MODE_SIZE[20]}
                         >
-                            08.15.25{' '}
-                            <span className="text-text-yellow">Hà Nội</span>
+                            {currentEvent
+                                ? formatDateTime(
+                                      currentEvent.start_time,
+                                      DATE_FORMAT_ISO
+                                  )
+                                : 'TBA'}{' '}
+                            <span className="text-text-yellow">
+                                {currentEvent
+                                    ? getEventLocation(currentEvent)
+                                    : 'TBA'}
+                            </span>
                         </Text>
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
@@ -33,7 +92,7 @@ const HeroSection = () => {
                             isAllowLineBreaks
                             className="leading-[48px]"
                         >
-                            SOUND HEALING CONCERT
+                            {currentEvent?.title || 'Sự kiện sắp diễn ra'}
                         </Text>
                         <Text
                             modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
@@ -41,13 +100,14 @@ const HeroSection = () => {
                             modeSize={MODE_SIZE[18]}
                             isAllowLineBreaks
                         >
-                            Sự kiện sắp diễn ra với sự tham gia của các nhạc sĩ
-                            nổi tiếng
+                            {currentEvent?.description ||
+                                'Sự kiện đặc biệt với nhiều hoạt động thú vị'}
                         </Text>
                         <Button
                             mode={MODE_BUTTON.DECORATIVE_YELLOW}
                             className="!w-fit !h-12"
                             icon={<TicketIcon />}
+                            onClick={handleBookTicket}
                         >
                             <Text
                                 modeWeight={MODE_WEIGHT.MEDIUM}
@@ -58,43 +118,42 @@ const HeroSection = () => {
                         </Button>
                     </div>
                     <div className="flex gap-4">
-                        <DivClick>
+                        <DivClick onClick={handlePrevious}>
                             <BackIcon mode={MODE_BACK.WHITE} />
                         </DivClick>
-                        <DivClick>
+                        <DivClick onClick={handleNext}>
                             <ArrowIcon mode={MODE_ARROW.WHITE} />
                         </DivClick>
                     </div>
                 </div>
                 <div className="flex-1 flex items-center justify-center gap-10 px-10">
                     <div className="w-[75%] h-full">
-                        <img
+                        <Image
                             src={
-                                'https://images.discovery-prod.axs.com/2025/06/cut-copy-tickets_11-13-25_18_684b100eefe3f.png'
+                                currentEvent
+                                    ? getEventImage(currentEvent)
+                                    : undefined
                             }
-                            alt="hero"
-                            className="w-full h-full object-cover"
+                            alt={currentEvent?.title || 'hero'}
+                            className="w-full h-full object-cover rounded-lg select-none"
                         />
                     </div>
-                    <div className="w-[15%] h-full py-10 opacity-50 overflow-hidden">
-                        <img
-                            src={
-                                'https://images.discovery-prod.axs.com/2025/06/cut-copy-tickets_11-13-25_18_684b100eefe3f.png'
-                            }
-                            alt="hero"
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
+                    {featuredEvents.length > 1 && (
+                        <div className="w-[15%] h-full py-10 opacity-50 overflow-hidden">
+                            <Image
+                                src={getEventImage(
+                                    featuredEvents[
+                                        (currentIndex + 1) %
+                                            featuredEvents.length
+                                    ]
+                                )}
+                                alt="next event"
+                                className="w-full h-full object-cover rounded-lg select-none"
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
-            {/* <div className="w-full h-24 bg-bg-yellow top-[-1px] left-0 right-0 relative">
-                <div className="w-full h-[30px] ">
-                    <WavyLineIcon />
-                </div>
-                <div className="w-full h-[30px] mt-10 right-0 absolute left-0">
-                    <WavyLineIcon mode={MODE_WAVY_LINE.YELLOW} />
-                </div>
-            </div> */}
         </>
     );
 };

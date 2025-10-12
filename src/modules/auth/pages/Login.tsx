@@ -2,8 +2,10 @@ import PcLayout from '@share/components/templates/PcLayout';
 import { MODE_COLOR_TEXT, MODE_SIZE, Text } from '@share/components/atoms/Text';
 import Button from '@share/components/atoms/Button';
 import { MODE_BUTTON } from '@share/components/atoms/Button';
-import { useAuthPopup } from '../hooks/useAuthPopup';
+import { useAuthPopup } from '../components/hooks/useAuthPopup';
 import AuthPopup from '../components/AuthPopup';
+import VerifyOtpPopup from '../components/VerifyOtpPopup';
+import ForgetPassword from '../components/ForgetPassword';
 
 const Login = () => {
     const { openAuthPopup } = useAuthPopup();
@@ -51,6 +53,8 @@ const Login = () => {
 
                 {/* Auth Popup */}
                 <AuthPopup />
+                <VerifyOtpPopup />
+                <ForgetPassword />
             </div>
         </PcLayout>
     );

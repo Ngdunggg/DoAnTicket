@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     MODE_COLOR_TEXT,
     MODE_SIZE,
@@ -6,7 +5,6 @@ import {
     Text,
 } from '@share/components/atoms/Text';
 import Button, { MODE_BUTTON } from '@share/components/atoms/Button';
-import { useAppDispatch } from '@configs/store';
 import DivClick from '@share/components/atoms/DivClick';
 import WavyLineIcon, {
     MODE_WAVY_LINE,
@@ -14,25 +12,23 @@ import WavyLineIcon, {
 import GoogleIcon from '@share/components/atoms/icons/GoogleIcon';
 import InputValidate from '@share/components/molecules/InputValidate';
 import { CreateAccountRequest } from '@share/models/auth/createAccount';
-import {
-    mockLogin,
-    mockRegister,
-    mockGoogleLogin,
-    dispatchAuthData,
-} from '../mocks/authMock';
-import { useAuthPopup } from '../hooks/useAuthPopup';
+import { useAuthPopup } from './hooks/useAuthPopup';
 
 const AuthPopup = () => {
     const {
         authForm,
         closeAuthPopup,
+        handleLogin,
+        handleLoginWithGoogle,
+        handleRegister,
         isAuthPopupOpen,
+        isLoading,
         isLogin,
         schemaCreateAccount,
+        setIsAuthPopupOpenStore,
+        setIsForgetPasswordPopupOpenStore,
         setIsLoginStore,
     } = useAuthPopup();
-    const [isLoading, setIsLoading] = useState(false);
-    const dispatch = useAppDispatch();
 
     const handleSubmit = authForm.handleSubmit(
         data => {
@@ -49,72 +45,8 @@ const AuthPopup = () => {
         }
     );
 
-    const handleLogin = async (data: { email: string; password: string }) => {
-        setIsLoading(true);
-
-        try {
-            console.log('Đăng nhập:', {
-                email: data.email,
-                password: data.password,
-            });
-
-            // TODO: Thay thế bằng API call thật
-            // const response = await loginAPI(data);
-
-            // Sử dụng mock function
-            const response = await mockLogin(data);
-            dispatchAuthData(dispatch, response);
-            closeAuthPopup();
-        } catch (error) {
-            console.error('Lỗi đăng nhập:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleRegister = async (data: CreateAccountRequest) => {
-        setIsLoading(true);
-
-        try {
-            console.log('Đăng ký:', data);
-
-            // TODO: Thay thế bằng API call thật
-            // const response = await registerAPI(data);
-
-            // Sử dụng mock function
-            const response = await mockRegister(data);
-            dispatchAuthData(dispatch, response);
-            closeAuthPopup();
-        } catch (error) {
-            console.error('Lỗi đăng ký:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleGoogleLogin = async () => {
-        setIsLoading(true);
-
-        try {
-            console.log('Đăng nhập bằng Google');
-
-            // TODO: Thay thế bằng Google OAuth API call thật
-            // const response = await googleLoginAPI();
-
-            // Sử dụng mock function
-            const response = await mockGoogleLogin();
-            dispatchAuthData(dispatch, response);
-            closeAuthPopup();
-        } catch (error) {
-            console.error('Lỗi đăng nhập Google:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const handleToggleMode = () => {
         setIsLoginStore(!isLogin);
-        // Reset form khi chuyển đổi mode
         authForm.reset();
     };
 
@@ -167,7 +99,7 @@ const AuthPopup = () => {
                                         </Text>
                                         <InputValidate
                                             control={authForm.control}
-                                            inputName={'name' as never}
+                                            inputName={'full_name' as never}
                                             schema={schemaCreateAccount}
                                             placeholder="Nhập họ và tên"
                                         />
@@ -221,7 +153,7 @@ const AuthPopup = () => {
                                         <InputValidate
                                             control={authForm.control}
                                             inputName={
-                                                'passwordConfirm' as never
+                                                'password_confirm' as never
                                             }
                                             schema={schemaCreateAccount}
                                             placeholder="Nhập lại mật khẩu"
@@ -230,11 +162,29 @@ const AuthPopup = () => {
                                     </div>
                                 )}
                             </div>
+                            {isLogin && (
+                                <DivClick
+                                    onClick={() => {
+                                        setIsForgetPasswordPopupOpenStore(true);
+                                        setIsAuthPopupOpenStore(false);
+                                    }}
+                                    className="flex flex-1 items-end justify-end"
+                                >
+                                    <Text
+                                        modeColor={MODE_COLOR_TEXT.YELLOW}
+                                        modeWeight={MODE_WEIGHT.MEDIUM}
+                                    >
+                                        Quên mật khẩu
+                                    </Text>
+                                </DivClick>
+                            )}
                             <Button
                                 mode={MODE_BUTTON.YELLOW}
                                 className="w-full"
+                                loading={
+                                    authForm.formState.isSubmitting || isLoading
+                                }
                                 type="submit"
-                                disabled={isLoading}
                             >
                                 <Text
                                     modeColor={MODE_COLOR_TEXT.BLACK}
@@ -286,8 +236,7 @@ const AuthPopup = () => {
                                 <Button
                                     mode={MODE_BUTTON.WHITE}
                                     className="w-full py-4 flex items-center justify-center gap-3"
-                                    onClick={handleGoogleLogin}
-                                    disabled={isLoading}
+                                    onClick={handleLoginWithGoogle}
                                     icon={<GoogleIcon />}
                                 >
                                     <Text

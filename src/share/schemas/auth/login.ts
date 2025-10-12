@@ -37,10 +37,10 @@ export const createAccountSchema = (mode: AuthMode = AUTH_MODE.LOGIN) => {
     if (mode === AUTH_MODE.REGISTER) {
         const registerSchema = {
             ...baseSchema,
-            name: validateMaxLength('auth.name', 255).min(1, {
+            full_name: validateMaxLength('auth.full_name', 255).min(1, {
                 message: 'Họ tên không được để trống',
             }),
-            passwordConfirm: z.string().trim().min(1, {
+            password_confirm: z.string().trim().min(1, {
                 message: 'Xác nhận mật khẩu không được để trống',
             }),
             phone: z
@@ -63,9 +63,9 @@ export const createAccountSchema = (mode: AuthMode = AUTH_MODE.LOGIN) => {
 
         return z
             .object(registerSchema)
-            .refine(data => data.password === data.passwordConfirm, {
+            .refine(data => data.password === data.password_confirm, {
                 message: 'Mật khẩu xác nhận không khớp',
-                path: ['passwordConfirm'],
+                path: ['password_confirm'],
             });
     }
 
