@@ -1,14 +1,17 @@
-import { clearToken } from '@share/auth/stores/authSlice';
+import { clearToken, setLoggingOut } from '@share/auth/stores/authSlice';
 import { clearUserInfo } from '@share/auth/stores/userSlice';
 import useSearchForm from './useSearchForm';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useAppDispatch, useAppSelector } from '@configs/store';
 import { useNavigate } from 'react-router-dom';
 import { searchToolBarSchema } from '@share/schemas/header/searchToolBar';
-import { useAuthPopup } from '@modules/auth/hooks/useAuthPopup';
+import { useAuthPopup } from '@modules/auth/components/hooks/useAuthPopup';
 import useSearchStoreAction from './useSearchStoreAction';
 import useSearchStoreSelector from './useSearchStoreSelector';
 import { useEffect } from 'react';
+import { authApi } from '@share/api/authApi';
+import { RESULT_CODE } from '@share/constants/commons';
+import { toast } from 'react-toastify';
 
 const useHeaderHandler = () => {
     // #region Actions
@@ -40,9 +43,37 @@ const useHeaderHandler = () => {
         console.log('searchText', searchText);
     }, [searchText]);
 
-    const handleLogout = () => {
-        dispatch(clearToken());
-        dispatch(clearUserInfo());
+    const handleLogout = async () => {
+        // Set logout flag first
+        dispatch(setLoggingOut(true));
+
+        try {
+            // Call logout API first (Backend sẽ xử lý cookies)
+            const response = await authApi.logout();
+
+            // Clear Redux store
+            dispatch(clearToken());
+            dispatch(clearUserInfo());
+
+            // Clear localStorage
+            localStorage.removeItem('token');
+
+            if (response.result.code === RESULT_CODE.SUCCESS) {
+                toast.success('Đăng xuất thành công');
+            } else {
+                toast.error('Có lỗi xảy ra khi đăng xuất');
+            }
+        } catch (error) {
+            // Even if API fails, still clear local data
+            dispatch(clearToken());
+            dispatch(clearUserInfo());
+            localStorage.removeItem('token');
+
+            console.error('Logout error:', error);
+            toast.error('Có lỗi xảy ra khi đăng xuất');
+        }
+
+        // Navigate to home
         navigate(SCREEN_PATH.HOME);
     };
 

@@ -19,6 +19,8 @@ export type CommonState = {
 };
 
 export type AuthState = {
+    isLoggingOut: boolean;
+    previousPopup: 'auth' | 'forget_password' | null;
     token: string | null;
 };
 

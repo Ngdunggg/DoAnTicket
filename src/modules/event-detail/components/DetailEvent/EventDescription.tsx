@@ -10,31 +10,30 @@ import {
     MODE_WEIGHT,
     MODE_LEADING,
 } from '@share/components/atoms/Text';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Event } from '@share/types/event';
 
-interface EventDescriptionProps {
-    additionalInfo: {
-        ageRestriction: string;
-        dressCode?: string;
-        duration: string;
-        language: string;
-    };
-    description: string;
-    highlights: string[];
-    requirements: string[];
-}
-
-const EventDescription = ({
-    additionalInfo,
-    description,
-    highlights,
-    requirements,
-}: EventDescriptionProps) => {
+const EventDescription = ({ eventDetail }: { eventDetail: Event }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [showToggleButton, setShowToggleButton] = useState(false);
+    const contentRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (contentRef.current) {
+            const contentHeight = contentRef.current.scrollHeight;
+            // Nếu nội dung chưa vượt quá 400px thì mặc định mở
+            if (contentHeight <= 400) {
+                setIsExpanded(true);
+                setShowToggleButton(false);
+            } else {
+                setShowToggleButton(true);
+            }
+        }
+    }, [eventDetail.description]);
 
     return (
-        <div className="px-4 py-8 bg-white">
-            <div className="rounded-2xl p-8 box-shadow-ticket">
+        <div className="px-4">
+            <div className="rounded-2xl p-8 box-shadow-ticket bg-white border border-gray-200">
                 <div
                     className={`relative overflow-hidden transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-none' : 'max-h-96'}`}
                 >
@@ -43,7 +42,7 @@ const EventDescription = ({
                         <div className="absolute bottom-0 left-0 right-0 h-24 fade-out-overlay pointer-events-none z-5"></div>
                     )}
                     {/* Description */}
-                    <div className="flex flex-col mb-8 gap-2">
+                    <div ref={contentRef} className="flex flex-col mb-8 gap-2">
                         <Text
                             modeColor={MODE_COLOR_TEXT.BLACK}
                             modeSize={MODE_SIZE[20]}
@@ -58,163 +57,28 @@ const EventDescription = ({
                             modeLeading={MODE_LEADING.MEDIUM}
                             isAllowLineBreaks
                         >
-                            {description}
+                            {eventDetail.description}
                         </Text>
-                    </div>
-
-                    {/* Highlights */}
-                    <div className="mb-8">
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.BLACK}
-                            modeSize={MODE_SIZE[18]}
-                            modeWeight={MODE_WEIGHT.MEDIUM}
-                        >
-                            Điểm nổi bật
-                        </Text>
-                        <div className="space-y-3">
-                            {highlights.map((highlight, index) => (
-                                <div
-                                    key={index}
-                                    className="flex items-start gap-3"
-                                >
-                                    <div className="w-2 h-2 bg-text-yellow rounded-full mt-2 flex-shrink-0" />
-                                    <Text
-                                        modeColor={
-                                            MODE_COLOR_TEXT.GRAY_SECONDARY
-                                        }
-                                        modeSize={MODE_SIZE[16]}
-                                        isAllowLineBreaks
-                                    >
-                                        {highlight}
-                                    </Text>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Requirements */}
-                    <div className="mb-8">
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.BLACK}
-                            modeSize={MODE_SIZE[18]}
-                            modeWeight={MODE_WEIGHT.MEDIUM}
-                        >
-                            Yêu cầu tham gia
-                        </Text>
-                        <div className="space-y-3">
-                            {requirements.map((requirement, index) => (
-                                <div
-                                    key={index}
-                                    className="flex items-start gap-3"
-                                >
-                                    <div className="w-2 h-2 bg-text-red rounded-full mt-2 flex-shrink-0" />
-                                    <Text
-                                        modeColor={
-                                            MODE_COLOR_TEXT.GRAY_SECONDARY
-                                        }
-                                        modeSize={MODE_SIZE[16]}
-                                        isAllowLineBreaks
-                                    >
-                                        {requirement}
-                                    </Text>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Additional Info */}
-                    <div className="bg-gray-50 rounded-lg p-6">
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.BLACK}
-                            modeSize={MODE_SIZE[18]}
-                            modeWeight={MODE_WEIGHT.MEDIUM}
-                        >
-                            Thông tin bổ sung
-                        </Text>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="flex justify-between">
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                    modeSize={MODE_SIZE[14]}
-                                >
-                                    Thời lượng:
-                                </Text>
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.BLACK}
-                                    modeSize={MODE_SIZE[14]}
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                >
-                                    {additionalInfo.duration}
-                                </Text>
-                            </div>
-                            <div className="flex justify-between">
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                    modeSize={MODE_SIZE[14]}
-                                >
-                                    Ngôn ngữ:
-                                </Text>
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.BLACK}
-                                    modeSize={MODE_SIZE[14]}
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                >
-                                    {additionalInfo.language}
-                                </Text>
-                            </div>
-                            <div className="flex justify-between">
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                    modeSize={MODE_SIZE[14]}
-                                >
-                                    Độ tuổi:
-                                </Text>
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.BLACK}
-                                    modeSize={MODE_SIZE[14]}
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                >
-                                    {additionalInfo.ageRestriction}
-                                </Text>
-                            </div>
-                            {additionalInfo.dressCode && (
-                                <div className="flex justify-between">
-                                    <Text
-                                        modeColor={
-                                            MODE_COLOR_TEXT.GRAY_SECONDARY
-                                        }
-                                        modeSize={MODE_SIZE[14]}
-                                    >
-                                        Trang phục:
-                                    </Text>
-                                    <Text
-                                        modeColor={MODE_COLOR_TEXT.BLACK}
-                                        modeSize={MODE_SIZE[14]}
-                                        modeWeight={MODE_WEIGHT.MEDIUM}
-                                    >
-                                        {additionalInfo.dressCode}
-                                    </Text>
-                                </div>
-                            )}
-                        </div>
                     </div>
                 </div>
 
-                {/* Read More/Less Button */}
-                <DivClick
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="cursor-pointer flex justify-center mt-6"
-                >
-                    <ChevronIcon
-                        size={20}
-                        mode={MODE_CHEVRON.BLACK}
-                        direction={
-                            isExpanded
-                                ? MODE_CHEVRON_DIRECTION.UP
-                                : MODE_CHEVRON_DIRECTION.DOWN
-                        }
-                    />
-                </DivClick>
+                {/* Read More/Less Button - chỉ hiện khi nội dung > 400px */}
+                {showToggleButton && (
+                    <DivClick
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="cursor-pointer flex justify-center mt-6"
+                    >
+                        <ChevronIcon
+                            size={20}
+                            mode={MODE_CHEVRON.BLACK}
+                            direction={
+                                isExpanded
+                                    ? MODE_CHEVRON_DIRECTION.UP
+                                    : MODE_CHEVRON_DIRECTION.DOWN
+                            }
+                        />
+                    </DivClick>
+                )}
             </div>
         </div>
     );

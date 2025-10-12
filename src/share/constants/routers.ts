@@ -1,4 +1,5 @@
 export const SCREEN_PATH = {
+    AUTH_CALLBACK: '/auth/callback',
     // AUTH
     AUTH_LOGIN: '/login',
     AUTH_REGISTER: '/register',
@@ -50,6 +51,7 @@ export const AUTH_PATH_PATTERNS = [
     SCREEN_PATH.AUTH_LOGIN,
     SCREEN_PATH.AUTH_REGISTER,
     SCREEN_PATH.AUTH_RESET_PASSWORD,
+    SCREEN_PATH.AUTH_CALLBACK,
 ];
 
 export const MY_TICKET_PATH_PATTERNS = [

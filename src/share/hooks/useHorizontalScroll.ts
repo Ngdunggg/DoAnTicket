@@ -1,114 +1,75 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 interface UseHorizontalScrollOptions {
-    // Số pixel scroll mỗi lần
     gap?: number; // Chiều rộng mỗi item
     itemsPerScroll?: number; // Khoảng cách giữa các items
-    itemWidth?: number;
-    scrollAmount?: number; // Số items scroll mỗi lần
+    itemWidth?: number; // Số items scroll mỗi lần
 }
 
 export const useHorizontalScroll = (
     options: UseHorizontalScrollOptions = {}
 ) => {
-    const {
-        gap = 16,
-        itemsPerScroll = 3,
-        itemWidth = 300,
-        scrollAmount,
-    } = options;
+    const { gap = 16, itemsPerScroll = 3, itemWidth = 300 } = options;
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [showLeftButton, setShowLeftButton] = useState(false);
     const [showRightButton, setShowRightButton] = useState(false);
 
-    // Tính toán scroll amount nếu không được cung cấp
-    const calculatedScrollAmount =
-        scrollAmount || itemsPerScroll * itemWidth + (itemsPerScroll - 1) * gap;
+    // Tính toán scroll amount
+    const scrollAmount = itemsPerScroll * (itemWidth + gap) - gap;
 
-    const scrollToDirection = (direction: 'left' | 'right') => {
+    const scrollToDirection = useCallback(
+        (direction: 'left' | 'right') => {
+            if (!scrollContainerRef.current) return;
+
+            const container = scrollContainerRef.current;
+            const scrollValue =
+                direction === 'left' ? -scrollAmount : scrollAmount;
+
+            container.scrollBy({
+                behavior: 'smooth',
+                left: scrollValue,
+            });
+        },
+        [scrollAmount]
+    );
+
+    const updateButtonVisibility = useCallback(() => {
         if (!scrollContainerRef.current) return;
 
         const container = scrollContainerRef.current;
-        const scrollValue =
-            direction === 'left'
-                ? -calculatedScrollAmount
-                : calculatedScrollAmount;
+        const { clientWidth, scrollLeft, scrollWidth } = container;
 
-        container.scrollBy({
-            behavior: 'smooth',
-            left: scrollValue,
-        });
-    };
-
-    const canScrollLeft = () => {
-        if (!scrollContainerRef.current) return false;
-        const container = scrollContainerRef.current;
-        return container.scrollLeft > 0;
-    };
-
-    const canScrollRight = () => {
-        if (!scrollContainerRef.current) return false;
-        const container = scrollContainerRef.current;
-
-        const totalWidth = container.scrollWidth;
-        const visibleWidth = container.clientWidth;
-        const currentScroll = container.scrollLeft;
-
-        const tolerance = 1;
-        return (
-            totalWidth > visibleWidth &&
-            currentScroll + tolerance < totalWidth - visibleWidth
-        );
-    };
-
-    const updateButtonVisibility = () => {
-        if (!scrollContainerRef.current) return;
-
-        setShowLeftButton(canScrollLeft());
-        setShowRightButton(canScrollRight());
-    };
-
-    // Update button visibility khi items thay đổi
-    useEffect(() => {
-        updateButtonVisibility();
+        setShowLeftButton(scrollLeft > 5);
+        setShowRightButton(scrollLeft + 10 < scrollWidth - clientWidth);
     }, []);
 
-    // Effect để update button visibility khi component mount và window resize
+    // Update button visibility khi component mount
     useEffect(() => {
-        const handleResize = () => {
-            updateButtonVisibility();
-        };
+        const timer = setTimeout(updateButtonVisibility, 100);
+        return () => clearTimeout(timer);
+    }, [updateButtonVisibility]);
 
-        updateButtonVisibility();
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
-    // Thêm scroll event listener
+    // Update button visibility khi scroll hoặc resize
     useEffect(() => {
         const container = scrollContainerRef.current;
         if (!container) return;
 
-        const handleScroll = () => {
-            updateButtonVisibility();
-        };
+        const handleUpdate = () => updateButtonVisibility();
 
-        container.addEventListener('scroll', handleScroll);
+        container.addEventListener('scroll', handleUpdate, { passive: true });
+        window.addEventListener('resize', handleUpdate);
 
         return () => {
-            container.removeEventListener('scroll', handleScroll);
+            container.removeEventListener('scroll', handleUpdate);
+            window.removeEventListener('resize', handleUpdate);
         };
-    }, []);
+    }, [updateButtonVisibility]);
 
     return {
         scrollContainerRef,
         scrollToDirection,
         showLeftButton,
         showRightButton,
-        updateButtonVisibility,
     };
 };

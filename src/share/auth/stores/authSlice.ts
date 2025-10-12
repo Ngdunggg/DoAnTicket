@@ -8,6 +8,8 @@ import storage from 'redux-persist/lib/storage';
  * @type {AuthState}
  */
 const initialState: AuthState = {
+    isLoggingOut: false,
+    previousPopup: null,
     token: null,
 };
 
@@ -24,13 +26,29 @@ const authSlice = createSlice({
         resetAppState: _state => {
             return initialState;
         },
+        setLoggingOut: (state, action: PayloadAction<boolean>) => {
+            state.isLoggingOut = action.payload;
+        },
+        setPreviousPopup: (
+            state,
+            action: PayloadAction<'auth' | 'forget_password' | null>
+        ) => {
+            state.previousPopup = action.payload;
+        },
         setToken: (state, action: PayloadAction<string>) => {
             state.token = action.payload;
+            state.isLoggingOut = false; // Reset logout flag when setting new token
         },
     },
 });
 
-export const { clearToken, resetAppState, setToken } = authSlice.actions;
+export const {
+    clearToken,
+    resetAppState,
+    setLoggingOut,
+    setPreviousPopup,
+    setToken,
+} = authSlice.actions;
 
 const persistConfig = {
     key: 'authentication',

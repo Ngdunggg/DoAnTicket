@@ -11,25 +11,15 @@ import ChevronIcon, {
     MODE_CHEVRON_DIRECTION,
 } from '@share/components/atoms/icons/ChevronIcon';
 import { useHorizontalScroll } from '@share/hooks/useHorizontalScroll';
+import { Event } from '@share/types/event';
+import Image from '@share/components/atoms/Image';
 
-interface Event {
-    date: string;
-    id: string;
-    image: string;
-    location: string;
-    price: string;
-    title: string;
-}
-
-interface SpecialEventsSectionProps {
+interface EventSectionProps {
     events: Event[];
-    onBookNow: (_eventId: string) => void;
+    onViewEvent: (_eventId: string) => void;
 }
 
-const SpecialEventsSection = ({
-    events,
-    onBookNow,
-}: SpecialEventsSectionProps) => {
+const EventSection = ({ events, onViewEvent }: EventSectionProps) => {
     // Sử dụng custom hook cho horizontal scroll
     const {
         scrollContainerRef,
@@ -94,14 +84,14 @@ const SpecialEventsSection = ({
                 >
                     {events.map(event => (
                         <DivClick
-                            onClick={() => onBookNow(event.id)}
+                            onClick={() => onViewEvent(event.id)}
                             key={event.id}
-                            className="flex-shrink-0 w-[300px]"
+                            className="flex-shrink-0"
                         >
-                            <img
-                                src={event.image}
+                            <Image
+                                src={event.images[0].image_url}
                                 alt={event.title}
-                                className="w-full h-full object-cover rounded-xl"
+                                className="object-cover rounded-xl w-[350px] h-[400px]"
                             />
                         </DivClick>
                     ))}
@@ -111,4 +101,4 @@ const SpecialEventsSection = ({
     );
 };
 
-export default SpecialEventsSection;
+export default EventSection;

@@ -24,6 +24,9 @@ import useHeaderHandler from '../hooks/useHeaderHandler';
 import SearchIcon from '@share/components/atoms/icons/SearchIcon';
 import { isNotNullOrUndefinedOrBlank } from '@share/utils/validate';
 import SuggestSearchPopup from './SuggestSearchPopup';
+import Image from '@share/components/atoms/Image';
+import VerifyOtpPopup from '@modules/auth/components/VerifyOtpPopup';
+import ForgetPassword from '@modules/auth/components/ForgetPassword';
 
 const Header = () => {
     const {
@@ -98,7 +101,7 @@ const Header = () => {
                         // TODO
                     />
                 </div>
-                <div className="flex gap-12">
+                <div className="flex h-full items-center gap-12">
                     <Button
                         onClick={handleClickCreateEvent}
                         mode={MODE_BUTTON.BLACK}
@@ -131,8 +134,8 @@ const Header = () => {
                                 }
                             >
                                 <div className="border border-white rounded-full">
-                                    <img
-                                        src={user.avatar}
+                                    <Image
+                                        src={user.avatar || ''}
                                         alt="avatar"
                                         className="w-9 h-9 rounded-full p-0.5"
                                     />
@@ -253,7 +256,7 @@ const Header = () => {
                             onClick={() => {
                                 openAuthPopup();
                             }}
-                            className="flex items-center py-2 gap-2"
+                            className="flex h-full items-center py-2 gap-2"
                         >
                             <Text
                                 modeColor={MODE_COLOR_TEXT.WHITE}
@@ -263,7 +266,7 @@ const Header = () => {
                             >
                                 Đăng nhập
                             </Text>
-                            <div className="w-[1px] h-full bg-white hover:bg-bg-yellow" />
+                            <div className="w-px h-[50%] bg-white hover:bg-bg-yellow" />
                             <Text
                                 modeColor={MODE_COLOR_TEXT.WHITE}
                                 modeWeight={MODE_WEIGHT.LARGE}
@@ -278,6 +281,8 @@ const Header = () => {
             </div>
             <HeaderIcon className="!h-10" />
             <AuthPopup />
+            <VerifyOtpPopup />
+            <ForgetPassword />
             <SuggestSearchPopup isOpen={isSearchPopupOpen} />
         </div>
     );

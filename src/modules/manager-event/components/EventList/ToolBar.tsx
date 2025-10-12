@@ -55,7 +55,7 @@ const ToolBar = () => {
 
             <div className="flex items-center gap-2 bg-white rounded-full p-1">
                 <DivClick
-                    className={`flex items-center px-6 py-3 rounded-full transition-all duration-200 ${
+                    className={`flex items-center px-3 py-3 rounded-full transition-all duration-200 ${
                         activeFilter === FILTER_STATUS.ALL
                             ? 'bg-bg-yellow'
                             : 'hover:bg-bg-gray-2'
@@ -64,7 +64,12 @@ const ToolBar = () => {
                         setActiveFilterStore(FILTER_STATUS.ALL);
                     }}
                 >
-                    <Text modeWeight={MODE_WEIGHT.MEDIUM}>Tất cả</Text>
+                    <Text
+                        modeWeight={MODE_WEIGHT.MEDIUM}
+                        className="text-nowrap"
+                    >
+                        Tất cả
+                    </Text>
                 </DivClick>
                 <DivClick
                     className={`flex items-center px-6 py-3 rounded-full transition-all duration-200 ${

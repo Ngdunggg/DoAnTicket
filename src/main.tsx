@@ -1,5 +1,6 @@
 import ContainerApp from '@app/ContainerApp';
 import envConfig from '@configs/env';
+import setupAxiosInterceptors from '@configs/axiosConfig';
 import * as ReactDOM from 'react-dom/client';
 import 'react-toastify/dist/ReactToastify.css';
 import './main.scss';
@@ -28,6 +29,9 @@ async function startMocking() {
  */
 async function startApp(): Promise<void> {
     await startMocking();
+
+    // Khởi tạo cấu hình axios (interceptor, baseURL, v.v.)
+    setupAxiosInterceptors();
 
     const rootElement = document.getElementById('root');
     if (!rootElement) {

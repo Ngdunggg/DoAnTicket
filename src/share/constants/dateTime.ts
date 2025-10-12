@@ -1,0 +1,11 @@
+export const DATE_FORMAT_ISO = 'yyyy-MM-dd';
+export const DATE_TIME_FORMAT_ISO = 'yyyy-MM-dd HH:mm';
+export const DATE_TIME_FORMAT_ISO_SHORT = 'yyyy-M-d H:mm';
+export const DATETIME_FORMAT_ISO_TIMEZONE = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX";
+export const DATETIME_FORMAT_ISO_WHITESPACE = 'yyyy-MM-dd    HH:mm';
+export const DATE_FORMAT_YYYY_MM = 'yyyy-MM';
+export const DATE_FORMAT_YY_MM = 'yy-mm';
+export const DATE_FORMAT_YY_MM_DD = 'yy-mm-dd';
+export const TIME_FORMAT_HH_MM = 'HH:mm';
+export const DATE_ONLY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+export const TIME_ONLY_REGEX = /^\d{2}:\d{2}$/;

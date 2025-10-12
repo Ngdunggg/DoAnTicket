@@ -12,25 +12,17 @@ import ChevronIcon, {
 } from '@share/components/atoms/icons/ChevronIcon';
 import { useHorizontalScroll } from '@share/hooks/useHorizontalScroll';
 import CountUp from 'react-countup';
-
-interface TrendingEvent {
-    date: string;
-    id: string;
-    image: string;
-    location: string;
-    price: string;
-    title: string;
-    viewCount: number;
-}
+import { Event } from '@share/types/event';
+import Image from '@share/components/atoms/Image';
 
 interface TrendingEventsSectionProps {
-    events: TrendingEvent[];
-    onBookNow: (eventId: string) => void;
+    events: Event[];
+    onViewEvent: (_eventId: string) => void;
 }
 
 const TrendingEventsSection = ({
     events,
-    onBookNow,
+    onViewEvent,
 }: TrendingEventsSectionProps) => {
     // Sử dụng custom hook cho horizontal scroll
     const {
@@ -43,11 +35,6 @@ const TrendingEventsSection = ({
         itemsPerScroll: 3,
         itemWidth: 300,
     });
-
-    // Sắp xếp events theo viewCount (trending) và chỉ lấy top 10
-    const top10Events = [...events]
-        .sort((a, b) => b.viewCount - a.viewCount)
-        .slice(0, 10);
 
     // Render ranking number với CountUp animation
     const renderRankingNumber = (rank: number) => {
@@ -127,20 +114,20 @@ const TrendingEventsSection = ({
                     ref={scrollContainerRef}
                     className="flex gap-20 overflow-x-auto overflow-y-hidden pb-4 scrollbar-hide scroll-smooth"
                 >
-                    {top10Events.map((event, index) => (
+                    {events.map((event, index) => (
                         <div
                             key={event.id}
-                            className="relative mt-2 w-[350px] pl-14 h-[200px]"
+                            className="relative mt-2 pl-14 max-w-[350px] max-h-[200px]"
                         >
                             {renderRankingNumber(index + 1)}
                             <DivClick
-                                onClick={() => onBookNow(event.id)}
-                                className="w-[350px] relative group cursor-pointer"
+                                onClick={() => onViewEvent(event.id)}
+                                className="w-[350px] h-[200px] relative group cursor-pointer"
                             >
-                                <img
-                                    src={event.image}
+                                <Image
+                                    src={event.images[0].image_url}
                                     alt={event.title}
-                                    className="w-full h-[200px] object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+                                    className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
                                 />
                             </DivClick>
                         </div>

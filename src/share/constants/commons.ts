@@ -85,3 +85,27 @@ export const EVENT_DESCRIPTION_TEMPLATE = `
     <h3>Lưu ý về điều khoản VAT</h3>
     <p>[Nội dung điều khoản về VAT]</p>
 `;
+
+export const RESULT_CODE = {
+    BAD_REQUEST: 'bad_request',
+    ERROR: 'error',
+    FORBIDDEN: 'forbidden',
+    INTERNAL_SERVER_ERROR: 'internal_server_error',
+    NOT_FOUND: 'not_found',
+    SUCCESS: 'success',
+    TOO_MANY_REQUESTS: 'too_many_requests',
+    UNAUTHORIZED: 'unauthorized',
+    UNPROCESSABLE_ENTITY: 'unprocessable_entity',
+};
+export type ResultCode = typeof RESULT_CODE.SUCCESS;
+
+//* Purchased ticket status
+export const PURCHASED_TICKET_STATUS = {
+    EXPIRED: 'expired',
+    UNUSED: 'unused',
+    USED: 'used',
+};
+export type PurchasedTicketStatus =
+    | typeof PURCHASED_TICKET_STATUS.USED
+    | typeof PURCHASED_TICKET_STATUS.EXPIRED
+    | typeof PURCHASED_TICKET_STATUS.UNUSED;

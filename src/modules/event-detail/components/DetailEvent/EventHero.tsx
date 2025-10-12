@@ -12,18 +12,23 @@ import CalendarIcon, {
 import MapPinIcon from '@share/components/atoms/icons/MapPinIcon';
 import ArrowRightIcon from '@share/components/atoms/icons/ArrowRightIcon';
 import { useAppSelector } from '@configs/store';
-import { useAuthPopup } from '@modules/auth/hooks/useAuthPopup';
+import { useAuthPopup } from '@modules/auth/components/hooks/useAuthPopup';
 import AuthPopup from '@modules/auth/components/AuthPopup';
 import TicketIcon from '@share/components/atoms/icons/TicketIcon';
+import VerifyOtpPopup from '@modules/auth/components/VerifyOtpPopup';
+import ForgetPassword from '@modules/auth/components/ForgetPassword';
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_FORMAT_YY_MM_DD } from '@share/constants/dateTime';
+import { Event } from '@share/types/event';
+import Image from '@share/components/atoms/Image';
+import {
+    getEventImage,
+    getEventLocation,
+    getMinPrice,
+} from '../../utils/eventUtils';
 
 interface EventHeroProps {
-    event: {
-        dateEnd: string;
-        dateStart: string;
-        image: string;
-        location: string;
-        title: string;
-    };
+    event: Event;
     onBookNow: () => void;
 }
 
@@ -38,17 +43,6 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
             console.log('onBookNow');
             onBookNow();
         }
-    };
-
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('vi-VN', {
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        });
     };
 
     return (
@@ -73,8 +67,15 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeSize={MODE_SIZE[16]}
                             >
-                                {formatDate(event.dateStart)} -{' '}
-                                {formatDate(event.dateEnd)}
+                                {formatDateTime(
+                                    event.start_time,
+                                    DATE_FORMAT_YY_MM_DD
+                                )}{' '}
+                                -{' '}
+                                {formatDateTime(
+                                    event.end_time,
+                                    DATE_FORMAT_YY_MM_DD
+                                )}
                             </Text>
                         </div>
 
@@ -86,7 +87,7 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeSize={MODE_SIZE[16]}
                             >
-                                {event.location}
+                                {getEventLocation(event)}
                             </Text>
                         </div>
                     </div>
@@ -105,7 +106,7 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                                 modeSize={MODE_SIZE[18]}
                                 className="font-bold"
                             >
-                                299.000 ₫
+                                {getMinPrice(event)}
                             </Text>
                             <ArrowRightIcon className=" text-white" />
                         </div>
@@ -133,8 +134,8 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
 
                 {/* Right Panel - Event Poster */}
                 <div className="w-2/3 overflow-hidden rounded-r-2xl relative">
-                    <img
-                        src={event.image}
+                    <Image
+                        src={getEventImage(event)}
                         alt={event.title}
                         className="w-full h-full object-cover"
                     />
@@ -142,6 +143,8 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
             </div>
             {/* Auth Popup */}
             <AuthPopup />
+            <VerifyOtpPopup />
+            <ForgetPassword />
         </div>
     );
 };

@@ -5,12 +5,14 @@ import {
     Text,
 } from '@share/components/atoms/Text';
 import DivClick from '../atoms/DivClick';
+import Image from '../atoms/Image';
+import CalendarIcon from '../atoms/icons/CalendarIcon';
+import { MODE_CALENDAR } from '../atoms/icons/CalendarIcon';
 
 interface EventCardProps {
     date: string;
     image?: string;
-    location: string;
-    onBookNow?: () => void;
+    onViewEvent?: () => void;
     price: string;
     title: string;
 }
@@ -18,32 +20,21 @@ interface EventCardProps {
 const EventCard = ({
     date,
     image,
-    location,
-    onBookNow,
+    onViewEvent,
     price,
     title,
 }: EventCardProps) => {
     return (
         <DivClick
             className="rounded-lg overflow-hidden duration-300 hover:scale-105"
-            onClick={onBookNow}
+            onClick={onViewEvent}
         >
             <div className="h-50 flex items-center justify-center">
-                {image ? (
-                    <img
-                        src={image}
-                        alt={title}
-                        className="w-full h-full object-cover rounded-lg"
-                    />
-                ) : (
-                    <Text
-                        modeColor={MODE_COLOR_TEXT.BLACK}
-                        modeSize={MODE_SIZE[16]}
-                        className="font-medium"
-                    >
-                        Hình ảnh sự kiện
-                    </Text>
-                )}
+                <Image
+                    src={image}
+                    alt={title}
+                    className="w-full h-full object-cover rounded-lg"
+                />
             </div>
             <div className="p-4">
                 <div className="h-[2.5rem] mb-2">
@@ -59,18 +50,11 @@ const EventCard = ({
                 <div className="space-y-2 mb-4">
                     <div className="flex items-center gap-2">
                         <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY}
+                            modeColor={MODE_COLOR_TEXT.WHITE}
                             modeSize={MODE_SIZE[14]}
+                            className="flex items-center gap-2"
                         >
-                            📅 {date}
-                        </Text>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY}
-                            modeSize={MODE_SIZE[14]}
-                        >
-                            📍 {location}
+                            <CalendarIcon mode={MODE_CALENDAR.WHITE} /> {date}
                         </Text>
                     </div>
                     <div className="flex items-center gap-2">
@@ -79,7 +63,7 @@ const EventCard = ({
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.LARGE}
                         >
-                            Từ {price}
+                            Chỉ từ {price}
                         </Text>
                     </div>
                 </div>

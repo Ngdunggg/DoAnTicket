@@ -1,70 +1,43 @@
 import EventHero from './EventHero';
 import EventDescription from './EventDescription';
 import TicketSection from './TicketSection';
+import useDetailEventHandler from './hooks/useDetailEventHandler';
+import { SCREEN_PATH } from '@share/constants/routers';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import OrganizerSection from './OrganizerSection';
 
-interface TicketType {
-    available: number;
-    benefits: string[];
-    description: string;
-    id: string;
-    isPopular?: boolean;
-    name: string;
-    originalPrice?: number;
-    price: number;
-}
+const EventDetailLayout = () => {
+    const { eventDetail, loading, organizerProfile } = useDetailEventHandler();
+    const navigate = useNavigate();
 
-interface EventDate {
-    date: string;
-    id: string;
-    tickets: TicketType[];
-}
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-white">Loading...</div>
+            </div>
+        );
+    }
 
-interface EventDetailLayoutProps {
-    event: {
-        additionalInfo: {
-            ageRestriction: string;
-            dressCode?: string;
-            duration: string;
-            language: string;
-        };
-        category: string;
-        dateEnd: string;
-        dateStart: string;
-        description: string;
-        highlights: string[];
-        id: string;
-        image: string;
-        location: string;
-        organizer: string;
-        requirements: string[];
-        title: string;
-    };
-    onBookNow: () => void;
-    onBuyTickets: (_dateId: string) => void;
-    tickets: EventDate[];
-}
+    if (!eventDetail) {
+        navigate(SCREEN_PATH.HOME);
+        toast.error('Sự kiện không tồn tại');
+        return null;
+    }
 
-const EventDetailLayout = ({
-    event,
-    onBookNow,
-    onBuyTickets,
-    tickets,
-}: EventDetailLayoutProps) => {
     return (
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 gap-10 pb-10    bg-gray-200">
             {/* Hero Section */}
-            <EventHero event={event} onBookNow={onBookNow} />
+            <EventHero event={eventDetail} onBookNow={() => {}} />
 
             {/* Description Section */}
-            <EventDescription
-                description={event.description}
-                highlights={event.highlights}
-                requirements={event.requirements}
-                additionalInfo={event.additionalInfo}
-            />
+            <EventDescription eventDetail={eventDetail} />
 
             {/* Ticket Section */}
-            <TicketSection ticketsData={tickets} onBuyTickets={onBuyTickets} />
+            <TicketSection event={eventDetail} onBuyTickets={() => {}} />
+
+            {/* Organizer Section */}
+            <OrganizerSection organizerProfile={organizerProfile || null} />
         </div>
     );
 };
