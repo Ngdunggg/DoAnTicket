@@ -39,14 +39,18 @@ export type Type =
 //* Filter status
 export const FILTER_STATUS = {
     ALL: 'all',
+    APPROVED: 'approved',
     PAST: 'past',
     PENDING: 'pending',
+    REJECTED: 'rejected',
     UPCOMING: 'upcoming',
 };
 export type FilterStatus =
     | typeof FILTER_STATUS.ALL
+    | typeof FILTER_STATUS.APPROVED
     | typeof FILTER_STATUS.UPCOMING
     | typeof FILTER_STATUS.PAST
+    | typeof FILTER_STATUS.REJECTED
     | typeof FILTER_STATUS.PENDING;
 
 //* Create event tab
@@ -109,3 +113,75 @@ export type PurchasedTicketStatus =
     | typeof PURCHASED_TICKET_STATUS.USED
     | typeof PURCHASED_TICKET_STATUS.EXPIRED
     | typeof PURCHASED_TICKET_STATUS.UNUSED;
+
+//* My ticket tab
+export const MY_TICKET_TAB = {
+    PAST: 'past',
+    UPCOMING: 'upcoming',
+};
+export type MyTicketTab =
+    | typeof MY_TICKET_TAB.UPCOMING
+    | typeof MY_TICKET_TAB.PAST;
+
+//* Image type
+export const IMAGE_TYPE = {
+    BANNER: 'banner',
+    CARD: 'card',
+};
+export type ImageType = typeof IMAGE_TYPE.BANNER | typeof IMAGE_TYPE.CARD;
+
+//* Ticket status
+export const TICKET_STATUS = {
+    ACTIVE: 'active',
+    HIDDEN: 'hidden',
+    SOLD_OUT: 'sold_out',
+};
+export type TicketStatus =
+    | typeof TICKET_STATUS.ACTIVE
+    | typeof TICKET_STATUS.SOLD_OUT
+    | typeof TICKET_STATUS.HIDDEN;
+
+//* Role
+export const ROLE = {
+    ADMIN: 'admin',
+    ORGANIZER: 'organizer',
+    USER: 'user',
+};
+export type Role = typeof ROLE.ADMIN | typeof ROLE.USER | typeof ROLE.ORGANIZER;
+
+//* Event status
+export const EVENT_STATUS = {
+    APPROVED: 'approved',
+    PENDING: 'pending',
+    REJECTED: 'rejected',
+};
+export type EventStatus =
+    | typeof EVENT_STATUS.PENDING
+    | typeof EVENT_STATUS.APPROVED
+    | typeof EVENT_STATUS.REJECTED;
+
+//* Orders status
+export const ORDERS_STATUS = {
+    EXPIRED: 'expired',
+    FAILED: 'failed',
+    PAID: 'paid',
+    PENDING: 'pending',
+};
+export type OrdersStatus =
+    | typeof ORDERS_STATUS.PENDING
+    | typeof ORDERS_STATUS.PAID
+    | typeof ORDERS_STATUS.FAILED
+    | typeof ORDERS_STATUS.EXPIRED;
+
+//* Admin tab
+export const ADMIN_TAB = {
+    CATEGORIES: 'categories',
+    DASHBOARD: 'dashboard',
+    EVENTS: 'events',
+    USERS: 'users',
+};
+export type AdminTab =
+    | typeof ADMIN_TAB.DASHBOARD
+    | typeof ADMIN_TAB.USERS
+    | typeof ADMIN_TAB.EVENTS
+    | typeof ADMIN_TAB.CATEGORIES;

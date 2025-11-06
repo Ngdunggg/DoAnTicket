@@ -103,7 +103,7 @@ const FormBooking = ({ questionForm }: FormBookingProps) => {
                         <RaddioButton
                             inputId="agreeToTerms"
                             name="agreeToTerms"
-                            value={true}
+                            value={agreeToTerms}
                             checked={agreeToTerms}
                         />
 

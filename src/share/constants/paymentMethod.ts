@@ -1,8 +1,10 @@
-const PAYMENT_METHOD = {
-    SHOPEEPAY: 'shopeepay',
-    VIETQR: 'vietqr',
+export const PAYMENT_METHOD = {
+    MOMO: 'momo',
     VNPAY: 'vnpay',
     ZALOPAY: 'zalopay',
-} as const;
+};
 
-export default PAYMENT_METHOD;
+export type PaymentMethod =
+    | typeof PAYMENT_METHOD.MOMO
+    | typeof PAYMENT_METHOD.VNPAY
+    | typeof PAYMENT_METHOD.ZALOPAY;

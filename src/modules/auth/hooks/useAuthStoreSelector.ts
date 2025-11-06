@@ -3,6 +3,7 @@ import { useAppSelector } from '@configs/store';
 const useAuthStoreSelector = () => {
     return {
         emailVerify: useAppSelector(state => state.login_signup.email_verify),
+        isAdmin: useAppSelector(state => state.login_signup.is_admin),
         isAuthPopupOpen: useAppSelector(
             state => state.login_signup.is_auth_popup_open
         ),

@@ -40,33 +40,37 @@ const HomeLayout = () => {
                 <OtherEventsSection
                     mode="week"
                     title="Sự kiện theo thời gian"
-                    events={getEventsThisWeek(10)}
-                    weekEvents={getEventsThisWeek(10)}
-                    monthEvents={getEventsThisMonth(10)}
+                    events={getEventsThisWeek(4)}
+                    weekEvents={getEventsThisWeek(4)}
+                    monthEvents={getEventsThisMonth(4)}
                     onViewEvent={handleViewEvent}
                 />
 
                 {/* Các thể loại sự kiện */}
                 <OtherEventsSection
                     title="Âm nhạc"
+                    category={['Âm nhạc']}
                     events={getEventsByCategory('Âm nhạc')}
                     onViewEvent={handleViewEvent}
                 />
 
                 <OtherEventsSection
                     title="Thể thao"
+                    category={['Thể thao']}
                     events={getEventsByCategory('Thể thao')}
                     onViewEvent={handleViewEvent}
                 />
 
                 <OtherEventsSection
-                    title="Nghệ thuật"
-                    events={getEventsByCategory('Nghệ thuật')}
+                    title="Ẩm thực"
+                    category={['Ẩm thực']}
+                    events={getEventsByCategory('Ẩm thực')}
                     onViewEvent={handleViewEvent}
                 />
 
                 <OtherEventsSection
                     title="Giáo dục"
+                    category={['Giáo dục']}
                     events={getEventsByCategory('Giáo dục', 10)}
                     onViewEvent={handleViewEvent}
                 />

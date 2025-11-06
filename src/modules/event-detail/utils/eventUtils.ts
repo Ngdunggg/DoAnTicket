@@ -1,3 +1,5 @@
+import { Category } from '@share/api/categoriesApi';
+import { IMAGE_TYPE, ImageType } from '@share/constants/commons';
 import { Event } from '@share/types/event';
 
 /**
@@ -22,10 +24,30 @@ export const getMinPrice = (event: Event): string => {
 };
 
 /**
+ * Get event ticket types
+ */
+export const getEventTypes = (
+    categoryIds: string,
+    categories: Category[]
+): string => {
+    return categoryIds
+        .split(',')
+        .map(
+            categoryId =>
+                categories.find(category => category.id === categoryId.trim())?.name
+        )
+        .join(', ');
+};
+
+/**
  * Get event main image URL
  */
-export const getEventImage = (event: Event): string | undefined => {
-    return event.images?.[0]?.image_url;
+export const getEventImage = (
+    event: Event,
+    imageType: ImageType
+): string | undefined => {
+    return event.images?.find(image => image.image_type === imageType)
+        ?.image_url;
 };
 
 /**
@@ -105,7 +127,7 @@ export const getEventCardData = (event: Event) => {
         date: event.start_time,
         hasAvailableTickets: hasAvailableTickets(event),
         id: event.id,
-        image: getEventImage(event),
+        image: getEventImage(event, IMAGE_TYPE.CARD),
         isFinished: isEventFinished(event),
         isOngoing: isEventOngoing(event),
         isUpcoming: isEventUpcoming(event),

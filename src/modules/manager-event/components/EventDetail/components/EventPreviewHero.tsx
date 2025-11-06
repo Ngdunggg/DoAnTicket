@@ -12,38 +12,18 @@ import CalendarIcon, {
 import MapPinIcon from '@share/components/atoms/icons/MapPinIcon';
 import ArrowRightIcon from '@share/components/atoms/icons/ArrowRightIcon';
 import TicketIcon from '@share/components/atoms/icons/TicketIcon';
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_TIME_FORMAT_ISO } from '@share/constants/dateTime';
+import { Event } from '@share/types/event';
+import Image from '@share/components/atoms/Image';
+import {
+    getEventImage,
+    getEventLocation,
+    getMinPrice,
+} from '@modules/event-detail/utils/eventUtils';
+import { IMAGE_TYPE } from '@share/constants/commons';
 
-interface EventPreviewHeroProps {
-    event: {
-        dateEnd: string;
-        dateStart: string;
-        image: string;
-        location: string;
-        title: string;
-    };
-    minPrice?: number;
-}
-
-const EventPreviewHero = ({
-    event,
-    minPrice = 299000,
-}: EventPreviewHeroProps) => {
-    const handleBuyTicket = () => {
-        // Disabled in preview mode
-        console.log('Preview mode - action disabled');
-    };
-
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('vi-VN', {
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        });
-    };
-
+const EventPreviewHero = ({ event }: { event: Event }) => {
     return (
         <div className="bg-bg-black w-full min-h-[600px] flex items-center justify-center px-10">
             <div className="flex w-full h-[450px] relative">
@@ -54,7 +34,8 @@ const EventPreviewHero = ({
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
                             modeSize={MODE_SIZE[24]}
-                            className="font-bold leading-tight"
+                            modeWeight={MODE_WEIGHT.LARGE}
+                            className="leading-tight"
                         >
                             {event.title}
                         </Text>
@@ -66,8 +47,15 @@ const EventPreviewHero = ({
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeSize={MODE_SIZE[16]}
                             >
-                                {formatDate(event.dateStart)} -{' '}
-                                {formatDate(event.dateEnd)}
+                                {formatDateTime(
+                                    event.start_time,
+                                    DATE_TIME_FORMAT_ISO
+                                )}{' '}
+                                -{' '}
+                                {formatDateTime(
+                                    event.end_time,
+                                    DATE_TIME_FORMAT_ISO
+                                )}
                             </Text>
                         </div>
 
@@ -79,7 +67,7 @@ const EventPreviewHero = ({
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeSize={MODE_SIZE[16]}
                             >
-                                {event.location}
+                                {getEventLocation(event)}
                             </Text>
                         </div>
                     </div>
@@ -96,9 +84,8 @@ const EventPreviewHero = ({
                             <Text
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeSize={MODE_SIZE[18]}
-                                className="font-bold"
                             >
-                                {minPrice.toLocaleString('vi-VN')} ₫
+                                {getMinPrice(event)}
                             </Text>
                             <ArrowRightIcon className=" text-white" />
                         </div>
@@ -106,7 +93,6 @@ const EventPreviewHero = ({
                         <Button
                             icon={<TicketIcon />}
                             mode={MODE_BUTTON.DECORATIVE_YELLOW}
-                            onClick={handleBuyTicket}
                             disabled
                         >
                             <Text
@@ -127,8 +113,8 @@ const EventPreviewHero = ({
 
                 {/* Right Panel - Event Poster */}
                 <div className="w-2/3 overflow-hidden rounded-r-2xl relative">
-                    <img
-                        src={event.image}
+                    <Image
+                        src={getEventImage(event, IMAGE_TYPE.BANNER)}
                         alt={event.title}
                         className="w-full h-full object-cover"
                     />

@@ -1,14 +1,24 @@
 import { useAppDispatch } from '@configs/store';
 import {
-    setIsOpenFilterPopup,
     resetEventListState,
-    setFilterType,
-    setFilterPriceFree,
+    setDateRangeEnd,
+    setDateRangeStart,
+    setIsOpenFilterPopup,
     setFilterLocation,
+    setFilterPriceFree,
+    setFilterType,
 } from '../stores/EventListSlice';
 
 const useEventListStoreAction = () => {
     const dispatch = useAppDispatch();
+
+    const setDateRangeEndStore = (data: string | null) => {
+        dispatch(setDateRangeEnd(data));
+    };
+
+    const setDateRangeStartStore = (data: string | null) => {
+        dispatch(setDateRangeStart(data));
+    };
 
     const setIsOpenFilterPopupStore = (data: boolean) => {
         dispatch(setIsOpenFilterPopup(data));
@@ -32,6 +42,8 @@ const useEventListStoreAction = () => {
 
     return {
         resetEventListStateStore,
+        setDateRangeEndStore,
+        setDateRangeStartStore,
         setFilterLocationStore,
         setFilterPriceFreeStore,
         setFilterTypeStore,

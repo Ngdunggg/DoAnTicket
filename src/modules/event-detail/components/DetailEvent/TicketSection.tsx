@@ -14,7 +14,7 @@ import ChevronIcon, {
 } from '@share/components/atoms/icons/ChevronIcon';
 import { Event } from '@share/types/event';
 import { formatDateTime } from '@share/utils/dateTime';
-import { DATE_FORMAT_YY_MM_DD } from '@share/constants/dateTime';
+import { DATE_FORMAT_ISO } from '@share/constants/dateTime';
 import { formatPrice } from '../../utils/eventUtils';
 
 interface TicketSectionProps {
@@ -82,7 +82,7 @@ const TicketSection = ({ event, onBuyTickets }: TicketSectionProps) => {
                                     >
                                         {formatDateTime(
                                             date.start_at,
-                                            DATE_FORMAT_YY_MM_DD
+                                            DATE_FORMAT_ISO
                                         )}
                                     </Text>
                                     <Text

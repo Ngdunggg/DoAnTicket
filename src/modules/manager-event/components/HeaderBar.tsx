@@ -22,10 +22,14 @@ import useMenuManager from '@share/components/organisms/layout/hooks/useMenuMana
 import useCreateEventStoreAction from './CreateAndEditEvent/hooks/useCreateEventStoreAction';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useNavigate } from 'react-router-dom';
+import Image from '@share/components/atoms/Image';
+import { ROLE } from '@share/constants/commons';
+import AdminIcon, { MODE_ADMIN } from '@share/components/atoms/icons/AdminIcon';
 
 const HeaderBar = () => {
     const { isActive, menuItems } = useMenuManager();
     const {
+        handleClickAdmin,
         handleClickCreateEvent,
         handleClickMyProfile,
         handleClickMyTicket,
@@ -77,10 +81,10 @@ const HeaderBar = () => {
                             }
                         >
                             <div className="border border-white rounded-full">
-                                <img
-                                    src={user.avatar}
+                                <Image
+                                    src={user.avatar_url || ''}
                                     alt="avatar"
-                                    className="w-9 h-9 rounded-full p-0.5"
+                                    className="w-9 h-9 rounded-full object-cover p-0.5"
                                 />
                             </div>
                             <Text
@@ -124,7 +128,29 @@ const HeaderBar = () => {
                                             Vé của tôi
                                         </Text>
                                     </DivClick>
-
+                                    {user?.role === ROLE.ADMIN && (
+                                        <DivClick
+                                            onClick={() => {
+                                                setIsAccountPopupOpenStore(
+                                                    false
+                                                );
+                                                handleClickAdmin();
+                                            }}
+                                            className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
+                                        >
+                                            <AdminIcon
+                                                mode={MODE_ADMIN.WHITE}
+                                            />
+                                            <Text
+                                                modeColor={
+                                                    MODE_COLOR_TEXT.WHITE
+                                                }
+                                                modeSize={MODE_SIZE[14]}
+                                            >
+                                                Quản lý sự kiện
+                                            </Text>
+                                        </DivClick>
+                                    )}
                                     <DivClick
                                         onClick={() => {
                                             setIsAccountPopupOpenStore(false);

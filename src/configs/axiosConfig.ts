@@ -32,6 +32,9 @@ const setupAxiosInterceptors = () => {
             config.baseURL = envConfig.apiBaseUrl;
         }
 
+        // Ensure cookies are sent to backend (JWT in cookies per backend strategy)
+        config.withCredentials = true;
+
         // Add token from localStorage if available
         const token = localStorage.getItem('token');
         if (token) {
@@ -60,11 +63,11 @@ const setupAxiosInterceptors = () => {
      */
     const onResponseError = async (error: AxiosError) => {
         // Handle 401 errors
-        if (error.response?.status === 401) {
-            // Clear token and redirect to login
-            localStorage.removeItem('token');
-            window.location.href = '/login';
-        }
+        // if (error.response?.status === 401) {
+        //     // Clear token and redirect to login
+        //     localStorage.removeItem('token');
+        //     window.location.href = '/login';
+        // }
 
         // Handle network errors
         if (

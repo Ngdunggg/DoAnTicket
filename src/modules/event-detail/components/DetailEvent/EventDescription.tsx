@@ -8,7 +8,6 @@ import {
     MODE_COLOR_TEXT,
     MODE_SIZE,
     MODE_WEIGHT,
-    MODE_LEADING,
 } from '@share/components/atoms/Text';
 import { useState, useEffect, useRef } from 'react';
 import { Event } from '@share/types/event';
@@ -51,14 +50,12 @@ const EventDescription = ({ eventDetail }: { eventDetail: Event }) => {
                             Giới thiệu
                         </Text>
                         <div className="h-px w-full bg-gray-300" />
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                            modeSize={MODE_SIZE[16]}
-                            modeLeading={MODE_LEADING.MEDIUM}
-                            isAllowLineBreaks
-                        >
-                            {eventDetail.description}
-                        </Text>
+                        <div
+                            className="html-content"
+                            dangerouslySetInnerHTML={{
+                                __html: eventDetail.description,
+                            }}
+                        />
                     </div>
                 </div>
 

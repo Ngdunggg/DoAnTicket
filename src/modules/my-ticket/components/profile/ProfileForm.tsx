@@ -13,11 +13,11 @@ import CameraIcon, {
 } from '@share/components/atoms/icons/CameraIcon';
 import RadioButton from '@share/components/atoms/RaddioButton';
 import useProfileFormHandler from './hooks/useProfileFormHandler';
+import Image from '@share/components/atoms/Image';
 
 const GENDER_OPTIONS = [
-    { label: 'Nam', value: 'male' },
-    { label: 'Nữ', value: 'female' },
-    { label: 'Khác', value: 'other' },
+    { label: 'Nam', value: true },
+    { label: 'Nữ', value: false },
 ];
 
 const ProfileForm = () => {
@@ -47,7 +47,7 @@ const ProfileForm = () => {
                 className="w-fit h-fit relative cursor-pointer"
                 onClick={handleAvatarClick}
             >
-                <img
+                <Image
                     src={avatarPreview}
                     alt="avatar"
                     className="w-40 h-40 rounded-full object-cover"
@@ -81,17 +81,17 @@ const ProfileForm = () => {
 
             <div className="flex gap-14">
                 {GENDER_OPTIONS.map(({ label, value }) => (
-                    <div key={value} className="flex items-center gap-2">
+                    <div
+                        key={String(value)}
+                        className="flex items-center gap-2"
+                    >
                         <RadioButton
                             inputId={`gender-${value}`}
                             name="gender"
                             value={value}
                             checked={profileForm.watch('gender') === value}
                             onChange={e =>
-                                profileForm.setValue(
-                                    'gender',
-                                    e.value as 'male' | 'female' | 'other'
-                                )
+                                profileForm.setValue('gender', Boolean(e.value))
                             }
                         />
                         <label

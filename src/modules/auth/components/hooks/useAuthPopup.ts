@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useAuthStoreSelector from '../../hooks/useAuthStoreSelector';
 import useAuthStoreAction from '../../hooks/useAuthStoreAction';
-import { AUTH_MODE, RESULT_CODE } from '@share/constants/commons';
+import { AUTH_MODE, RESULT_CODE, ROLE } from '@share/constants/commons';
 import useAuthFormLogin from './useAuthFormLogin';
 import useLoginMutation from '../../hooks/useLoginMutation';
 import { LoginRequest, LoginResponse } from '@share/models/auth/login';
@@ -24,13 +24,14 @@ export const useAuthPopup = () => {
     const {
         resetAuthStateStore,
         setEmailVerifyStore,
+        setIsAdminStore,
         setIsAuthPopupOpenStore,
         setIsForgetPasswordPopupOpenStore,
         setIsLoginStore,
         setIsVerifyOtpPopupOpenStore,
     } = useAuthStoreAction();
     const [isLoading, setIsLoading] = useState(false);
-    const { isAuthPopupOpen, isLogin } = useAuthStoreSelector();
+    const { isAdmin, isAuthPopupOpen, isLogin } = useAuthStoreSelector();
     // Lấy thông tin user và token từ Redux store
     const dispatch = useAppDispatch();
     const { token } = useAppSelector(state => state.auth);
@@ -113,9 +114,34 @@ export const useAuthPopup = () => {
         setIsLoading(false);
         // Lưu token vào Redux store
         dispatch(setToken(data.data.token));
-        dispatch(setUserInfo(data.data.user));
+        // Lưu token vào localStorage để axios interceptor tự gán Authorization
+        localStorage.setItem('token', data.data.token);
+        console.log(data.data.token);
+        // Chuẩn hóa user từ LoginUser -> User
+        const loginUser = data.data.user;
+        console.log(loginUser);
+        const normalizedUser = {
+            address: loginUser.address ?? null,
+            avatar_url: loginUser.avatar_url ?? null,
+            created_at: '',
+            date_of_birth: loginUser.date_of_birth ?? '',
+            email: loginUser.email,
+            full_name: loginUser.full_name,
+            gender: loginUser.gender ?? null,
+            google_id: loginUser.google_id ?? null,
+            id: loginUser.id,
+            phone: loginUser.phone ?? '',
+            role: loginUser.role,
+            status: loginUser.status,
+        };
+        dispatch(setUserInfo(normalizedUser));
 
         toast.success('Đăng nhập thành công');
+
+        if (normalizedUser.role === ROLE.ADMIN && !isAdmin) {
+            setIsAdminStore(true);
+            return;
+        }
         closeAuthPopup();
     };
 
@@ -177,12 +203,20 @@ export const useAuthPopup = () => {
         window.location.href = `${process.env.VITE_APP_API_BASE_URL}auth/google`;
     };
 
+    const handleNavigateToAdmin = () => {
+        if (isAdmin) {
+            navigate(SCREEN_PATH.ADMIN_DASHBOARD);
+        }
+    };
+
     return {
         authForm,
         closeAuthPopup,
         handleLogin,
         handleLoginWithGoogle,
+        handleNavigateToAdmin,
         handleRegister,
+        isAdmin,
         isAuthPopupOpen,
         isLoading,
         isLogin,

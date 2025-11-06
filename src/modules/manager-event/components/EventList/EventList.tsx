@@ -1,37 +1,51 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ToolBar from './ToolBar';
 import EventListCard from '@share/components/organisms/EventListCard';
 import useToolBarEvent from './hooks/useToolBarEvent';
 import useEventList from './hooks/useEventList';
+import {
+    Text,
+    MODE_COLOR_TEXT,
+    MODE_SIZE,
+    MODE_WEIGHT,
+} from '@share/components/atoms/Text';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useNavigate } from 'react-router-dom';
+import { organizerApi } from '@share/api/organizerApi';
+import { RESULT_CODE } from '@share/constants/commons';
+import { toast } from 'react-toastify';
+import useFetchEventList from '@modules/manager-event/hooks/useFetchEventList';
 
 const EventList = () => {
+    const navigate = useNavigate();
     const { searchText } = useToolBarEvent();
     const { filteredEvents } = useEventList();
-    const navigate = useNavigate();
+    const { refetch } = useFetchEventList();
 
-    const handleEdit = (eventId: string) => {
-        console.log('Edit event:', eventId);
-        // TODO: Navigate to edit page
+    const handleDeleteEventClick = async (eventId: string) => {
+        try {
+            const response = await organizerApi.deleteMyEvent(eventId);
+            if (response.result.code === RESULT_CODE.SUCCESS) {
+                toast.success('Xóa sự kiện thành công');
+                await refetch();
+            }
+        } catch (error: any) {
+            console.log(
+                'Delete event error:',
+                error.response.data.result.error_msg_id
+            );
+            toast.error(
+                error.response.data.result.error_msg_id ||
+                    'Xóa sự kiện thất bại'
+            );
+        }
     };
 
-    const handleView = (eventId: string) => {
-        console.log('View event:', eventId);
-        // TODO: Navigate to event detail page
-    };
-
-    const handleDelete = (eventId: string) => {
-        console.log('Delete event:', eventId);
-        // TODO: Show confirmation dialog and delete
-    };
-
-    const handleCardClick = (eventId: string) => {
+    const handleViewEventClick = (eventId: string) => {
         navigate(
             SCREEN_PATH.MANAGER_EVENT_DETAIL.replace(':event_id', eventId)
         );
-        // TODO: Navigate to event detail page
     };
-
     return (
         <div className="flex flex-col flex-1 max-h-screen overflow-hidden">
             <ToolBar />
@@ -49,18 +63,23 @@ const EventList = () => {
                                 <EventListCard
                                     key={event.id}
                                     event={event}
-                                    onEdit={handleEdit}
-                                    onView={handleView}
-                                    onDelete={handleDelete}
-                                    onCardClick={() =>
-                                        handleCardClick(event.id)
+                                    onViewEvent={() =>
+                                        handleViewEventClick(event.id)
+                                    }
+                                    onDeleteEvent={() =>
+                                        handleDeleteEventClick(event.id)
                                     }
                                 />
                             ))
                     ) : (
-                        <div className="text-center py-12">
+                        <Text
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            modeSize={MODE_SIZE[20]}
+                            modeWeight={MODE_WEIGHT.LARGE}
+                            className="text-center"
+                        >
                             không có sự kiện nào
-                        </div>
+                        </Text>
                     )}
                 </div>
             </div>

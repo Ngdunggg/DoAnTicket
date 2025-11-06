@@ -5,16 +5,21 @@ import EventListCard from '@share/components/organisms/EventListCard';
 import useToolBarEvent from '@modules/manager-event/components/EventList/hooks/useToolBarEvent';
 import InputValidate from '@share/components/molecules/InputValidate';
 import { isNotNullOrUndefinedOrBlank } from '@share/utils/validate';
+import {
+    Text,
+    MODE_COLOR_TEXT,
+    MODE_SIZE,
+    MODE_WEIGHT,
+} from '@share/components/atoms/Text';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useNavigate } from 'react-router-dom';
 
 const ListEventReport = () => {
+    const navigate = useNavigate();
     const { schemaSearch, searchForm, searchText, setSearchTextStore } =
         useToolBarEvent();
-    const { filteredEvents } = useEventList();
-    const navigate = useNavigate();
-
-    const handleCardClick = (eventId: string) => {
+    const { allEventsByOrganizer } = useEventList();
+    const handleViewEventClick = (eventId: string) => {
         navigate(
             SCREEN_PATH.MANAGER_REPORT_DETAIL.replace(':event_id', eventId)
         );
@@ -62,8 +67,13 @@ const ListEventReport = () => {
             </div>
             <div className="py-2 overflow-y-auto scrollbar-hide">
                 <div className="flex flex-col gap-4">
-                    {filteredEvents.length > 0 ? (
-                        filteredEvents
+                    {allEventsByOrganizer.length > 0 ? (
+                        [...allEventsByOrganizer]
+                            .sort(
+                                (a, b) =>
+                                    new Date(b.start_time).getTime() -
+                                    new Date(a.start_time).getTime()
+                            )
                             .filter(event =>
                                 event.title
                                     .trim()
@@ -74,16 +84,21 @@ const ListEventReport = () => {
                                 <EventListCard
                                     key={event.id}
                                     event={event}
-                                    onCardClick={() =>
-                                        handleCardClick(event.id)
+                                    onViewEvent={() =>
+                                        handleViewEventClick(event.id)
                                     }
                                     showMenu={false}
                                 />
                             ))
                     ) : (
-                        <div className="text-center py-12">
+                        <Text
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            modeSize={MODE_SIZE[20]}
+                            modeWeight={MODE_WEIGHT.LARGE}
+                            className="text-center"
+                        >
                             không có sự kiện nào
-                        </div>
+                        </Text>
                     )}
                 </div>
             </div>

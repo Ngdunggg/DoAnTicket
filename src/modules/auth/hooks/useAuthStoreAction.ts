@@ -7,6 +7,7 @@ import {
     resetAuthState,
     setIsVerifyOtpPopupOpen,
     setIsChangePassword,
+    setIsAdmin,
 } from '../store/authSlice';
 
 const useAuthStoreAction = () => {
@@ -15,6 +16,7 @@ const useAuthStoreAction = () => {
     return {
         resetAuthStateStore: () => dispatch(resetAuthState()),
         setEmailVerifyStore: (data: string) => dispatch(setEmailVerify(data)),
+        setIsAdminStore: (data: boolean) => dispatch(setIsAdmin(data)),
         setIsAuthPopupOpenStore: (data: boolean) =>
             dispatch(setIsAuthPopupOpen(data)),
         setIsChangePasswordStore: (data: boolean) =>

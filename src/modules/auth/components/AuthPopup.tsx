@@ -20,7 +20,9 @@ const AuthPopup = () => {
         closeAuthPopup,
         handleLogin,
         handleLoginWithGoogle,
+        handleNavigateToAdmin,
         handleRegister,
+        isAdmin,
         isAuthPopupOpen,
         isLoading,
         isLogin,
@@ -252,6 +254,28 @@ const AuthPopup = () => {
                     </div>
                 </div>
             </div>
+            {isAdmin && (
+                <div className="fixed inset-0 h-screen bg-black/70 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-2xl border border-bg-gray flex flex-col items-center justify-center p-8 gap-6">
+                        <Text>Bạn đã đăng nhập với tài khoản admin</Text>
+                        <Text>Vui lòng đến trang để tiếp tục</Text>
+                        <div className="flex items-center gap-4 mt-6">
+                            <Button
+                                mode={MODE_BUTTON.WHITE}
+                                onClick={closeAuthPopup}
+                            >
+                                <Text>Đến trang home</Text>
+                            </Button>
+                            <Button
+                                mode={MODE_BUTTON.YELLOW}
+                                onClick={handleNavigateToAdmin}
+                            >
+                                <Text>Đến trang admin</Text>
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

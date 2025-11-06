@@ -8,18 +8,14 @@ import {
 } from '@share/components/atoms/Text';
 import { getCurrentEventId } from '@share/utils/path';
 import { SCREEN_PATH } from '@share/constants/routers';
-
-interface EventInfo {
-    date: string;
-    id: string;
-    image?: string;
-    location: string;
-    title: string;
-}
-
+import { Event } from '@share/types/event';
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_FORMAT_ISO } from '@share/constants/dateTime';
+import CalendarIcon, { MODE_CALENDAR } from '../atoms/icons/CalendarIcon';
+import MapPinIcon from '../atoms/icons/MapPinIcon';
 interface EventHeaderInfoProps {
     countdownDuration?: number;
-    eventInfo: EventInfo;
+    eventInfo: Event;
     // in minutes
     onTimeout?: () => void;
     showCountdown?: boolean;
@@ -70,25 +66,18 @@ const EventHeaderInfo = ({
         return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     };
 
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('vi-VN', {
-            day: 'numeric',
-            month: 'long',
-            weekday: 'long',
-            year: 'numeric',
-        });
-    };
-
     return (
         <div className="relative h-80 w-full overflow-hidden px-20 py-10 rounded-lg">
             {/* Background Image */}
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                 style={{
-                    backgroundImage: eventInfo.image
-                        ? `url(${eventInfo.image})`
-                        : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    backgroundImage:
+                        eventInfo.images &&
+                        eventInfo.images.length > 0 &&
+                        eventInfo.images?.[0]?.image_url
+                            ? `url(${eventInfo.images[0].image_url})`
+                            : undefined,
                 }}
             >
                 {/* Overlay */}
@@ -114,15 +103,23 @@ const EventHeaderInfo = ({
                             modeColor={MODE_COLOR_TEXT.WHITE}
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.MEDIUM}
+                            className="flex items-center gap-2"
                         >
-                            📍 {eventInfo.location}
+                            <MapPinIcon /> {eventInfo.location}
                         </Text>
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.MEDIUM}
+                            className="flex items-center gap-2"
                         >
-                            📅 {formatDate(eventInfo.date)}
+                            <CalendarIcon mode={MODE_CALENDAR.WHITE} />{' '}
+                            {eventInfo.start_time
+                                ? formatDateTime(
+                                      eventInfo.start_time,
+                                      DATE_FORMAT_ISO
+                                  )
+                                : ''}
                         </Text>
                     </div>
                 </div>

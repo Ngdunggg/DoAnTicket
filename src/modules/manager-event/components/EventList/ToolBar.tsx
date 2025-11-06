@@ -107,6 +107,18 @@ const ToolBar = () => {
                 >
                     <Text modeWeight={MODE_WEIGHT.MEDIUM}>Chờ phê duyệt</Text>
                 </DivClick>
+                <DivClick
+                    className={`flex items-center px-6 py-3 rounded-full transition-all duration-200 ${
+                        activeFilter === FILTER_STATUS.REJECTED
+                            ? 'bg-bg-yellow'
+                            : 'hover:bg-bg-gray-2'
+                    }`}
+                    onClick={() => {
+                        setActiveFilterStore(FILTER_STATUS.REJECTED);
+                    }}
+                >
+                    <Text modeWeight={MODE_WEIGHT.MEDIUM}>Đã từ chối</Text>
+                </DivClick>
             </div>
         </div>
     );

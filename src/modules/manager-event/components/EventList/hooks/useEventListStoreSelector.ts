@@ -5,7 +5,9 @@ const useEventListStoreSelector = () => {
         activeFilter: useAppSelector(
             state => state.manager_event_list.activeFilter
         ),
-        allEvents: useAppSelector(state => state.manager_event_list.allEvents),
+        allEventsByOrganizer: useAppSelector(
+            state => state.manager_event_list.allEventsByOrganizer
+        ),
     };
 };
 

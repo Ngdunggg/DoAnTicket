@@ -35,17 +35,7 @@ const OrganizerSection = ({
                             {organizerProfile.organization_name}
                         </Text>
                         <Text>
-                            8Wonder là thương hiệu sự kiện âm nhạc quốc tế được
-                            phát triển bởi Tập đoàn Vingroup, với khát vọng đưa
-                            Việt Nam trở thành điểm đến mới của những lễ hội văn
-                            hóa – âm nhạc – du lịch đẳng cấp khu vực và châu Á.
-                            <br /> <br />
-                            Không chỉ mang nhịp đập của các lễ hội quốc tế đến
-                            gần hơn với khán giả Việt, 8Wonder còn thắp lên hành
-                            trình đầy cảm xúc – nơi âm nhạc vượt khỏi giới hạn
-                            của sân khấu, nơi nghệ sĩ từ khắp các châu lục cùng
-                            cất tiếng hát chung, và nơi bản sắc văn hoá Việt Nam
-                            được lan tỏa mạnh mẽ.
+                            {organizerProfile.description_organization}
                         </Text>
                         <Text
                             modeSize={MODE_SIZE[16]}

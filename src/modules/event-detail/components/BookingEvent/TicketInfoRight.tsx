@@ -11,6 +11,9 @@ import {
     MODE_SIZE,
     MODE_WEIGHT,
 } from '@share/components/atoms/Text';
+import MapPinIcon from '@share/components/atoms/icons/MapPinIcon';
+import CalendarIcon, { MODE_CALENDAR } from '@share/components/atoms/icons/CalendarIcon';
+import { formatPrice } from '../../utils/eventUtils';
 
 interface EventInfo {
     date: string;
@@ -36,14 +39,6 @@ const TicketInfoRight = ({
     ticketTypes,
     totalAmount,
 }: TicketInfoRightProps) => {
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            currency: 'VND',
-            style: 'currency',
-        }).format(price);
-    };
-
-    // Tính tổng số lượng vé đã chọn
     const totalTicketQuantity = selectedTickets.reduce(
         (total, selectedTicket) => {
             return total + selectedTicket.quantity;
@@ -68,15 +63,17 @@ const TicketInfoRight = ({
                 <Text
                     modeColor={MODE_COLOR_TEXT.WHITE}
                     modeSize={MODE_SIZE[14]}
+                    className="flex items-center gap-2"
                 >
-                    📍 {eventInfo.location}
+                    <MapPinIcon /> {eventInfo.location}
                 </Text>
 
                 <Text
                     modeColor={MODE_COLOR_TEXT.WHITE}
                     modeSize={MODE_SIZE[14]}
+                    className="flex items-center gap-2"
                 >
-                    📅{' '}
+                    <CalendarIcon mode={MODE_CALENDAR.WHITE} />{' '}
                     {new Date(eventInfo.date).toLocaleDateString('vi-VN', {
                         day: 'numeric',
                         month: 'long',
@@ -86,13 +83,11 @@ const TicketInfoRight = ({
                 </Text>
             </div>
 
-            {/* Các loại vé có sẵn */}
             <div className="px-4">
                 <Text
                     modeColor={MODE_COLOR_TEXT.WHITE}
                     modeSize={MODE_SIZE[18]}
                     modeWeight={MODE_WEIGHT.LARGE}
-                    className="mb-3"
                 >
                     Giá vé
                 </Text>
@@ -120,7 +115,6 @@ const TicketInfoRight = ({
                 </div>
             </div>
 
-            {/* Chi tiết vé đã chọn và tổng tiền - ở dưới cùng */}
             <div className="mt-auto px-4 border-t border-white flex flex-col pt-4">
                 {selectedTickets.length > 0 && (
                     <div className="flex items-center gap-2">
@@ -135,7 +129,6 @@ const TicketInfoRight = ({
                     </div>
                 )}
 
-                {/* Button thanh toán - ở dưới cùng */}
                 <Button
                     onClick={onPayment}
                     disabled={!isBookingTicket || isLoading}

@@ -12,6 +12,8 @@ import ChevronIcon, {
 import EventGrid from '@share/components/organisms/EventGrid';
 import { Event } from '@share/types/event';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { SCREEN_PATH } from '@share/constants/routers';
 
 interface OtherEventsSectionProps {
     category?: string[];
@@ -33,12 +35,23 @@ const OtherEventsSection = ({
     weekEvents = [],
 }: OtherEventsSectionProps) => {
     const [activeTab, setActiveTab] = useState<'week' | 'month'>('week');
+    const navigate = useNavigate();
 
     const getCurrentEvents = () => {
         if (mode === 'week') {
             return activeTab === 'week' ? weekEvents : monthEvents;
         }
         return events;
+    };
+
+    const handleViewMore = () => {
+        if (category.length > 0) {
+            navigate(SCREEN_PATH.EVENT_LIST, {
+                state: { searchKeyword: category.join(',') },
+            });
+        } else {
+            navigate(SCREEN_PATH.EVENT_LIST);
+        }
     };
 
     return (
@@ -82,7 +95,7 @@ const OtherEventsSection = ({
                 )}
                 <DivClick
                     onClick={() => {
-                        console.log(category);
+                        handleViewMore();
                     }}
                     className="flex items-center gap-2"
                 >

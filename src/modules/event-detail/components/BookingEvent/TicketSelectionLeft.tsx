@@ -6,6 +6,8 @@ import {
     MODE_SIZE,
     MODE_WEIGHT,
 } from '@share/components/atoms/Text';
+import { formatPrice } from '../../utils/eventUtils';
+import useEventDetailStoreSelector from '@modules/event-detail/hooks/useEventDetailStoreSelector';
 
 interface TicketSelectionLeftProps {
     onTicketChange: (_tickets: SelectedTicket[]) => void;
@@ -35,13 +37,6 @@ const TicketSelectionLeft = ({
             t => t.ticketType.id === ticketTypeId
         );
         return selected ? selected.quantity : 0;
-    };
-
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            currency: 'VND',
-            style: 'currency',
-        }).format(price);
     };
 
     return (

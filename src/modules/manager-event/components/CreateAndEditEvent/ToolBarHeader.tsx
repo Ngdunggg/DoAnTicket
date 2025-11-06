@@ -5,10 +5,11 @@ import {
     MODE_WEIGHT,
     Text,
 } from '@share/components/atoms/Text';
-import useCreateEventHandler from './hooks/useCreateEventHandler';
+import useToolBarHeaderHandler from './hooks/useToolBarHeaderHandler';
 import { CREATE_EVENT_TAB } from '@share/constants/commons';
 const ToolBarHeader = () => {
-    const { activeTab, setActiveTabStore } = useCreateEventHandler();
+    const { activeTab, handleCreateEvent, setActiveTabStore } =
+        useToolBarHeaderHandler();
 
     const TabHeaderMenu = [
         {
@@ -54,6 +55,7 @@ const ToolBarHeader = () => {
 
             <Button
                 mode={MODE_BUTTON.YELLOW}
+                onClick={handleCreateEvent}
                 isShadow
                 className="!rounded-xl !h-10 min-w-[130px] !mr-10"
             >
