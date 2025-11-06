@@ -14,10 +14,10 @@ import {
 import ChevronIcon, {
     MODE_CHEVRON,
     MODE_CHEVRON_DIRECTION,
-} from '../../../atoms/icons/ChevronIcon';
-import EventIcon from '../../../atoms/icons/EventIcon';
-import UserIcon from '../../../atoms/icons/UserIcon';
-import LogoutIcon from '../../../atoms/icons/LogoutIcon';
+} from '@share/components/atoms/icons/ChevronIcon';
+import EventIcon from '@share/components/atoms/icons/EventIcon';
+import UserIcon from '@share/components/atoms/icons/UserIcon';
+import LogoutIcon from '@share/components/atoms/icons/LogoutIcon';
 import AuthPopup from '@modules/auth/components/AuthPopup';
 import InputValidate from '@share/components/molecules/InputValidate';
 import useHeaderHandler from '../hooks/useHeaderHandler';
@@ -27,15 +27,19 @@ import SuggestSearchPopup from './SuggestSearchPopup';
 import Image from '@share/components/atoms/Image';
 import VerifyOtpPopup from '@modules/auth/components/VerifyOtpPopup';
 import ForgetPassword from '@modules/auth/components/ForgetPassword';
+import { ROLE } from '@share/constants/commons';
+import AdminIcon, { MODE_ADMIN } from '@share/components/atoms/icons/AdminIcon';
 
 const Header = () => {
     const {
+        handleClickAdmin,
         handleClickCreateEvent,
         handleClickLogo,
         handleClickMyEvents,
         handleClickMyProfile,
         handleClickMyTicket,
         handleLogout,
+        handleSearchSubmit,
         isAccountPopupOpen,
         isSearchPopupOpen,
         openAuthPopup,
@@ -48,7 +52,7 @@ const Header = () => {
     } = useHeaderHandler();
 
     return (
-        <div className="overflow-x-hidden fixed z-10 w-full top-0">
+        <div className="overflow-x-hidden fixed z-50 w-full top-0">
             <div className="bg-bg-black h-20 flex flex-1 items-center justify-between px-20 gap-10">
                 <DivClick onClick={handleClickLogo}>
                     <Text
@@ -66,7 +70,6 @@ const Header = () => {
                         inputName="search"
                         schema={schemaSearch}
                         placeholder="Hôm nay có gì ..."
-                        // onSubmit={searchForm.handleSubmit(handleSearch)}
                         className="!h-10.5 flex items-center justify-center"
                         iconClassName="bottom-2.5"
                         icon={<SearchIcon />}
@@ -74,12 +77,12 @@ const Header = () => {
                             if (e.key === 'Enter') {
                                 const searchValue =
                                     searchForm.getValues('search');
-                                setSearchTextStore?.(searchValue || '');
+                                handleSearchSubmit(searchValue || '');
                             }
                         }}
                         onBlurIgnoreClearIcon={() => {
                             const searchValue = searchForm.getValues('search');
-                            setSearchTextStore?.(searchValue || '');
+                            handleSearchSubmit(searchValue || '');
                         }}
                         onFocus={() => {
                             // When focusing on search input, ensure we're in SEARCH view if there's search text
@@ -98,7 +101,6 @@ const Header = () => {
                             searchForm.setValue('search', '');
                             setSearchTextStore?.('');
                         }}
-                        // TODO
                     />
                 </div>
                 <div className="flex h-full items-center gap-12">
@@ -125,7 +127,7 @@ const Header = () => {
                     {user ? (
                         <div className="relative">
                             <DivClick
-                                className="flex items-center py-2 gap-2 cursor-pointer"
+                                className="flex items-center py-2 gap-2"
                                 onMouseEnter={() =>
                                     setIsAccountPopupOpenStore(true)
                                 }
@@ -135,9 +137,9 @@ const Header = () => {
                             >
                                 <div className="border border-white rounded-full">
                                     <Image
-                                        src={user.avatar || ''}
+                                        src={user.avatar_url || ''}
                                         alt="avatar"
-                                        className="w-9 h-9 rounded-full p-0.5"
+                                        className="w-9 h-9 object-cover rounded-full p-0.5"
                                     />
                                 </div>
                                 <Text
@@ -187,7 +189,27 @@ const Header = () => {
                                                 Vé của tôi
                                             </Text>
                                         </DivClick>
-
+                                        {user.role === ROLE.ADMIN && (
+                                            <DivClick
+                                                className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
+                                                onClick={() => {
+                                                    setIsAccountPopupOpenStore(
+                                                        false
+                                                    );
+                                                    handleClickAdmin();
+                                                }}
+                                            >
+                                                <AdminIcon mode={MODE_ADMIN.WHITE} />
+                                                <Text
+                                                    modeColor={
+                                                        MODE_COLOR_TEXT.WHITE
+                                                    }
+                                                    modeSize={MODE_SIZE[14]}
+                                                >
+                                                    Quản lý sự kiện
+                                                </Text>
+                                            </DivClick>
+                                        )}
                                         <DivClick
                                             onClick={() => {
                                                 setIsAccountPopupOpenStore(

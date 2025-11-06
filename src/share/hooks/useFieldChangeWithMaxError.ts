@@ -158,8 +158,12 @@ export default function useFieldChangeWithMaxError<T extends ZodRawShape>(
      */
     const handleInputOnChange = useCallback(
         <K extends keyof T>(value: z.infer<T[K]>, inputName: K) => {
-            const fieldSchema = baseSchema.shape[inputName] as ZodTypeAny;
-            setMaxErrorFn(value, fieldSchema);
+            // Unwrap schema để lấy shape thực sự (xử lý trường hợp có superRefine)
+            const unwrappedSchema = unwrap(baseSchema);
+            if (unwrappedSchema instanceof ZodObject && unwrappedSchema.shape) {
+                const fieldSchema = unwrappedSchema.shape[inputName] as ZodTypeAny;
+                setMaxErrorFn(value, fieldSchema);
+            }
         },
         [baseSchema, setMaxErrorFn]
     );

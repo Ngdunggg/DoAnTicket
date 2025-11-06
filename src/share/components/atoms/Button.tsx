@@ -8,6 +8,7 @@ export const MODE_BUTTON = {
     BLACK: 'black',
     DECORATIVE_YELLOW: 'decorativeYellow',
     NONE: 'none',
+    OUTLINE: 'outline',
     WHITE: 'white',
     YELLOW: 'yellow',
 } as const;
@@ -74,6 +75,7 @@ const Button = ({
         black: '!bg-bg-black !border-white hover:!border-bg-yellow hover:!text-text-yellow !text-text-white transition-all duration-200',
         decorativeYellow: 'decorative-yellow-btn',
         none: '!bg-transparent !border-none !text-text-white hover:!text-text-yellow',
+        outline: '!bg-transparent !border-bg-black hover:!border-bg-yellow hover:!text-text-yellow !text-text-black transition-all duration-200',
         white: '!bg-white !border-bg-black-2 hover:!bg-white !text-text-black transition-all duration-200',
         yellow: '!bg-bg-yellow !border-bg-yellow hover:!bg-bg-yellow/70 hover:!border-bg-yellow/70 hover:!text-text-black !text-text-black transition-all duration-300 ',
     };

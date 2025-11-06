@@ -18,7 +18,7 @@ import TicketIcon from '@share/components/atoms/icons/TicketIcon';
 import VerifyOtpPopup from '@modules/auth/components/VerifyOtpPopup';
 import ForgetPassword from '@modules/auth/components/ForgetPassword';
 import { formatDateTime } from '@share/utils/dateTime';
-import { DATE_FORMAT_YY_MM_DD } from '@share/constants/dateTime';
+import { DATE_TIME_FORMAT_ISO } from '@share/constants/dateTime';
 import { Event } from '@share/types/event';
 import Image from '@share/components/atoms/Image';
 import {
@@ -26,10 +26,11 @@ import {
     getEventLocation,
     getMinPrice,
 } from '../../utils/eventUtils';
+import { IMAGE_TYPE } from '@share/constants/commons';
 
 interface EventHeroProps {
     event: Event;
-    onBookNow: () => void;
+    onBookNow: (_eventId: string) => void;
 }
 
 const EventHero = ({ event, onBookNow }: EventHeroProps) => {
@@ -40,8 +41,7 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
         if (!token) {
             openAuthPopup();
         } else {
-            console.log('onBookNow');
-            onBookNow();
+            onBookNow(event.id);
         }
     };
 
@@ -55,7 +55,8 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
                             modeSize={MODE_SIZE[24]}
-                            className="font-bold leading-tight"
+                            modeWeight={MODE_WEIGHT.LARGE}
+                            className="leading-tight"
                         >
                             {event.title}
                         </Text>
@@ -69,12 +70,12 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                             >
                                 {formatDateTime(
                                     event.start_time,
-                                    DATE_FORMAT_YY_MM_DD
+                                    DATE_TIME_FORMAT_ISO
                                 )}{' '}
                                 -{' '}
                                 {formatDateTime(
                                     event.end_time,
-                                    DATE_FORMAT_YY_MM_DD
+                                    DATE_TIME_FORMAT_ISO
                                 )}
                             </Text>
                         </div>
@@ -104,7 +105,6 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                             <Text
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeSize={MODE_SIZE[18]}
-                                className="font-bold"
                             >
                                 {getMinPrice(event)}
                             </Text>
@@ -135,7 +135,7 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                 {/* Right Panel - Event Poster */}
                 <div className="w-2/3 overflow-hidden rounded-r-2xl relative">
                     <Image
-                        src={getEventImage(event)}
+                        src={getEventImage(event, IMAGE_TYPE.BANNER)}
                         alt={event.title}
                         className="w-full h-full object-cover"
                     />

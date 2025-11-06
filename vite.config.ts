@@ -66,6 +66,11 @@ export default defineConfig(({ mode }) => ({
     publicDir: false,
     root: './src',
     server: {
+        allowedHosts: [
+            'nonfilterable-jared-unshingled.ngrok-free.dev',
+            '.ngrok-free.dev',
+            '.ngrok.io',
+        ],
         port: 3000,
     },
 }));

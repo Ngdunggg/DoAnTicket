@@ -11,7 +11,8 @@ import XCircleIcon, {
 import DivClick from '@share/components/atoms/DivClick';
 import AlertCircleIcon from '@share/components/atoms/icons/AlertCircleIcon';
 import RadioButton from '@share/components/atoms/RaddioButton';
-import PAYMENT_METHOD from '@share/constants/paymentMethod';
+import { PAYMENT_METHOD } from '@share/constants/paymentMethod';
+import useUpdateInfoUser from './hooks/useUpdateInfoUser';
 
 interface BookingFormData {
     agreeToTerms: boolean;
@@ -31,7 +32,7 @@ const PaymentForm = ({
     selectedPaymentMethod,
 }: PaymentFormProps) => {
     const [isShowWarning, setIsShowWarning] = useState(true);
-
+    const { handleOpenUpdateInfoUser } = useUpdateInfoUser();
     const paymentMethods = [
         {
             icon: '🏦',
@@ -40,13 +41,8 @@ const PaymentForm = ({
         },
         {
             icon: '📱',
-            id: PAYMENT_METHOD.VIETQR,
-            label: 'VietQR',
-        },
-        {
-            icon: '🛒',
-            id: PAYMENT_METHOD.SHOPEEPAY,
-            label: 'ShopeePay',
+            id: PAYMENT_METHOD.MOMO,
+            label: 'Momo',
         },
         {
             icon: '💳',
@@ -73,7 +69,7 @@ const PaymentForm = ({
                             vui lòng{' '}
                             <span
                                 className="cursor-pointer text-blue-500"
-                                onClick={() => {}}
+                                onClick={handleOpenUpdateInfoUser}
                             >
                                 cập nhật tại đây
                             </span>

@@ -2,13 +2,14 @@ import { BaseHttpResponse } from '@share/models/common/response';
 
 export type LoginUser = {
     address: string;
-    avatar: string;
+    avatar_url: string;
     date_of_birth: string;
     email: string;
     full_name: string;
-    gender: string;
+    gender: boolean | null;
+    google_id: string | null;
     id: string;
-    phone_number: string;
+    phone: string;
     role: string;
     status: string;
 };

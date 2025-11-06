@@ -5,6 +5,7 @@ import { useEffect, useMemo } from 'react';
 import { Event } from '@share/types/event';
 import { useNavigate } from 'react-router-dom';
 import { SCREEN_PATH } from '@share/constants/routers';
+import { FILTER_STATUS } from '@share/constants/commons';
 
 const useHomeHandler = () => {
     const { allEvents } = useHomeEventListStoreSelector();
@@ -14,7 +15,13 @@ const useHomeHandler = () => {
 
     useEffect(() => {
         if (data) {
-            setAllEventsStore(data);
+            setAllEventsStore(
+                data.filter(
+                    event =>
+                        event.status !== FILTER_STATUS.PENDING &&
+                        event.status !== FILTER_STATUS.REJECTED
+                )
+            );
         }
     }, [data]);
 

@@ -5,7 +5,6 @@ import {
     MODE_WEIGHT,
     MODE_COLOR_TEXT,
 } from '@share/components/atoms/Text';
-import { EventStats } from '@share/types/ticket';
 import {
     PieChart,
     Pie,
@@ -20,43 +19,73 @@ import {
     LineChart,
     Line,
 } from 'recharts';
+import { EventReport } from '@share/types/event';
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_FORMAT_ISO } from '@share/constants/dateTime';
 
 interface ChartsSectionProps {
-    stats: EventStats;
+    dailyStats: EventReport['daily_stats'];
+    purchasedTickets: EventReport['purchased_tickets'];
+    stats: EventReport['summary'];
 }
 
-const ChartsSection = ({ stats }: ChartsSectionProps) => {
+const ChartsSection = ({
+    dailyStats,
+    purchasedTickets,
+    stats,
+}: ChartsSectionProps) => {
+    // Tính tổng vé đã bán
+    const totalTicketsSold =
+        stats.total_tickets_available - stats.total_tickets_remaining;
+
     // Dữ liệu cho biểu đồ tròn (vé đã bán vs còn lại)
     const pieData = [
-        { color: '#10B981', name: 'Đã bán', value: stats.totalTicketsSold },
+        { color: '#10B981', name: 'Đã bán', value: totalTicketsSold },
         {
             color: '#6B7280',
             name: 'Còn lại',
-            value: stats.totalTicketsAvailable - stats.totalTicketsSold,
+            value: stats.total_tickets_remaining,
         },
     ];
 
-    // Mock dữ liệu doanh thu theo ngày (7 ngày gần nhất)
-    const revenueData = [
-        { date: '15/12', revenue: 2500000 },
-        { date: '16/12', revenue: 3200000 },
-        { date: '17/12', revenue: 1800000 },
-        { date: '18/12', revenue: 4200000 },
-        { date: '19/12', revenue: 3800000 },
-        { date: '20/12', revenue: 2900000 },
-        { date: '21/12', revenue: 3500000 },
-    ];
+    // Dữ liệu doanh thu theo ngày từ backend
+    const revenueData = dailyStats.revenue 
+        .map(item => ({
+            count: item.count,
+            date: formatDateTime(item.date, DATE_FORMAT_ISO),
+            orders: item.orders,
+            revenue: item.revenue,
+        }))
+        .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
 
-    // Mock dữ liệu lượt truy cập và mua vé theo ngày
-    const analyticsData = [
-        { date: '15/12', purchases: 8, views: 120 },
-        { date: '16/12', purchases: 12, views: 180 },
-        { date: '17/12', purchases: 6, views: 95 },
-        { date: '18/12', purchases: 18, views: 220 },
-        { date: '19/12', purchases: 14, views: 195 },
-        { date: '20/12', purchases: 11, views: 160 },
-        { date: '21/12', purchases: 16, views: 210 },
-    ];
+    // Tính tổng lượt mua theo ngày từ purchasedTickets
+    const purchasesByDay = purchasedTickets.reduce((acc, ticket) => {
+        const key = formatDateTime(new Date(ticket.created_at), DATE_FORMAT_ISO);
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+    }, {} as Record<string, number>);
+
+    // Tạo map lượt xem theo ngày từ dailyStats.views
+    const viewsByDay = dailyStats.views.reduce((acc, view) => {
+        const key = formatDateTime(view.date, DATE_FORMAT_ISO);
+        acc[key] = view.count;
+        return acc;
+    }, {} as Record<string, number>);
+
+    // Hợp nhất date và tạo analyticsData gồm views và purchases
+    const allDates = Array.from(
+        new Set([...Object.keys(viewsByDay), ...Object.keys(purchasesByDay)])
+    );
+
+    const analyticsData = allDates
+        .map(dateKey => ({
+            date: dateKey,
+            purchases: purchasesByDay[dateKey] || 0,
+            views: viewsByDay[dateKey] || 0,
+        }))
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     const CustomTooltip = ({ active, label, payload }: any) => {
         if (active && payload && payload.length) {
@@ -242,7 +271,7 @@ const ChartsSection = ({ stats }: ChartsSectionProps) => {
                 </div>
 
                 {/* Biểu đồ cột - Doanh thu theo ngày */}
-                <div className="flex flex-col gap-2 flex-1 bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="flex flex-col min-h-[300px] gap-2 flex-1 bg-white/5 rounded-lg p-4 border border-white/10">
                     <Text
                         modeSize={MODE_SIZE[16]}
                         modeWeight={MODE_WEIGHT.MEDIUM}
@@ -251,36 +280,48 @@ const ChartsSection = ({ stats }: ChartsSectionProps) => {
                     >
                         💰 Doanh thu theo ngày
                     </Text>
-                    <ResponsiveContainer
-                        width="100%"
-                        height={200}
-                        style={{ backgroundColor: '' }}
-                    >
-                        <BarChart data={revenueData}>
-                            <CartesianGrid
-                                strokeDasharray="3 3"
-                                stroke="#374151"
-                            />
-                            <XAxis
-                                dataKey="date"
-                                stroke="#9CA3AF"
-                                fontSize={12}
-                            />
-                            <YAxis
-                                stroke="#9CA3AF"
-                                fontSize={12}
-                                tickFormatter={value =>
-                                    `${(value / 1000000).toFixed(1)}M`
-                                }
-                            />
-                            <Tooltip content={<CustomTooltip />} />
-                            <Bar
-                                dataKey="revenue"
-                                fill="#F59E0B"
-                                radius={[4, 4, 0, 0]}
-                            />
-                        </BarChart>
-                    </ResponsiveContainer>
+                    {revenueData.length > 0 ? (
+                        <ResponsiveContainer
+                            width="100%"
+                            height={200}
+                            style={{ backgroundColor: '' }}
+                        >
+                            <BarChart data={revenueData}>
+                                <CartesianGrid
+                                    strokeDasharray="3 3"
+                                    stroke="#374151"
+                                />
+                                <XAxis
+                                    dataKey="date"
+                                    stroke="#9CA3AF"
+                                    fontSize={12}
+                                />
+                                <YAxis
+                                    stroke="#9CA3AF"
+                                    fontSize={12}
+                                    tickFormatter={value =>
+                                        `${(value / 1000000).toFixed(1)}M`
+                                    }
+                                />
+                                <Tooltip content={<CustomTooltip />} />
+                                <Bar
+                                    dataKey="revenue"
+                                    fill="#F59E0B"
+                                    radius={[4, 4, 0, 0]}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <div className="flex flex-1 justify-center items-center h-full">
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.GRAY}
+                                modeSize={MODE_SIZE[16]}
+                                modeWeight={MODE_WEIGHT.LARGE}
+                            >
+                                Chưa có doanh thu từ sự kiện này
+                            </Text>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

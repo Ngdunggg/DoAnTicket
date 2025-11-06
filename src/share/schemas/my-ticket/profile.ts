@@ -37,7 +37,7 @@ export const profileSchema = () =>
             .min(1, { message: 'Họ và tên không được để trống' })
             .min(2, { message: 'Họ và tên phải có ít nhất 2 ký tự' }),
 
-        gender: z.enum(['male', 'female', 'other'], {
+        gender: z.boolean({
             required_error: 'Vui lòng chọn giới tính',
         }),
 

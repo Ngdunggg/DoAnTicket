@@ -1,8 +1,12 @@
 export const SCREEN_PATH = {
+    // ADMIN
+    ADMIN_DASHBOARD: '/admin/dashboard',
+
     AUTH_CALLBACK: '/auth/callback',
     // AUTH
     AUTH_LOGIN: '/login',
     AUTH_REGISTER: '/register',
+
     AUTH_RESET_PASSWORD: '/reset-password',
 
     // MANAGER EVENT
@@ -10,19 +14,20 @@ export const SCREEN_PATH = {
 
     // EVENT
     EVENT_DETAIL: '/event-detail/:event_id',
-
     EVENT_LIST: '/events',
-    EVENT_PAYMENT: '/event-detail/:event_id/booking/:booking_id/payment',
+    EVENT_PAYMENT: '/event-detail/:event_id/payment',
+    EVENT_PAYMENT_CALLBACK: '/payment/result',
     EVENT_QUESTION_FORM:
-        '/event-detail/:event_id/booking/:booking_id/question-form',
-    EVENT_TICKET_SELECTION:
-        '/event-detail/:event_id/booking/:booking_id/selection',
+        '/event-detail/:event_id/booking/question-form',
 
+    EVENT_TICKET_SELECTION:
+        '/event-detail/:event_id/booking/selection',
     // HOME
     HOME: '/',
     // MANAGER EVENT
     MANAGER_EVENT: '/organizer/events',
     MANAGER_EVENT_DETAIL: '/organizer/events/:event_id',
+    MANAGER_EVENT_EDIT: '/organizer/events/:event_id/edit',
     MANAGER_LEGAL: '/organizer/legal-document',
     MANAGER_LEGAL_BUSINESS: '/organizer/legal-document/business',
     MANAGER_LEGAL_IMAGE: '/organizer/legal-document/contentImage',
@@ -30,6 +35,7 @@ export const SCREEN_PATH = {
     MANAGER_REPORT_DETAIL: '/organizer/report/:event_id',
     // MY TICKET
     MY_TICKET: '/my-ticket',
+
     MY_TICKET_PROFILE: '/my-ticket/my-profile',
 
     // ROOT

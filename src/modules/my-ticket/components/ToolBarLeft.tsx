@@ -14,13 +14,18 @@ import {
     Text,
     MODE_WEIGHT,
 } from '@share/components/atoms/Text';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { SCREEN_PATH } from '@share/constants/routers';
+import Image from '@share/components/atoms/Image';
+import useToolBarLeftHandler from '../hooks/useToolBarLeftHandler';
 
 const ToolBarLeft = () => {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const isProfilePage = location.pathname === SCREEN_PATH.MY_TICKET_PROFILE;
+    const {
+        handleEventPage,
+        handleHomePage,
+        handleMyTicketPage,
+        handleProfilePage,
+        isProfilePage,
+        userInfo,
+    } = useToolBarLeftHandler();
     return (
         <div className="flex flex-col px-6 gap-10">
             <div className="flex items-center gap-1">
@@ -28,7 +33,7 @@ const ToolBarLeft = () => {
                     modeColor={MODE_COLOR_TEXT.WHITE}
                     modeSize={MODE_SIZE[16]}
                     className="cursor-pointer"
-                    onClick={() => navigate(SCREEN_PATH.HOME)}
+                    onClick={handleHomePage}
                 >
                     Trang chủ
                 </Text>
@@ -45,7 +50,7 @@ const ToolBarLeft = () => {
                     }
                     modeSize={MODE_SIZE[16]}
                     className={`${!isProfilePage ? '' : 'cursor-pointer'}`}
-                    onClick={() => navigate(SCREEN_PATH.MY_TICKET)}
+                    onClick={handleMyTicketPage}
                 >
                     Vé của tôi
                 </Text>
@@ -66,10 +71,10 @@ const ToolBarLeft = () => {
                 )}
             </div>
             <div className="flex items-center gap-3">
-                <img
-                    src={'https://static.ticketbox.vn/avatar.png'}
+                <Image
+                    src={userInfo?.avatar_url || ''}
                     alt="avatar"
-                    className="w-12 h-12 rounded-full"
+                    className="w-12 h-12 rounded-full object-cover"
                 />
                 <div className="flex flex-col gap-2">
                     <Text
@@ -83,8 +88,7 @@ const ToolBarLeft = () => {
                         modeWeight={MODE_WEIGHT.LARGE}
                         modeSize={MODE_SIZE[16]}
                     >
-                        {/* {user.name || "Nguyễn Văn A"} */}
-                        Nguyễn Văn A
+                        {userInfo?.full_name || 'Nguyễn Văn A'}
                     </Text>
                 </div>
             </div>
@@ -95,7 +99,7 @@ const ToolBarLeft = () => {
                             ? 'text-text-yellow'
                             : 'text-white hover:text-text-yellow'
                     }`}
-                    onClick={() => navigate(SCREEN_PATH.MY_TICKET_PROFILE)}
+                    onClick={handleProfilePage}
                 >
                     <UserIcon
                         mode={
@@ -114,7 +118,7 @@ const ToolBarLeft = () => {
                 </DivClick>
                 <DivClick
                     className="flex items-center gap-2"
-                    onClick={() => navigate(SCREEN_PATH.MY_TICKET)}
+                    onClick={handleMyTicketPage}
                 >
                     <TicketIcon
                         mode={
@@ -135,7 +139,7 @@ const ToolBarLeft = () => {
                 </DivClick>
                 <DivClick
                     className="flex items-center gap-2"
-                    onClick={() => {}}
+                    onClick={handleEventPage}
                 >
                     <EventIcon />
                     <Text modeColor={MODE_COLOR_TEXT.WHITE}>

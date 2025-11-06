@@ -51,6 +51,8 @@ export const {
 } = authSlice.actions;
 
 const persistConfig = {
+    // Không persist isLoggingOut vì nó chỉ là flag tạm thời
+    blacklist: ['isLoggingOut'],
     key: 'authentication',
     storage,
 };

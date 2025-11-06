@@ -1,4 +1,5 @@
 export const MODE_EVENT = {
+    BLACK: 'black',
     DEFAULT: 'default',
     YELLOW: 'yellow',
 } as const;
@@ -12,6 +13,8 @@ function EventIcon({
         switch (mode) {
             case MODE_EVENT.YELLOW:
                 return '#FCCB62';
+            case MODE_EVENT.BLACK:
+                return '#01060F';
             default:
                 return '#FFFFFF';
         }

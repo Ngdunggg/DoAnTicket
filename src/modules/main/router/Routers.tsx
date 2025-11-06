@@ -8,12 +8,15 @@ import homeRouters from '@modules/home/router/Routers';
 import myTicketRouters from '@modules/my-ticket/router/Routers';
 import PrivateRoute from '@share/auth/PrivateRoute';
 import managerEventRouters from '@modules/manager-event/router/Routers';
+import adminRouters from '@modules/admin/router/Routers';
 // import LoadingModal from "@share/components/organisms/LoadingModal";
 import PcLayout from '@share/components/templates/PcLayout';
 import ManagerLayoutComponent from '@share/components/templates/ManagerLayout';
+import AdminLayout from '@share/components/templates/AdminLayout';
 import ScrollToTop from '@share/components/ScrollToTop';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { Outlet, RouteObject } from 'react-router-dom';
+import { ROLE } from '@share/constants/commons';
 // import ErrorBoundary from "../components/ErrorBoundary";
 // import { ErrorHandler } from "../components/ErrorHandler";
 // import { GlobalErrorHandler } from "../components/GlobalErrorHandler";
@@ -65,6 +68,17 @@ const ManagerEventLayoutWrapper = () => {
         </PrivateRoute>
     );
 };
+
+const AdminLayoutWrapper = () => {
+    return (
+        <PrivateRoute allowedRoles={[ROLE.ADMIN]}>
+            <AdminLayout>
+                <ScrollToTop />
+                <Outlet />
+            </AdminLayout>
+        </PrivateRoute>
+    );
+};
 /**
  * Represents the main routes configuration.
  */
@@ -86,6 +100,11 @@ const mainRoutes: RouteObject[] = [
             {
                 children: [...myTicketRouters, ...eventDetailPrivateRouters],
                 element: <MainLayoutWrapper />,
+                path: SCREEN_PATH.ROOT,
+            },
+            {
+                children: [...adminRouters],
+                element: <AdminLayoutWrapper />,
                 path: SCREEN_PATH.ROOT,
             },
             {

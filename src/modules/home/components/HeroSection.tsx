@@ -19,6 +19,7 @@ import {
     getEventImage,
     getEventLocation,
 } from '@modules/event-detail/utils/eventUtils';
+import { IMAGE_TYPE } from '@share/constants/commons';
 
 interface HeroSectionProps {
     featuredEvents: Event[];
@@ -94,15 +95,7 @@ const HeroSection = ({ featuredEvents, onViewEvent }: HeroSectionProps) => {
                         >
                             {currentEvent?.title || 'Sự kiện sắp diễn ra'}
                         </Text>
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                            modeLeading={MODE_LEADING.SMALL}
-                            modeSize={MODE_SIZE[18]}
-                            isAllowLineBreaks
-                        >
-                            {currentEvent?.description ||
-                                'Sự kiện đặc biệt với nhiều hoạt động thú vị'}
-                        </Text>
+                        <div/>
                         <Button
                             mode={MODE_BUTTON.DECORATIVE_YELLOW}
                             className="!w-fit !h-12"
@@ -131,7 +124,10 @@ const HeroSection = ({ featuredEvents, onViewEvent }: HeroSectionProps) => {
                         <Image
                             src={
                                 currentEvent
-                                    ? getEventImage(currentEvent)
+                                    ? getEventImage(
+                                          currentEvent,
+                                          IMAGE_TYPE.BANNER
+                                      )
                                     : undefined
                             }
                             alt={currentEvent?.title || 'hero'}
@@ -145,7 +141,8 @@ const HeroSection = ({ featuredEvents, onViewEvent }: HeroSectionProps) => {
                                     featuredEvents[
                                         (currentIndex + 1) %
                                             featuredEvents.length
-                                    ]
+                                    ],
+                                    IMAGE_TYPE.BANNER
                                 )}
                                 alt="next event"
                                 className="w-full h-full object-cover rounded-lg select-none"

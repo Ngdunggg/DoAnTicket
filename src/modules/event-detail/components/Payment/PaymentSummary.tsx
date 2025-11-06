@@ -6,6 +6,7 @@ import {
 } from '@share/components/atoms/Text';
 import Button, { MODE_BUTTON } from '@share/components/atoms/Button';
 import DivClick from '@share/components/atoms/DivClick';
+import useFormQuestionHandler from '@modules/event-detail/components/QuestionForm/hooks/useFormQuestionHandler';
 
 interface SelectedTicket {
     quantity: number;
@@ -29,17 +30,13 @@ const PaymentSummary = ({
     selectedTickets,
     totalAmount,
 }: PaymentSummaryProps) => {
+    const { handleBackToSelectTicket } = useFormQuestionHandler();
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('vi-VN', {
             currency: 'VND',
             style: 'currency',
         }).format(price);
     };
-
-    const totalTicketQuantity = selectedTickets.reduce(
-        (total, ticket) => total + ticket.quantity,
-        0
-    );
 
     return (
         <div className="flex flex-col gap-6">
@@ -52,7 +49,7 @@ const PaymentSummary = ({
                     >
                         Thông tin đặt vé
                     </Text>
-                    <DivClick onClick={() => {}}>
+                    <DivClick onClick={handleBackToSelectTicket}>
                         <Text
                             modeColor={MODE_COLOR_TEXT.GREEN}
                             modeSize={MODE_SIZE[18]}
@@ -96,7 +93,7 @@ const PaymentSummary = ({
                                         modeColor={MODE_COLOR_TEXT.YELLOW}
                                         modeWeight={MODE_WEIGHT.MEDIUM}
                                     >
-                                        {totalTicketQuantity}
+                                        {selectedTicket.quantity}
                                     </Text>
                                 </div>
 

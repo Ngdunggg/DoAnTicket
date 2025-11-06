@@ -4,7 +4,7 @@ import { Event } from '@share/types/event';
 
 type ManagerEventListState = {
     activeFilter: FilterStatus;
-    allEvents: Event[];
+    allEventsByOrganizer: Event[];
 };
 
 /**
@@ -12,7 +12,7 @@ type ManagerEventListState = {
  */
 const initialState: ManagerEventListState = {
     activeFilter: FILTER_STATUS.ALL,
-    allEvents: [],
+    allEventsByOrganizer: [],
 };
 
 const managerEventListSlice = createSlice({
@@ -25,13 +25,13 @@ const managerEventListSlice = createSlice({
         setActiveFilter: (state, action: PayloadAction<FilterStatus>) => {
             state.activeFilter = action.payload;
         },
-        setAllEvents: (state, action: PayloadAction<Event[]>) => {
-            state.allEvents = action.payload;
+        setAllEventsByOrganizer: (state, action: PayloadAction<Event[]>) => {
+            state.allEventsByOrganizer = action.payload;
         },
     },
 });
 
 // Exports
-export const { resetManagerEventListState, setActiveFilter, setAllEvents } =
+export const { resetManagerEventListState, setActiveFilter, setAllEventsByOrganizer } =
     managerEventListSlice.actions;
 export default managerEventListSlice.reducer;

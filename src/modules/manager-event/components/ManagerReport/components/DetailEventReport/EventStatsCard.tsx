@@ -4,19 +4,23 @@ import {
     MODE_WEIGHT,
     MODE_COLOR_TEXT,
 } from '@share/components/atoms/Text';
-import { EventStats } from '@share/types/ticket';
+import { EventReport } from '@share/types/event';
+import { formatPrice } from '@modules/event-detail/utils/eventUtils';
 
-const EventStatsCard = ({ stats }: { stats: EventStats }) => {
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            currency: 'VND',
-            style: 'currency',
-        }).format(amount);
-    };
+interface EventStatsCardProps {
+    stats: EventReport['summary'];
+}
 
-    const formatNumber = (num: number) => {
-        return new Intl.NumberFormat('vi-VN').format(num);
-    };
+const EventStatsCard = ({ stats }: EventStatsCardProps) => {
+    // Tính số vé đã bán
+    const totalTicketsSold =
+        stats.total_tickets_available - stats.total_tickets_remaining;
+
+    // Tính tỷ lệ chuyển đổi
+    const conversionRate =
+        stats.total_views > 0
+            ? (totalTicketsSold / stats.total_views) * 100
+            : 0;
 
     return (
         <div className="flex flex-col flex-1 h-fit max-w-[40%] bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
@@ -44,7 +48,7 @@ const EventStatsCard = ({ stats }: { stats: EventStats }) => {
                         modeWeight={MODE_WEIGHT.LARGE}
                         modeColor={MODE_COLOR_TEXT.WHITE}
                     >
-                        {formatCurrency(stats.totalRevenue)}
+                        {formatPrice(stats.total_revenue)}
                     </Text>
                 </div>
 
@@ -62,7 +66,7 @@ const EventStatsCard = ({ stats }: { stats: EventStats }) => {
                         modeWeight={MODE_WEIGHT.LARGE}
                         modeColor={MODE_COLOR_TEXT.WHITE}
                     >
-                        {formatNumber(stats.viewCount)}
+                        {stats.total_views}
                     </Text>
                 </div>
 
@@ -80,8 +84,7 @@ const EventStatsCard = ({ stats }: { stats: EventStats }) => {
                         modeWeight={MODE_WEIGHT.LARGE}
                         modeColor={MODE_COLOR_TEXT.WHITE}
                     >
-                        {formatNumber(stats.totalTicketsSold)}/
-                        {formatNumber(stats.totalTicketsAvailable)}
+                        {totalTicketsSold}/{stats.total_tickets_available}
                     </Text>
                 </div>
 
@@ -99,7 +102,7 @@ const EventStatsCard = ({ stats }: { stats: EventStats }) => {
                         modeWeight={MODE_WEIGHT.LARGE}
                         modeColor={MODE_COLOR_TEXT.WHITE}
                     >
-                        {stats.conversionRate.toFixed(1)}%
+                        {conversionRate.toFixed(1)}%
                     </Text>
                 </div>
             </div>

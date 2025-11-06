@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LOCATION } from '@share/constants/commons';
 
 type EventListState = {
+    date_range_end: string | null;
+    date_range_start: string | null;
     filter_location: string;
     filter_price_free: boolean;
     filter_type: string;
@@ -12,6 +14,8 @@ type EventListState = {
  * Initial state: eventList is empty by default.
  */
 const initialState: EventListState = {
+    date_range_end: null,
+    date_range_start: null,
     filter_location: LOCATION.ALL,
     filter_price_free: false,
     filter_type: '',
@@ -24,6 +28,12 @@ const eventListSlice = createSlice({
     reducers: {
         resetEventListState: () => {
             return initialState;
+        },
+        setDateRangeEnd: (state, action: PayloadAction<string | null>) => {
+            state.date_range_end = action.payload;
+        },
+        setDateRangeStart: (state, action: PayloadAction<string | null>) => {
+            state.date_range_start = action.payload;
         },
         setFilterLocation: (state, action: PayloadAction<string>) => {
             state.filter_location = action.payload;
@@ -43,6 +53,8 @@ const eventListSlice = createSlice({
 // Exports
 export const {
     resetEventListState,
+    setDateRangeEnd,
+    setDateRangeStart,
     setFilterLocation,
     setFilterPriceFree,
     setFilterType,

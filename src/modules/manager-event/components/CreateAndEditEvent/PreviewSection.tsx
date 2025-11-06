@@ -5,11 +5,23 @@ import {
     Text,
 } from '@share/components/atoms/Text';
 import Button, { MODE_BUTTON } from '@share/components/atoms/Button';
-import useCreateEventHandler from './hooks/useCreateEventHandler';
+import useCreateEventHandler from './hooks/useToolBarHeaderHandler';
 import { CREATE_EVENT_TAB } from '@share/constants/commons';
+import { useFormContext } from 'react-hook-form';
+import { CreateEventInput } from '@share/schemas/event/createEvent';
+import { useEffect, useRef } from 'react';
+import {
+    formatPrice,
+    getEventTypes,
+} from '@modules/event-detail/utils/eventUtils';
+import useCreateEventStoreSelector from './hooks/useCreateEventStoreSelector';
+import LoadingContent from '@share/components/molecules/LoadingContent';
 
 const PreviewSection = () => {
+    const createEventForm = useFormContext<CreateEventInput>();
     const { setActiveTabStore } = useCreateEventHandler();
+    const { eventTypes } = useCreateEventStoreSelector();
+    const objectUrlsRef = useRef<string[]>([]);
 
     const handleEditInfo = () => {
         setActiveTabStore(CREATE_EVENT_TAB.INFO);
@@ -19,58 +31,66 @@ const PreviewSection = () => {
         setActiveTabStore(CREATE_EVENT_TAB.PAYMENT);
     };
 
-    const handleSaveEvent = () => {
-        // TODO: Implement save event logic
-        console.log('Saving event...');
-    };
+    // Cleanup object URLs on unmount
+    useEffect(() => {
+        return () => {
+            objectUrlsRef.current.forEach(url => URL.revokeObjectURL(url));
+        };
+    }, []);
 
-    // Mock data - sẽ được thay thế bằng dữ liệu thực từ store
+    // Lấy dữ liệu thực từ form
     const eventData = {
-        dateEnd: '22/03/2024 18:00',
-        dateStart: '20/03/2024 08:00',
-        description:
-            'Đây là hội nghị thường niên lớn nhất về công nghệ tại Việt Nam, quy tụ các chuyên gia hàng đầu...',
-        image: null,
-        location: 'Trung tâm Hội nghị Quốc gia, Hà Nội',
-        title: 'Hội nghị Công nghệ Việt Nam 2024',
-        type: 'Hội nghị',
+        dateEnd: createEventForm.watch('end_time'),
+        dateStart: createEventForm.watch('start_time'),
+        description: createEventForm.watch('description'),
+        image: createEventForm.watch('images'),
+        location: createEventForm.watch('is_online')
+            ? 'Sự kiện trực tuyến'
+            : `${createEventForm.watch('street_address')} ${createEventForm.watch('ward')} ${createEventForm.watch('district')} ${createEventForm.watch('city')}`,
+        title: createEventForm.watch('title'),
+        type: createEventForm.watch('category_id'),
     };
 
-    const ticketTypes = [
-        {
-            description: 'Vé ưu đãi sớm với giá tốt nhất',
-            name: 'Vé Early Bird',
-            price: 500000,
-        },
-        {
-            description: 'Vé tiêu chuẩn với đầy đủ quyền lợi',
-            name: 'Vé Standard',
-            price: 750000,
-        },
-        {
-            description: 'Vé VIP với quyền lợi cao cấp',
-            name: 'Vé VIP',
-            price: 1200000,
-        },
-    ];
+    const ticketTypes = createEventForm.watch('tickets') || [];
 
     const paymentData = {
-        accountHolder: 'NGUYEN VAN A',
-        bankAccount: '1234567890',
-        bankName: 'Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank)',
-        branch: 'Chi nhánh Hà Nội',
-        contactEmail: 'contact@techvietnam.com',
-        contactName: 'Nguyễn Thị B',
-        contactPhone: '0987654321',
+        accountHolder: createEventForm.watch('account_holder_name'),
+        bankAccount: createEventForm.watch('account_number'),
+        bankName: createEventForm.watch('bank_name'),
+        branch: createEventForm.watch('bank_branch'),
+        contactEmail: createEventForm.watch('contact_email'),
+        contactName: createEventForm.watch('full_name'),
+        contactPhone: createEventForm.watch('contact_phone'),
         hasQRCode: true,
-        organizationInfo:
-            'Công ty chuyên tổ chức các sự kiện công nghệ hàng đầu Việt Nam',
-        organizationName: 'Công ty Cổ phần Công nghệ Việt Nam',
-        website: 'www.techvietnam.com',
+        logoUrl: (() => {
+            const logoData = createEventForm.watch('logo_data');
+            const logoUrl = createEventForm.watch('logo_url');
+            
+            // Nếu có logo_data mới (File) → dùng file đó
+            if (logoData instanceof File && logoData.size > 0) {
+                return URL.createObjectURL(logoData);
+            }
+            // Nếu không có file mới nhưng có logo_url từ API → dùng URL đó
+            if (logoUrl) {
+                return logoUrl;
+            }
+            return null;
+        })(),
+        organizationInfo: createEventForm.watch('description_organization'),
+        organizationName: createEventForm.watch('organization_name'),
+        website: createEventForm.watch('website'),
     };
 
+    const { isLoading } = useCreateEventStoreSelector();
+    if (isLoading) {
+        return (
+            <div className="flex flex-col gap-6 flex-1 overflow-y-auto px-6 py-10 pb-10 mt-12">
+                <LoadingContent className="bg-transparent w-full h-full" />
+            </div>
+        );
+    }
     return (
-        <div className="flex flex-col gap-6 flex-1 overflow-y-auto px-6 py-10 pb-10 mt-12">
+        <div className="flex flex-col gap-6 flex-1 overflow-y-auto px-6 py-10 pb-10 mt-16">
             {/* Header */}
             <div className="flex items-center justify-center">
                 <Text
@@ -102,68 +122,67 @@ const PreviewSection = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
-                    <div className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-5">
+                        <div className="flex items-center gap-2">
                             <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
+                                modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                             >
-                                Tên sự kiện
+                                Tên sự kiện:
                             </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                 {eventData.title}
                             </Text>
                         </div>
 
-                        <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
                             <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
+                                modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                             >
-                                Địa điểm
+                                Địa điểm:
                             </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                 {eventData.location}
                             </Text>
                         </div>
 
-                        <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
                             <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
+                                modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                             >
-                                Ngày bắt đầu
+                                Ngày bắt đầu:
                             </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                 {eventData.dateStart}
                             </Text>
                         </div>
 
-                        <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
                             <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
+                                modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                             >
-                                Ngày kết thúc
+                                Ngày kết thúc:
                             </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                 {eventData.dateEnd}
+                            </Text>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.YELLOW}
+                                modeWeight={MODE_WEIGHT.MEDIUM}
+                            >
+                                Loại sự kiện:
+                            </Text>
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                {getEventTypes(
+                                    eventData.type,
+                                    eventTypes ?? []
+                                )}
                             </Text>
                         </div>
                     </div>
@@ -171,66 +190,68 @@ const PreviewSection = () => {
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
                             <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
-                            >
-                                Loại sự kiện
-                            </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
-                                {eventData.type}
-                            </Text>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
+                                modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                             >
                                 Hình ảnh sự kiện
                             </Text>
-                            <div className="w-32 h-32 bg-bg-gray rounded-lg flex items-center justify-center">
-                                {eventData.image ? (
-                                    <img
-                                        src={eventData.image}
-                                        alt="Event"
-                                        className="w-full h-full object-cover rounded-lg"
-                                    />
-                                ) : (
-                                    <Text
-                                        modeColor={
-                                            MODE_COLOR_TEXT.GRAY_SECONDARY
+                            <div className="flex gap-2 flex-wrap">
+                                {eventData.image.map(image => {
+                                    // Handle both File objects and URL strings
+                                    let imageSrc: string;
+                                    if (image.image_data instanceof File) {
+                                        imageSrc = URL.createObjectURL(
+                                            image.image_data
+                                        );
+                                        // Track URL for cleanup
+                                        if (
+                                            !objectUrlsRef.current.includes(
+                                                imageSrc
+                                            )
+                                        ) {
+                                            objectUrlsRef.current.push(
+                                                imageSrc
+                                            );
                                         }
-                                        modeSize={MODE_SIZE[12]}
-                                    >
-                                        Chưa có hình ảnh
-                                    </Text>
-                                )}
+                                    } else {
+                                        imageSrc = image.image_data;
+                                    }
+
+                                    return (
+                                        <div
+                                            key={image.image_type}
+                                            className="w-60 h-60 bg-bg-gray rounded-lg overflow-hidden"
+                                        >
+                                            <img
+                                                src={imageSrc}
+                                                alt={`Event ${image.image_type}`}
+                                                className="w-full h-full object-cover"
+                                                onError={e => {
+                                                    e.currentTarget.style.display =
+                                                        'none';
+                                                }}
+                                            />
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-4">
                     <Text
-                        modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                        modeSize={MODE_SIZE[14]}
+                        modeColor={MODE_COLOR_TEXT.YELLOW}
                         modeWeight={MODE_WEIGHT.MEDIUM}
                     >
-                        Mô tả sự kiện
+                        Mô tả sự kiện:
                     </Text>
-                    <div className="bg-bg-gray rounded-lg p-4 max-h-40 overflow-y-auto">
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.WHITE}
-                            modeSize={MODE_SIZE[14]}
-                        >
-                            {eventData.description}
-                        </Text>
-                    </div>
+                    <div
+                        className="bg-white rounded-lg p-4 min-h-40 max-h-80 overflow-y-auto html-content"
+                        dangerouslySetInnerHTML={{
+                            __html: eventData.description || '',
+                        }}
+                    />
                 </div>
             </div>
 
@@ -260,13 +281,10 @@ const PreviewSection = () => {
                                     modeSize={MODE_SIZE[16]}
                                     modeWeight={MODE_WEIGHT.LARGE}
                                 >
-                                    {ticket.price.toLocaleString('vi-VN')} ₫
+                                    {formatPrice(ticket.price)}
                                 </Text>
                             </div>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
-                            >
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                 {ticket.description}
                             </Text>
                         </div>
@@ -297,113 +315,80 @@ const PreviewSection = () => {
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
                             <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
+                                modeColor={MODE_COLOR_TEXT.WHITE}
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                             >
-                                Tên ban tổ chức
+                                Logo ban tổ chức
                             </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
-                                {paymentData.organizationName}
-                            </Text>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
-                            >
-                                Số tài khoản
-                            </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
-                                {paymentData.bankAccount}
-                            </Text>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
-                            >
-                                Tên chủ tài khoản
-                            </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
-                                {paymentData.accountHolder}
-                            </Text>
+                            {paymentData.logoUrl && (
+                                <div className="w-60 h-60 bg-bg-gray rounded-lg overflow-hidden">
+                                    <img
+                                        src={paymentData.logoUrl}
+                                        alt="Logo ban tổ chức"
+                                        className="w-full h-full object-cover rounded-lg"
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-4">
-                        <div className="flex flex-col gap-2">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
-                            >
-                                Ngân hàng
-                            </Text>
+                        <div className="flex items-center gap-2">
                             <Text
                                 modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
+                                modeWeight={MODE_WEIGHT.MEDIUM}
                             >
+                                Tên ban tổ chức:
+                            </Text>
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                {paymentData.organizationName}
+                            </Text>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.WHITE}
+                                modeWeight={MODE_WEIGHT.MEDIUM}
+                            >
+                                Số tài khoản:
+                            </Text>
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                {paymentData.bankAccount}
+                            </Text>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.WHITE}
+                                modeWeight={MODE_WEIGHT.MEDIUM}
+                            >
+                                Tên chủ tài khoản:
+                            </Text>
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                {paymentData.accountHolder}
+                            </Text>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.WHITE}
+                                modeWeight={MODE_WEIGHT.MEDIUM}
+                            >
+                                Ngân hàng:
+                            </Text>
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
                                 {paymentData.bankName}
                             </Text>
                         </div>
 
-                        <div className="flex flex-col gap-2">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
-                            >
-                                Chi nhánh
-                            </Text>
+                        <div className="flex items-center gap-2">
                             <Text
                                 modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[16]}
-                            >
-                                {paymentData.branch}
-                            </Text>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                                modeSize={MODE_SIZE[14]}
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                             >
-                                Mã QR VNPay
+                                Chi nhánh:
                             </Text>
-                            <div className="w-24 h-24 bg-bg-gray rounded-lg flex items-center justify-center">
-                                {paymentData.hasQRCode ? (
-                                    <Text
-                                        modeColor={MODE_COLOR_TEXT.YELLOW}
-                                        modeSize={MODE_SIZE[12]}
-                                    >
-                                        ✓ Đã đăng
-                                    </Text>
-                                ) : (
-                                    <Text
-                                        modeColor={
-                                            MODE_COLOR_TEXT.GRAY_SECONDARY
-                                        }
-                                        modeSize={MODE_SIZE[12]}
-                                    >
-                                        Chưa đăng
-                                    </Text>
-                                )}
-                            </div>
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                {paymentData.branch}
+                            </Text>
                         </div>
                     </div>
                 </div>
@@ -411,80 +396,30 @@ const PreviewSection = () => {
                 {/* Contact Info */}
                 <div className="flex flex-col gap-4 pt-4 border-t border-gray-700">
                     <Text
-                        modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                        modeSize={MODE_SIZE[14]}
+                        modeColor={MODE_COLOR_TEXT.WHITE}
                         modeWeight={MODE_WEIGHT.MEDIUM}
                     >
                         Thông tin liên hệ
                     </Text>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="flex flex-col gap-1">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[14]}
-                            >
-                                <span className="text-gray-400">
-                                    Người liên hệ:
-                                </span>{' '}
-                                {paymentData.contactName}
+                    <div className="grid grid-cols-2 gap-6">
+                        <div className="flex flex-col gap-3">
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                Người liên hệ: {paymentData.contactName}
                             </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[14]}
-                            >
-                                <span className="text-gray-400">Email:</span>{' '}
-                                {paymentData.contactEmail}
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                Email: {paymentData.contactEmail}
                             </Text>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[14]}
-                            >
-                                <span className="text-gray-400">SĐT:</span>{' '}
-                                {paymentData.contactPhone}
+                        <div className="flex flex-col gap-3">
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                SĐT: {paymentData.contactPhone}
                             </Text>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[14]}
-                            >
-                                <span className="text-gray-400">Website:</span>{' '}
-                                {paymentData.website}
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                Website: {paymentData.website}
                             </Text>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex justify-center gap-4 pt-6">
-                <Button
-                    mode={MODE_BUTTON.WHITE}
-                    onClick={handleEditInfo}
-                    className="!h-12 !px-8"
-                >
-                    <Text
-                        modeColor={MODE_COLOR_TEXT.BLACK}
-                        modeSize={MODE_SIZE[16]}
-                        modeWeight={MODE_WEIGHT.MEDIUM}
-                    >
-                        Chỉnh sửa thông tin
-                    </Text>
-                </Button>
-
-                <Button
-                    mode={MODE_BUTTON.YELLOW}
-                    onClick={handleSaveEvent}
-                    className="!h-12 !px-8"
-                >
-                    <Text
-                        modeColor={MODE_COLOR_TEXT.BLACK}
-                        modeSize={MODE_SIZE[16]}
-                        modeWeight={MODE_WEIGHT.MEDIUM}
-                    >
-                        Lưu sự kiện
-                    </Text>
-                </Button>
             </div>
         </div>
     );

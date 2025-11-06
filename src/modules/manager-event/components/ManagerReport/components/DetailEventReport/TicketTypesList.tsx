@@ -4,28 +4,14 @@ import {
     MODE_WEIGHT,
     MODE_COLOR_TEXT,
 } from '@share/components/atoms/Text';
-import { TicketType } from '@share/types/ticket';
+import { EventReport } from '@share/types/event';
+import { formatPrice } from '@modules/event-detail/utils/eventUtils';
 
 interface TicketTypesListProps {
-    ticketTypes: TicketType[];
+    ticketTypes: EventReport['ticket_types'];
 }
 
 const TicketTypesList = ({ ticketTypes }: TicketTypesListProps) => {
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            currency: 'VND',
-            style: 'currency',
-        }).format(amount);
-    };
-
-    const formatNumber = (num: number) => {
-        return new Intl.NumberFormat('vi-VN').format(num);
-    };
-
-    const getProgressPercentage = (sold: number, total: number) => {
-        return total > 0 ? (sold / total) * 100 : 0;
-    };
-
     const getProgressColor = (percentage: number) => {
         if (percentage >= 80) return 'bg-red-500';
         if (percentage >= 60) return 'bg-yellow-500';
@@ -45,12 +31,7 @@ const TicketTypesList = ({ ticketTypes }: TicketTypesListProps) => {
 
             <div className="flex flex-col gap-4">
                 {ticketTypes.map(ticket => {
-                    const progressPercentage = getProgressPercentage(
-                        ticket.soldQuantity,
-                        ticket.totalQuantity
-                    );
-                    const remainingTickets =
-                        ticket.totalQuantity - ticket.soldQuantity;
+                    const progressPercentage = ticket.sold_percentage;
 
                     return (
                         <div
@@ -71,16 +52,8 @@ const TicketTypesList = ({ ticketTypes }: TicketTypesListProps) => {
                                         modeWeight={MODE_WEIGHT.MEDIUM}
                                         modeColor={MODE_COLOR_TEXT.YELLOW}
                                     >
-                                        {formatCurrency(ticket.price)}
+                                        {formatPrice(ticket.price)}
                                     </Text>
-                                    {ticket.description && (
-                                        <Text
-                                            modeSize={MODE_SIZE[12]}
-                                            modeColor={MODE_COLOR_TEXT.GRAY}
-                                        >
-                                            {ticket.description}
-                                        </Text>
-                                    )}
                                 </div>
 
                                 <div className="flex items-center gap-2">
@@ -88,15 +61,14 @@ const TicketTypesList = ({ ticketTypes }: TicketTypesListProps) => {
                                         modeSize={MODE_SIZE[14]}
                                         modeColor={MODE_COLOR_TEXT.GRAY}
                                     >
-                                        còn lại:{' '}
-                                        {formatNumber(remainingTickets)}
+                                        còn lại: {ticket.remaining_quantity}
                                     </Text>
                                     <Text
                                         modeWeight={MODE_WEIGHT.MEDIUM}
                                         modeColor={MODE_COLOR_TEXT.WHITE}
                                     >
-                                        {formatNumber(ticket.soldQuantity)}/
-                                        {formatNumber(ticket.totalQuantity)}
+                                        {ticket.sold_quantity}/
+                                        {ticket.initial_quantity}
                                     </Text>
                                 </div>
                             </div>
@@ -122,8 +94,8 @@ const TicketTypesList = ({ ticketTypes }: TicketTypesListProps) => {
                                     modeColor={MODE_COLOR_TEXT.GREEN}
                                 >
                                     Doanh thu:{' '}
-                                    {formatCurrency(
-                                        ticket.price * ticket.soldQuantity
+                                    {formatPrice(
+                                        ticket.price * ticket.sold_quantity
                                     )}
                                 </Text>
                             </div>

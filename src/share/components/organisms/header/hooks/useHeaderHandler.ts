@@ -8,9 +8,8 @@ import { searchToolBarSchema } from '@share/schemas/header/searchToolBar';
 import { useAuthPopup } from '@modules/auth/components/hooks/useAuthPopup';
 import useSearchStoreAction from './useSearchStoreAction';
 import useSearchStoreSelector from './useSearchStoreSelector';
-import { useEffect } from 'react';
 import { authApi } from '@share/api/authApi';
-import { RESULT_CODE } from '@share/constants/commons';
+import { RESULT_CODE, ROLE } from '@share/constants/commons';
 import { toast } from 'react-toastify';
 
 const useHeaderHandler = () => {
@@ -39,9 +38,6 @@ const useHeaderHandler = () => {
     // #endregion
 
     // #region Handlers
-    useEffect(() => {
-        console.log('searchText', searchText);
-    }, [searchText]);
 
     const handleLogout = async () => {
         // Set logout flag first
@@ -113,13 +109,36 @@ const useHeaderHandler = () => {
         navigate(SCREEN_PATH.MY_TICKET_PROFILE);
     };
 
+    const handleSearchSubmit = (keyword: string) => {
+        if (!keyword.trim()) return;
+
+        // Chuyển đến EventList với filter
+        navigate(SCREEN_PATH.EVENT_LIST, {
+            state: { searchKeyword: keyword.trim() },
+        });
+
+        // Đóng popup và clear input
+        setIsSearchPopupOpenStore(false);
+        searchForm.setValue('search', '');
+    };
+
+    const handleClickAdmin = () => {
+        if (!token || !user || user.role !== ROLE.ADMIN) {
+            toast.error('Bạn không có quyền truy cập trang quản lý');
+            return;
+        }
+        navigate(SCREEN_PATH.ADMIN_DASHBOARD);
+    };
+
     return {
+        handleClickAdmin,
         handleClickCreateEvent,
         handleClickLogo,
         handleClickMyEvents,
         handleClickMyProfile,
         handleClickMyTicket,
         handleLogout,
+        handleSearchSubmit,
         isAccountPopupOpen,
         isSearchPopupOpen,
         openAuthPopup,

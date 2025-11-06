@@ -1,7 +1,12 @@
 import useEventListStoreAction from './useEventListStoreAction';
 import useEventListStoreSelector from './useEventListStoreSelector';
 import { useEffect, useState } from 'react';
-import { LOCATION, TYPE } from '@share/constants/commons';
+import { FILTER_STATUS, LOCATION, TYPE } from '@share/constants/commons';
+import useHomeEventListStoreSelector from '@modules/home/hooks/useHomeEventListStoreSelector';
+import { SCREEN_PATH } from '@share/constants/routers';
+import { useNavigate } from 'react-router-dom';
+import useFetchEventListQuery from '@modules/home/hooks/useFetchEventListQuery';
+import useHomeEventListStoreAction from '@modules/home/hooks/useHomeEventListStoreAction';
 
 type filterOptions = {
     location: string;
@@ -10,10 +15,21 @@ type filterOptions = {
 };
 
 const useEventListHandler = () => {
-    const { filterLocation, filterPriceFree, filterType, isOpenFilterPopup } =
-        useEventListStoreSelector();
+    const navigate = useNavigate();
+    const {
+        dateRangeEnd,
+        dateRangeStart,
+        filterLocation,
+        filterPriceFree,
+        filterType,
+        isOpenFilterPopup,
+    } = useEventListStoreSelector();
+    const { allEvents } = useHomeEventListStoreSelector();
+    const { setAllEventsStore } = useHomeEventListStoreAction();
     const {
         resetEventListStateStore,
+        setDateRangeEndStore,
+        setDateRangeStartStore,
         setFilterLocationStore,
         setFilterPriceFreeStore,
         setFilterTypeStore,
@@ -68,6 +84,22 @@ const useEventListHandler = () => {
         type: filterType,
     });
 
+    const { data, isError, isLoading } = useFetchEventListQuery(
+        allEvents.length === 0
+    );
+
+    useEffect(() => {
+        if (allEvents.length === 0 && data && data.length > 0) {
+            setAllEventsStore(
+                data.filter(
+                    event =>
+                        event.status !== FILTER_STATUS.PENDING &&
+                        event.status !== FILTER_STATUS.REJECTED
+                )
+            );
+        }
+    }, [data]);
+
     useEffect(() => {
         return () => {
             resetEventListStateStore();
@@ -95,13 +127,29 @@ const useEventListHandler = () => {
         });
     };
 
+    const handleViewEvent = (eventId: string) => {
+        navigate(SCREEN_PATH.EVENT_DETAIL.replace(':event_id', eventId));
+    };
+
+    const handleDateRangeChange = (start: string | null, end: string | null) => {
+        setDateRangeStartStore(start);
+        setDateRangeEndStore(end);
+    };
+
     return {
+        allEvents,
+        dateRangeEnd,
+        dateRangeStart,
         filterLocation,
         filterOptions,
         filterPriceFree,
         filterType,
+        handleDateRangeChange,
         handleFilter,
         handleResetFilter,
+        handleViewEvent,
+        isError,
+        isLoading,
         isOpenFilterPopup,
         OPTIONS_LOCATION,
         OPTIONS_TYPE,

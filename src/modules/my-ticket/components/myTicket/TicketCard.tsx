@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
 import {
     MODE_COLOR_TEXT,
     MODE_SIZE,
     MODE_WEIGHT,
     Text,
 } from '@share/components/atoms/Text';
-import { TicketData } from '../../types/ticket';
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_TIME_FORMAT_ISO } from '@share/constants/dateTime';
 import CalendarIcon, {
     MODE_CALENDAR,
 } from '@share/components/atoms/icons/CalendarIcon';
@@ -16,71 +16,41 @@ import TicketIcon, {
 import QRPopup from './QRPopup';
 import MoreIcon from '@share/components/atoms/icons/MoreIcon';
 import DivClick from '@share/components/atoms/DivClick';
+import {
+    formatPrice,
+    getEventImage,
+} from '@modules/event-detail/utils/eventUtils';
+import useTicketCardHandler from './hooks/useTicketCardHandler';
+import { IMAGE_TYPE, MY_TICKET_TAB } from '@share/constants/commons';
+import { TicketWithEvent } from './hooks/useMyTicketHandler';
+import useMyTicketStoreSelector from '@modules/my-ticket/hooks/useMyTicketStoreSelector';
 
-interface TicketCardProps {
-    formatDateTime: (_dateTimeString: string) => { date: string; time: string };
-    ticket: TicketData;
-}
+const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
+    const { event, ticket: ticketData } = ticket;
+    const { selectedTicketId } = useMyTicketStoreSelector();
+    const {
+        getStatus,
+        handleCloseQrPopup,
+        handleOpenQrPopup,
+        menuRef,
+        setShowMenu,
+        showMenu,
+    } = useTicketCardHandler(ticketData.id);
 
-const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
-    const [showQR, setShowQR] = useState(false);
-    const [showMenu, setShowMenu] = useState(false);
-    const menuRef = useRef<HTMLDivElement>(null);
-
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            currency: 'VND',
-            style: 'currency',
-        }).format(price);
-    };
-
-    // Đóng menu khi click ra ngoài
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (
-                menuRef.current &&
-                !menuRef.current.contains(event.target as Node)
-            ) {
-                setShowMenu(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-    // Tính toán status dựa trên thời gian hiện tại
-    const getStatus = () => {
-        const now = new Date();
-        const eventDate = new Date(ticket.eventDateTime);
-        return eventDate > now ? 'upcoming' : 'past';
-    };
-
-    const getStatusColor = (status: string) => {
-        return status === 'upcoming' ? 'text-green-400' : 'text-gray-400';
-    };
-
-    const getStatusText = (status: string) => {
-        return status === 'upcoming' ? 'Sắp diễn ra' : 'Đã diễn ra';
-    };
-
-    const status = getStatus();
-    const { date, time } = formatDateTime(ticket.eventDateTime);
+    const isShowQrPopup = selectedTicketId === ticketData.id;
 
     return (
         <>
             <DivClick
                 className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-bg-yellow/30 transition-all duration-300 group cursor-pointer"
-                onClick={() => setShowQR(true)}
+                onClick={handleOpenQrPopup}
             >
                 <div className="flex">
                     {/* Event Image */}
                     <div className="relative w-76 h-50 rounded-l-lg overflow-hidden flex-shrink-0">
                         <img
-                            src={ticket.image}
-                            alt={ticket.eventName}
+                            src={getEventImage(event, IMAGE_TYPE.CARD)}
+                            alt={event.title}
                             className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -88,81 +58,82 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
                         {/* Status Badge */}
                         <div className="absolute top-1 right-1">
                             <div
-                                className={`px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm ${getStatusColor(status)}`}
+                                className={`px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm ${getStatus(event) === MY_TICKET_TAB.UPCOMING ? 'text-green-400' : 'text-gray-400'}`}
                             >
                                 <Text
                                     modeColor={
-                                        status === 'upcoming'
+                                        getStatus(event) ===
+                                        MY_TICKET_TAB.UPCOMING
                                             ? MODE_COLOR_TEXT.GREEN
                                             : MODE_COLOR_TEXT.GRAY
                                     }
-                                    modeSize={MODE_SIZE[12]}
+                                    modeSize={MODE_SIZE[14]}
                                     modeWeight={MODE_WEIGHT.MEDIUM}
                                 >
-                                    {getStatusText(status)}
+                                    {getStatus(event) === MY_TICKET_TAB.UPCOMING
+                                        ? 'Sắp diễn ra'
+                                        : 'Đã diễn ra'}
                                 </Text>
                             </div>
                         </div>
                     </div>
 
                     {/* Event Info */}
-                    <div className="flex-1 ml-4 pt-4 flex flex-col gap-2.5">
+                    <div className="flex-1 ml-4 pt-4 flex flex-col gap-4">
                         {/* Event Name */}
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
-                            modeSize={MODE_SIZE[18]}
+                            modeSize={MODE_SIZE[20]}
                             modeWeight={MODE_WEIGHT.LARGE}
                         >
-                            {ticket.eventName}
+                            {event.title}
                         </Text>
 
                         {/* Date and Time */}
                         <div className="flex items-center gap-2">
-                            <CalendarIcon
-                                mode={MODE_CALENDAR.YELLOW}
-                                size={14}
-                            />
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY}
-                                modeSize={MODE_SIZE[14]}
-                            >
-                                {date} • {time}
+                            <CalendarIcon mode={MODE_CALENDAR.YELLOW} />
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                {formatDateTime(
+                                    event.start_time || '',
+                                    DATE_TIME_FORMAT_ISO
+                                )}
                             </Text>
                         </div>
 
                         {/* Venue */}
                         <div className="flex items-center gap-2">
-                            <MapPinIcon className="w-3 h-3 text-bg-yellow" />
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY}
-                                modeSize={MODE_SIZE[14]}
-                            >
-                                {ticket.venue}
+                            <MapPinIcon className="w-6 h-6 text-bg-yellow" />
+                            <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                {event.location}
                             </Text>
                         </div>
 
                         {/* Ticket Details */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2">
                                 <TicketIcon
                                     mode={MODE_TICKET.YELLOW}
-                                    className="w-3 h-3"
+                                    size={24}
                                 />
                                 <Text
                                     modeColor={MODE_COLOR_TEXT.WHITE}
-                                    modeSize={MODE_SIZE[14]}
                                     modeWeight={MODE_WEIGHT.MEDIUM}
                                 >
-                                    {ticket.ticketType} • Ghế{' '}
-                                    {ticket.seatNumber}
+                                    {ticketData.ticket_types?.name || ''}
                                 </Text>
                             </div>
                             <Text
+                                modeColor={MODE_COLOR_TEXT.WHITE}
+                                modeWeight={MODE_WEIGHT.LARGE}
+                                modeSize={MODE_SIZE[18]}
+                            >
+                                •
+                            </Text>
+                            <Text
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
-                                modeSize={MODE_SIZE[14]}
                                 modeWeight={MODE_WEIGHT.LARGE}
                             >
-                                {formatPrice(ticket.price)}
+                                {formatPrice(Number(ticketData.price))}
                             </Text>
                         </div>
                     </div>
@@ -182,16 +153,12 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
                         {/* Dropdown Menu */}
                         {showMenu && (
                             <div className="absolute right-2 top-7 mt-2 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-10">
-                                {status === 'upcoming' ? (
+                                {getStatus(event) === MY_TICKET_TAB.UPCOMING ? (
                                     <>
                                         <DivClick
                                             onClick={e => {
                                                 e?.stopPropagation();
                                                 setShowMenu(false);
-                                                console.log(
-                                                    'Xem chi tiết vé:',
-                                                    ticket.id
-                                                );
                                             }}
                                             className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors border-b border-bg-gray"
                                         >
@@ -199,28 +166,9 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
                                                 modeColor={
                                                     MODE_COLOR_TEXT.WHITE
                                                 }
-                                                modeSize={MODE_SIZE[14]}
                                                 modeWeight={MODE_WEIGHT.MEDIUM}
                                             >
                                                 Xem chi tiết
-                                            </Text>
-                                        </DivClick>
-                                        <DivClick
-                                            onClick={e => {
-                                                e?.stopPropagation();
-                                                setShowMenu(false);
-                                                setShowQR(true);
-                                            }}
-                                            className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors"
-                                        >
-                                            <Text
-                                                modeColor={
-                                                    MODE_COLOR_TEXT.YELLOW
-                                                }
-                                                modeSize={MODE_SIZE[14]}
-                                                modeWeight={MODE_WEIGHT.MEDIUM}
-                                            >
-                                                Xem QR Code
                                             </Text>
                                         </DivClick>
                                     </>
@@ -230,10 +178,6 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
                                             onClick={e => {
                                                 e?.stopPropagation();
                                                 setShowMenu(false);
-                                                console.log(
-                                                    'Xem lại sự kiện:',
-                                                    ticket.id
-                                                );
                                             }}
                                             className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors border-b border-bg-gray"
                                         >
@@ -241,7 +185,6 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
                                                 modeColor={
                                                     MODE_COLOR_TEXT.WHITE
                                                 }
-                                                modeSize={MODE_SIZE[14]}
                                                 modeWeight={MODE_WEIGHT.MEDIUM}
                                             >
                                                 Xem lại sự kiện
@@ -251,10 +194,6 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
                                             onClick={e => {
                                                 e?.stopPropagation();
                                                 setShowMenu(false);
-                                                console.log(
-                                                    'Đánh giá sự kiện:',
-                                                    ticket.id
-                                                );
                                             }}
                                             className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors"
                                         >
@@ -262,7 +201,6 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
                                                 modeColor={
                                                     MODE_COLOR_TEXT.YELLOW
                                                 }
-                                                modeSize={MODE_SIZE[14]}
                                                 modeWeight={MODE_WEIGHT.MEDIUM}
                                             >
                                                 Đánh giá
@@ -278,10 +216,9 @@ const TicketCard: React.FC<TicketCardProps> = ({ formatDateTime, ticket }) => {
 
             {/* QR Popup */}
             <QRPopup
-                isOpen={showQR}
-                onClose={() => setShowQR(false)}
+                isOpen={isShowQrPopup}
+                onClose={handleCloseQrPopup}
                 ticket={ticket}
-                formatDateTime={formatDateTime}
             />
         </>
     );

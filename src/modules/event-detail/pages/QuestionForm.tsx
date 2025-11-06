@@ -1,90 +1,62 @@
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { TicketPurchaseState } from '../types/ticketPurchase';
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import EventHeaderInfo from '@share/components/organisms/EventHeaderInfo';
 import FormBooking from '../components/QuestionForm/FormBooking';
 import ToolBarRight from '../components/QuestionForm/ToolBarRight';
 import useFormQuestionHandler from '../components/QuestionForm/hooks/useFormQuestionHandler';
-import { getCurrentEventId } from '@share/utils/path';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useAppSelector } from '@configs/store';
 import { isNotNullOrUndefinedOrBlank } from '@share/utils/validate';
+import useEventDetailStoreSelector from '../hooks/useEventDetailStoreSelector';
+import useEventDetailStoreAction from '../hooks/useEventDetailStoreAction';
 
 const QuestionForm = () => {
-    const location = useLocation();
     const navigate = useNavigate();
-    const pathname = location.pathname;
-    const eventId = getCurrentEventId(pathname);
     const { token } = useAppSelector(state => state.auth);
     const { user } = useAppSelector(state => state.user);
-    // Lấy thông tin từ state được truyền từ TicketPurchase
-    const purchaseState = location.state as TicketPurchaseState;
-
-    const [isLoading, setIsLoading] = useState(false);
-    const { questionForm } = useFormQuestionHandler();
-
-    // Mock event data - trong thực tế sẽ fetch từ API
-    const eventData = {
-        date: '2024-12-25',
-        id: eventId || '1',
-        image: 'https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2F3b%2F36%2F58%2Fb9085b00c469d727db9ee8857ee49b8d.jpg&w=640&q=75',
-        location: 'Nhà hát Hòa Bình, TP.HCM',
-        title: 'Concert Nhạc Trẻ 2024',
-    };
-
-    const isFormValid = () => {
-        const values = questionForm.getValues();
-        return (
-            values.email.trim() !== '' &&
-            values.phone.trim() !== '' &&
-            values.agreeToTerms
-        );
-    };
-
-    const handleContinue = async () => {
-        // Sử dụng handleSubmit để validate form trước khi tiếp tục
-        questionForm.handleSubmit(async validData => {
-            setIsLoading(true);
-
-            try {
-                // Tạo state để chuyển đến trang thanh toán
-                const paymentState = {
-                    ...purchaseState,
-                    bookingForm: validData,
-                };
-
-                // Navigate to payment page
-                navigate(
-                    SCREEN_PATH.EVENT_PAYMENT.replace(
-                        ':event_id',
-                        eventId || ''
-                    ).replace(':booking_id', '1'),
-                    {
-                        state: paymentState,
-                    }
-                );
-            } catch (error) {
-                console.error('Navigation failed:', error);
-                alert('Có lỗi xảy ra. Vui lòng thử lại.');
-            } finally {
-                setIsLoading(false);
-            }
-        })();
-    };
+    const { handleBackToSelectTicket, questionForm } = useFormQuestionHandler();
+    const { eventDetail, selectedTickets } = useEventDetailStoreSelector();
+    const { setSelectedTicketsStore } = useEventDetailStoreAction();
 
     if (
-        !purchaseState ||
+        !selectedTickets ||
+        !eventDetail ||
         !isNotNullOrUndefinedOrBlank(token) ||
         !isNotNullOrUndefinedOrBlank(user)
     ) {
+        // Clear stale state when guard fails
+        setSelectedTicketsStore(null);
+        navigate(SCREEN_PATH.HOME);
         return null;
     }
+
+    // Optimized form validation
+    const isFormValid =
+        questionForm.formState.isValid && questionForm.watch('agreeToTerms');
+
+    // Memoized navigation handler
+    const handleContinue = useCallback(() => {
+        questionForm.handleSubmit(validData => {
+            const paymentState = {
+                ...selectedTickets,
+                bookingForm: validData,
+            };
+
+            navigate(
+                SCREEN_PATH.EVENT_PAYMENT.replace(
+                    ':event_id',
+                    eventDetail?.id || ''
+                ),
+                { state: paymentState }
+            );
+        })();
+    }, [questionForm, eventDetail?.id]);
 
     return (
         <div className="min-h-screen bg-bg-black-2 flex flex-1 w-full pb-10">
             <div className="flex-1 flex flex-col">
                 {/* Event Header Info */}
-                <EventHeaderInfo eventInfo={eventData} />
+                <EventHeaderInfo eventInfo={eventDetail} />
 
                 {/* Main Content */}
                 <div className="flex gap-10 px-20 py-10">
@@ -96,11 +68,12 @@ const QuestionForm = () => {
                     {/* Right Side - Booking Info */}
                     <div className="w-96 mt-13">
                         <ToolBarRight
-                            selectedTickets={purchaseState.selectedTickets}
-                            totalAmount={purchaseState.totalAmount}
+                            handleBackToSelectTicket={handleBackToSelectTicket}
+                            selectedTickets={selectedTickets.selectedTickets}
+                            totalAmount={selectedTickets.totalAmount}
                             onContinue={handleContinue}
-                            isFormValid={isFormValid()}
-                            isLoading={isLoading}
+                            isFormValid={isFormValid}
+                            isLoading={questionForm.formState.isSubmitting}
                         />
                     </div>
                 </div>

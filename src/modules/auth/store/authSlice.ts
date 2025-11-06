@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type AuthState = {
     email_verify: string;
+    is_admin: boolean;
     is_auth_popup_open: boolean;
     is_change_password: boolean;
     is_forget_password_popup_open: boolean;
@@ -14,6 +15,7 @@ type AuthState = {
  */
 const initialState: AuthState = {
     email_verify: '',
+    is_admin: false,
     is_auth_popup_open: false,
     is_change_password: false,
     is_forget_password_popup_open: false,
@@ -30,6 +32,9 @@ const worksitesSlice = createSlice({
         },
         setEmailVerify: (state, action: PayloadAction<string>) => {
             state.email_verify = action.payload;
+        },
+        setIsAdmin: (state, action: PayloadAction<boolean>) => {
+            state.is_admin = action.payload;
         },
         setIsAuthPopupOpen: (state, action: PayloadAction<boolean>) => {
             state.is_auth_popup_open = action.payload;
@@ -56,6 +61,7 @@ const worksitesSlice = createSlice({
 export const {
     resetAuthState,
     setEmailVerify,
+    setIsAdmin,
     setIsAuthPopupOpen,
     setIsChangePassword,
     setIsForgetPasswordPopupOpen,

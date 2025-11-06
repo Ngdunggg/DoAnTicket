@@ -15,7 +15,7 @@ export default function useProfileForm() {
             dateOfBirth: '',
             email: '',
             fullName: '',
-            gender: 'male',
+            gender: true,
             phone: '',
         },
         mode: 'onChange',

@@ -2,7 +2,7 @@ import { useAppDispatch } from '@configs/store';
 import {
     resetManagerEventListState,
     setActiveFilter,
-    setAllEvents,
+    setAllEventsByOrganizer,
 } from '../../../stores/eventListSlice';
 import { FilterStatus } from '@share/constants/commons';
 import { Event } from '@share/types/event';
@@ -16,14 +16,14 @@ const useEventListStoreAction = () => {
     const resetManagerEventListStateStore = () => {
         dispatch(resetManagerEventListState());
     };
-    const setAllEventsStore = (data: Event[]) => {
-        dispatch(setAllEvents(data));
+    const setAllEventsByOrganizerStore = (data: Event[]) => {
+        dispatch(setAllEventsByOrganizer(data));
     };
 
     return {
         resetManagerEventListStateStore,
         setActiveFilterStore,
-        setAllEventsStore,
+        setAllEventsByOrganizerStore,
     };
 };
 

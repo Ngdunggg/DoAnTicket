@@ -5,67 +5,61 @@ import {
     MODE_WEIGHT,
     Text,
 } from '@share/components/atoms/Text';
-import { TicketData } from '../../types/ticket';
 import { QRCodeSVG } from 'qrcode.react';
 import DivClick from '@share/components/atoms/DivClick';
 import WavyLineIcon, {
     MODE_WAVY_LINE,
 } from '@share/components/atoms/icons/WavyLineIcon';
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_TIME_FORMAT_ISO } from '@share/constants/dateTime';
+import XCircleIcon from '@share/components/atoms/icons/XCircleIcon';
+import { MODE_X_CIRCLE_ICON } from '@share/components/atoms/icons/XCircleIcon';
+import { formatPrice } from '@modules/event-detail/utils/eventUtils';
+import CalendarIcon, {
+    MODE_CALENDAR,
+} from '@share/components/atoms/icons/CalendarIcon';
+import MapPinIcon from '@share/components/atoms/icons/MapPinIcon';
+import { TicketWithEvent } from './hooks/useMyTicketHandler';
+import TicketIcon, {
+    MODE_TICKET,
+} from '@share/components/atoms/icons/TicketIcon';
 
 interface QRPopupProps {
-    formatDateTime: (_dateTimeString: string) => { date: string; time: string };
     isOpen: boolean;
     onClose: () => void;
-    ticket: TicketData | null;
+    ticket: TicketWithEvent | null;
 }
 
-const QRPopup: React.FC<QRPopupProps> = ({
-    formatDateTime,
-    isOpen,
-    onClose,
-    ticket,
-}) => {
+const QRPopup: React.FC<QRPopupProps> = ({ isOpen, onClose, ticket }) => {
     if (!isOpen || !ticket) return null;
 
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            currency: 'VND',
-            style: 'currency',
-        }).format(price);
-    };
+    const { event, ticket: ticketData } = ticket;
 
-    const { date, time } = formatDateTime(ticket.eventDateTime);
-
-    // Tạo dữ liệu cho QR code (có thể là JSON string chứa thông tin vé)
+    // Tạo qr_data giống hệt với backend để đảm bảo QR code khớp với email
     const qrData = JSON.stringify({
-        eventDateTime: ticket.eventDateTime,
-        eventName: ticket.eventName,
-        seatNumber: ticket.seatNumber,
-        ticketId: ticket.id,
-        ticketType: ticket.ticketType,
-        venue: ticket.venue,
+        qr_data: `ticket:${ticketData.id}:${ticketData.serial_number}`,
+        ticketId: ticketData.id,
+        ticketTypeName: ticketData.ticket_types?.name || '',
     });
 
     return (
-        <div className="fixed inset-0 h-screen bg-black/70 flex items-center justify-center z-50">
+        <div className="fixed inset-0 top-2 h-screen bg-bg-black-2/20 flex items-center justify-center z-50">
             <div className="bg-bg-black-2 rounded-2xl w-full max-w-[500px] border border-bg-gray">
                 {/* Header */}
                 <div className="flex flex-col bg-bg-yellow rounded-t-2xl relative">
                     <div className="flex items-center gap-2 justify-between px-6 py-6 ">
                         <Text
                             modeColor={MODE_COLOR_TEXT.BLACK}
-                            modeSize={MODE_SIZE[20]}
+                            modeSize={MODE_SIZE[24]}
                             modeWeight={MODE_WEIGHT.LARGE}
                         >
                             Mã QR Vé
                         </Text>
                         <DivClick onClick={onClose}>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.BLACK}
-                                modeSize={MODE_SIZE[20]}
-                            >
-                                ×
-                            </Text>
+                            <XCircleIcon
+                                mode={MODE_X_CIRCLE_ICON.BLACK}
+                                size={24}
+                            />
                         </DivClick>
                     </div>
                     <WavyLineIcon
@@ -77,38 +71,43 @@ const QRPopup: React.FC<QRPopupProps> = ({
                 {/* Content */}
                 <div className="p-6 flex flex-col gap-6">
                     {/* Event Info */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-4">
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
-                            modeSize={MODE_SIZE[18]}
+                            modeSize={MODE_SIZE[20]}
                             modeWeight={MODE_WEIGHT.LARGE}
                         >
-                            {ticket.eventName}
+                            {event.title}
                         </Text>
                         <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY}
-                            modeSize={MODE_SIZE[14]}
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            className="flex items-center gap-2"
                         >
-                            📅 {date} • {time}
+                            <CalendarIcon
+                                mode={MODE_CALENDAR.YELLOW}
+                                size={24}
+                            />{' '}
+                            {formatDateTime(
+                                event.start_time || '',
+                                DATE_TIME_FORMAT_ISO
+                            )}
                         </Text>
                         <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY}
-                            modeSize={MODE_SIZE[14]}
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            className="flex items-center gap-2"
                         >
-                            📍 {ticket.venue}
+                            <MapPinIcon className="w-6 h-6 text-bg-yellow" />{' '}
+                            {event.location}
                         </Text>
                         <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY}
-                            modeSize={MODE_SIZE[14]}
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            className="flex items-center gap-2"
                         >
-                            🎫 {ticket.ticketType} • Ghế {ticket.seatNumber}
-                        </Text>
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.YELLOW}
-                            modeSize={MODE_SIZE[16]}
-                            modeWeight={MODE_WEIGHT.LARGE}
-                        >
-                            💰 {formatPrice(ticket.price)}
+                            <TicketIcon mode={MODE_TICKET.YELLOW} size={24} />{' '}
+                            {ticketData.ticket_types?.name || ''}{' '}
+                            <span className="text-bg-yellow font-bold">
+                                • {formatPrice(Number(ticketData.price))}
+                            </span>
                         </Text>
                     </div>
 
@@ -126,16 +125,10 @@ const QRPopup: React.FC<QRPopupProps> = ({
 
                     {/* Instructions */}
                     <div className="flex flex-col text-center">
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY}
-                            modeSize={MODE_SIZE[14]}
-                        >
+                        <Text modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}>
                             Quét mã QR này tại cửa vào sự kiện
                         </Text>
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
-                            modeSize={MODE_SIZE[12]}
-                        >
+                        <Text modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}>
                             Mã QR này chứa thông tin vé của bạn
                         </Text>
                     </div>

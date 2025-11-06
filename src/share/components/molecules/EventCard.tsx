@@ -13,7 +13,7 @@ interface EventCardProps {
     date: string;
     image?: string;
     onViewEvent?: () => void;
-    price: string;
+    price: string | null;
     title: string;
 }
 
@@ -63,7 +63,7 @@ const EventCard = ({
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.LARGE}
                         >
-                            Chỉ từ {price}
+                            {price ? `Chỉ từ ${price}` : 'Liên hệ'}
                         </Text>
                     </div>
                 </div>

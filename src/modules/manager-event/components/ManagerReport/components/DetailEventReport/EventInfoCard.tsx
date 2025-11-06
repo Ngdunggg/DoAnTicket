@@ -3,24 +3,31 @@ import {
     MODE_SIZE,
     MODE_WEIGHT,
     MODE_COLOR_TEXT,
-    MODE_LEADING,
 } from '@share/components/atoms/Text';
-import { Event } from '@share/types/event';
+import { formatDateTime } from '@share/utils/dateTime';
+import { DATE_TIME_FORMAT_ISO } from '@share/constants/dateTime';
 import { FILTER_STATUS } from '@share/constants/commons';
-
+import { Event } from '@share/types/event';
+import BackIcon, { MODE_BACK } from '@share/components/atoms/icons/BackIcon';
+import DivClick from '@share/components/atoms/DivClick';
+import { SCREEN_PATH } from '@share/constants/routers';
+import { useNavigate } from 'react-router-dom';
+import { IMAGE_TYPE } from '@share/constants/commons';
+import { getEventImage } from '@modules/event-detail/utils/eventUtils';
 interface EventInfoCardProps {
     event: Event;
 }
 
 const EventInfoCard = ({ event }: EventInfoCardProps) => {
+    const navigate = useNavigate();
     const getStatusText = (status: string) => {
         switch (status) {
-            case FILTER_STATUS.UPCOMING:
-                return 'Sắp tới';
-            case FILTER_STATUS.PAST:
-                return 'Đã qua';
+            case FILTER_STATUS.APPROVED:
+                return 'Đã phê duyệt';
             case FILTER_STATUS.PENDING:
                 return 'Chờ phê duyệt';
+            case FILTER_STATUS.REJECTED:
+                return 'Đã từ chối';
             default:
                 return 'Không xác định';
         }
@@ -28,21 +35,33 @@ const EventInfoCard = ({ event }: EventInfoCardProps) => {
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case FILTER_STATUS.UPCOMING:
+            case FILTER_STATUS.APPROVED:
                 return 'bg-green-500/20 text-green-400';
-            case FILTER_STATUS.PAST:
-                return 'bg-gray-500/20 text-gray-400';
             case FILTER_STATUS.PENDING:
                 return 'bg-yellow-500/20 text-yellow-400';
+            case FILTER_STATUS.REJECTED:
+                return 'bg-red-500/20 text-red-400';
             default:
                 return 'bg-gray-500/20 text-gray-400';
         }
+    };
+
+    const getCategories = () => {
+        if (!event.categories || event.categories.length === 0) {
+            return 'Chưa phân loại';
+        }
+        return event.categories.map(cat => cat.name).join(', ');
     };
 
     return (
         <div className="flex gap-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
             <div className="flex flex-col flex-1 w-full max-w-[60%]">
                 <div className="flex items-center gap-4 mb-6">
+                    <DivClick
+                        onClick={() => navigate(SCREEN_PATH.MANAGER_REPORT)}
+                    >
+                        <BackIcon mode={MODE_BACK.WHITE} />
+                    </DivClick>
                     <Text
                         modeSize={MODE_SIZE[24]}
                         modeWeight={MODE_WEIGHT.LARGE}
@@ -71,7 +90,10 @@ const EventInfoCard = ({ event }: EventInfoCardProps) => {
                                 Ngày bắt đầu:
                             </Text>
                             <Text modeColor={MODE_COLOR_TEXT.GRAY}>
-                                {event.dateStart}
+                                {formatDateTime(
+                                    event.start_time.toString(),
+                                    DATE_TIME_FORMAT_ISO
+                                )}
                             </Text>
                         </div>
 
@@ -84,7 +106,10 @@ const EventInfoCard = ({ event }: EventInfoCardProps) => {
                                 Ngày kết thúc:
                             </Text>
                             <Text modeColor={MODE_COLOR_TEXT.GRAY}>
-                                {event.dateEnd}
+                                {formatDateTime(
+                                    event.end_time.toString(),
+                                    DATE_TIME_FORMAT_ISO
+                                )}
                             </Text>
                         </div>
 
@@ -97,51 +122,30 @@ const EventInfoCard = ({ event }: EventInfoCardProps) => {
                                 Địa điểm:
                             </Text>
                             <Text modeColor={MODE_COLOR_TEXT.GRAY}>
-                                {event.location}
+                                {event.location || 'Online'}
                             </Text>
                         </div>
 
-                        {event.organizer && (
-                            <div className="flex items-center gap-3">
-                                <Text
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                    modeColor={MODE_COLOR_TEXT.WHITE}
-                                    className="w-30"
-                                >
-                                    Tổ chức:
-                                </Text>
-                                <Text modeColor={MODE_COLOR_TEXT.GRAY}>
-                                    {event.organizer}
-                                </Text>
-                            </div>
-                        )}
-                        {/* Mô tả */}
-                        {event.description && (
-                            <div className="flex gap-2">
-                                <Text
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                    modeColor={MODE_COLOR_TEXT.WHITE}
-                                    className="w-31"
-                                >
-                                    Mô tả sự kiện:
-                                </Text>
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.GRAY}
-                                    modeLeading={MODE_LEADING.MEDIUM}
-                                    isAllowLineBreaks
-                                >
-                                    {event.description}
-                                </Text>
-                            </div>
-                        )}
+                        <div className="flex items-center gap-3">
+                            <Text
+                                modeWeight={MODE_WEIGHT.MEDIUM}
+                                modeColor={MODE_COLOR_TEXT.WHITE}
+                                className="w-30"
+                            >
+                                Danh mục:
+                            </Text>
+                            <Text modeColor={MODE_COLOR_TEXT.GRAY}>
+                                {getCategories()}
+                            </Text>
+                        </div>
                     </div>
                 </div>
             </div>
             {/* Hình ảnh sự kiện */}
-            {event.image && (
+            {event.images.length > 0 && (
                 <div className="flex flex-1 justify-center max-h-[350px]">
                     <img
-                        src={event.image}
+                        src={getEventImage(event, IMAGE_TYPE.BANNER) || ''}
                         alt={event.title}
                         className="w-full h-full object-cover rounded-lg"
                     />

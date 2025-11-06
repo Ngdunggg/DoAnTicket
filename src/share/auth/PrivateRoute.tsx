@@ -9,6 +9,7 @@ import VerifyOtpPopup from '@modules/auth/components/VerifyOtpPopup';
 import ForgetPassword from '@modules/auth/components/ForgetPassword';
 
 type PrivateRouteProps = {
+    allowedRoles?: string[];
     children: ReactNode;
 };
 
@@ -21,7 +22,7 @@ type PrivateRouteProps = {
  * @param children - The components to be rendered if a token is present.
  * @returns The rendered children components if a token is present, otherwise redirects to home with auth popup.
  */
-export const PrivateRoute = ({ children }: PrivateRouteProps) => {
+export const PrivateRoute = ({ allowedRoles, children }: PrivateRouteProps) => {
     const { isLoggingOut, token } = useAppSelector(state => state.auth);
     const { user } = useAppSelector(state => state.user);
     const { openAuthPopup } = useAuthPopup();
@@ -31,41 +32,57 @@ export const PrivateRoute = ({ children }: PrivateRouteProps) => {
 
     useEffect(() => {
         if (!token || !user) {
-            // Nếu đang trong quá trình logout, không hiện popup
-            if (isLoggingOut) {
-                // Reset logout flag khi đã về HOME
-                if (location.pathname === SCREEN_PATH.HOME) {
-                    dispatch(setLoggingOut(false));
-                }
+            // Nếu đang ở HOME và đang trong quá trình logout, chỉ reset flag
+            if (location.pathname === SCREEN_PATH.HOME && isLoggingOut) {
+                dispatch(setLoggingOut(false));
                 return;
             }
 
-            // Lưu URL hiện tại để có thể quay lại sau khi đăng nhập
-            const currentPath = location.pathname + location.search;
+            // Nếu đang ở URL private (không phải HOME), LUÔN navigate về HOME
+            // Không check isLoggingOut ở đây để tránh màn hình trắng
+            if (location.pathname !== SCREEN_PATH.HOME) {
+                // Lưu URL hiện tại để có thể quay lại sau khi đăng nhập
+                const currentPath = location.pathname + location.search;
 
-            // Chuyển hướng về home
-            navigate(SCREEN_PATH.HOME, {
-                replace: true,
-                state: {
-                    from: currentPath,
-                    showAuthPopup: true,
-                },
-            });
+                // Chuyển hướng về home
+                navigate(SCREEN_PATH.HOME, {
+                    replace: true,
+                    state: {
+                        from: currentPath,
+                        showAuthPopup: true,
+                    },
+                });
 
-            // Hiện popup đăng nhập
-            openAuthPopup();
+                // Chỉ hiện popup nếu không phải đang logout
+                if (!isLoggingOut) {
+                    openAuthPopup();
+                }
+            } else {
+                // Nếu đã ở HOME, chỉ hiện popup nếu có flag showAuthPopup và không phải logout
+                const navState = (location.state || {}) as { showAuthPopup?: boolean };
+                if (navState.showAuthPopup && !isLoggingOut) {
+                    openAuthPopup();
+                }
+            }
         }
     }, [
+        dispatch,
+        isLoggingOut,
+        location,
+        navigate,
+        openAuthPopup,
         token,
         user,
-        navigate,
-        location,
-        openAuthPopup,
-        isLoggingOut,
-        dispatch,
     ]);
 
-    // Nếu chưa có token hoặc user, không render children
+    // Check role change and redirect if needed
+    useEffect(() => {
+        if (allowedRoles && allowedRoles.length > 0 && user && !allowedRoles.includes(user.role)) {
+            navigate(SCREEN_PATH.HOME, { replace: true });
+        }
+    }, [allowedRoles, navigate, user]);
+
+    // If no token or user, render auth popups instead of children
     if (!token || !user) {
         // Nếu đang trong quá trình logout, không hiện AuthPopup
         if (isLoggingOut) {
@@ -79,6 +96,12 @@ export const PrivateRoute = ({ children }: PrivateRouteProps) => {
                 <ForgetPassword />
             </>
         );
+    }
+
+    // Role-based guard: if allowedRoles provided and current user role not included, redirect to home
+    if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+        navigate(SCREEN_PATH.HOME, { replace: true });
+        return null;
     }
 
     return (

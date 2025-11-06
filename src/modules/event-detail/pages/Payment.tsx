@@ -4,11 +4,16 @@ import { TicketPurchaseState } from '../types/ticketPurchase';
 import EventHeaderInfo from '@share/components/organisms/EventHeaderInfo';
 import PaymentForm from '../components/Payment/PaymentForm';
 import PaymentSummary from '../components/Payment/PaymentSummary';
-import { getCurrentEventId } from '@share/utils/path';
-import PAYMENT_METHOD from '@share/constants/paymentMethod';
+import { PAYMENT_METHOD } from '@share/constants/paymentMethod';
 import { useAppSelector } from '@configs/store';
 import { isNotNullOrUndefinedOrBlank } from '@share/utils/validate';
 import { SCREEN_PATH } from '@share/constants/routers';
+import useEventDetailStoreSelector from '../hooks/useEventDetailStoreSelector';
+import useEventDetailStoreAction from '../hooks/useEventDetailStoreAction';
+import UpdateInfoUser from '../components/Payment/UpdateInfoUser';
+import { orderApi } from '@share/api/orderApi';
+import { RESULT_CODE } from '@share/constants/commons';
+import { toast } from 'react-toastify';
 
 interface BookingFormData {
     agreeToTerms: boolean;
@@ -23,32 +28,27 @@ interface PaymentState extends TicketPurchaseState {
 const Payment = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const pathname = location.pathname;
-    const eventId = getCurrentEventId(pathname);
     const { token } = useAppSelector(state => state.auth);
     const { user } = useAppSelector(state => state.user);
-    // Lấy thông tin từ state được truyền từ QuestionForm
+
     const paymentState = location.state as PaymentState;
+
+    const { eventDetail } = useEventDetailStoreSelector();
+    const { setSelectedTicketsStore } = useEventDetailStoreAction();
 
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(
         PAYMENT_METHOD.VNPAY
     );
     const [isLoading, setIsLoading] = useState(false);
 
-    // Mock event data - trong thực tế sẽ fetch từ API
-    const eventData = {
-        date: '2024-12-25',
-        id: eventId || '1',
-        image: 'https://ticketbox.vn/_next/image?url=https%3A%2F%2Fimages.tkbcdn.com%2F2%2F360%2F479%2Fts%2Fds%2F3b%2F36%2F58%2Fb9085b00c469d727db9ee8857ee49b8d.jpg&w=640&q=75',
-        location: 'Nhà hát Hòa Bình, TP.HCM',
-        title: 'Concert Nhạc Trẻ 2024',
-    };
-
     if (
         !paymentState ||
+        !eventDetail ||
         !isNotNullOrUndefinedOrBlank(token) ||
         !isNotNullOrUndefinedOrBlank(user)
     ) {
+        // Clear stale when guard fails
+        setSelectedTicketsStore(null);
         navigate(SCREEN_PATH.HOME);
         return null;
     }
@@ -57,22 +57,45 @@ const Payment = () => {
         setIsLoading(true);
 
         try {
-            // Mock payment processing
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Navigate to confirmation page
-            navigate(`/event/${eventId}/purchase/confirmation`, {
-                state: {
-                    ...paymentState,
-                    paymentMethod: selectedPaymentMethod,
-                },
+            const orderResponse = await orderApi.createOrder({
+                buyer_email: paymentState.bookingForm.email,
+                buyer_phone: paymentState.bookingForm.phone,
+                order_items: paymentState.selectedTickets.map(ticket => ({
+                    quantity: ticket.quantity,
+                    ticket_type_id: ticket.ticketType.id,
+                })),
+                payment_method: selectedPaymentMethod,
             });
+            if (orderResponse.result.code !== RESULT_CODE.SUCCESS) {
+                toast.error(
+                    orderResponse.result.error_msg_id ||
+                        'Thanh toán thất bại. Vui lòng thử lại.'
+                );
+                return;
+            }
+            const orderId = orderResponse.data.order_id;
+            console.log('orderId', orderId);
+            const paymentUrlResponse = await orderApi.createPaymentUrl({
+                order_id: orderId,
+                payment_method: selectedPaymentMethod,
+            });
+            if (paymentUrlResponse.result.code !== RESULT_CODE.SUCCESS) {
+                toast.error(
+                    paymentUrlResponse.result.error_msg_id ||
+                        'Thanh toán thất bại. Vui lòng thử lại.'
+                );
+                return;
+            }
+            console.log('paymentUrlResponse', paymentUrlResponse);
+            const paymentUrl = paymentUrlResponse.data.payment_url;
+            window.location.href = paymentUrl;
         } catch (error) {
             console.error('Payment failed:', error);
-            alert('Thanh toán thất bại. Vui lòng thử lại.');
+            toast.error('Thanh toán thất bại. Vui lòng thử lại.');
         } finally {
             setIsLoading(false);
         }
+        setSelectedTicketsStore(null);
     };
 
     const handlePaymentMethodSelect = (method: string) => {
@@ -80,34 +103,39 @@ const Payment = () => {
     };
 
     return (
-        <div className="min-h-screen bg-bg-black-2 flex flex-1 w-full pb-10">
-            <div className="flex-1 flex flex-col">
-                {/* Event Header Info */}
-                <EventHeaderInfo eventInfo={eventData} />
+        <>
+            <div className="min-h-screen bg-bg-black-2 flex flex-1 w-full pb-10">
+                <div className="flex-1 flex flex-col">
+                    {/* Event Header Info */}
+                    <EventHeaderInfo eventInfo={eventDetail} />
 
-                {/* Main Content */}
-                <div className="flex gap-10 px-20 py-10">
-                    {/* Left Side - Form */}
-                    <div className="flex-1">
-                        <PaymentForm
-                            bookingForm={paymentState.bookingForm}
-                            onPaymentMethodSelect={handlePaymentMethodSelect}
-                            selectedPaymentMethod={selectedPaymentMethod}
-                        />
-                    </div>
+                    {/* Main Content */}
+                    <div className="flex gap-10 px-20 py-10">
+                        {/* Left Side - Form */}
+                        <div className="flex-1">
+                            <PaymentForm
+                                bookingForm={paymentState.bookingForm}
+                                onPaymentMethodSelect={
+                                    handlePaymentMethodSelect
+                                }
+                                selectedPaymentMethod={selectedPaymentMethod}
+                            />
+                        </div>
 
-                    {/* Right Side - Payment Summary */}
-                    <div className="w-96 mt-13">
-                        <PaymentSummary
-                            selectedTickets={paymentState.selectedTickets}
-                            totalAmount={paymentState.totalAmount}
-                            onPayment={handlePayment}
-                            isLoading={isLoading}
-                        />
+                        {/* Right Side - Payment Summary */}
+                        <div className="w-96 mt-13">
+                            <PaymentSummary
+                                selectedTickets={paymentState.selectedTickets}
+                                totalAmount={paymentState.totalAmount}
+                                onPayment={handlePayment}
+                                isLoading={isLoading}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <UpdateInfoUser />
+        </>
     );
 };
 

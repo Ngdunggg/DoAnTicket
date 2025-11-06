@@ -1,40 +1,46 @@
 import { BaseHttpResponse } from '../common/response';
 
 export type User = {
-    address: string;
-    avatar?: string | null;
+    address?: string | null;
+    avatar_url?: string | null;
+    created_at: string;
     date_of_birth: string;
     email: string;
-    full_name: string;
-    gender: string;
+    full_name: string; 
+    gender: boolean | null;
+    google_id?: string | null;
     id: string;
-    phone_number: string;
+    phone: string;
     role: string;
     status: string;
 };
 
 export type UserStore = {
-    address: string;
-    avatar?: string | null;
+    address?: string | null;
+    avatar_url?: string | null;
+    created_at: string;
     date_of_birth: string;
     email: string;
     full_name: string;
-    gender: string;
+    gender: boolean | null;
+    google_id?: string | null;
     id: string;
-    phone_number: string;
+    phone: string;
     role: string;
     status: string;
 };
 
 export type UserInfo = {
-    address: string;
-    avatar?: string | null;
+    address?: string | null;
+    avatar_url?: string | null;
+    created_at: string;
     date_of_birth: string;
     email: string;
     full_name: string;
-    gender: string;
+    gender: boolean | null;
+    google_id?: string | null;
     id: string;
-    phone_number: string;
+    phone: string;
     role: string;
     status: string;
 };

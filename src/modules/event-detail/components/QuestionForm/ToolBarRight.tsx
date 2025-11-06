@@ -10,8 +10,10 @@ import {
     MODE_WEIGHT,
 } from '@share/components/atoms/Text';
 import DivClick from '@share/components/atoms/DivClick';
+import { formatPrice } from '../../utils/eventUtils';
 
 interface ToolBarRightProps {
+    handleBackToSelectTicket: () => void;
     isFormValid: boolean;
     isLoading?: boolean;
     onContinue: () => void;
@@ -20,27 +22,13 @@ interface ToolBarRightProps {
 }
 
 const ToolBarRight = ({
+    handleBackToSelectTicket,
     isFormValid,
     isLoading = false,
     onContinue,
     selectedTickets,
     totalAmount,
 }: ToolBarRightProps) => {
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            currency: 'VND',
-            style: 'currency',
-        }).format(price);
-    };
-
-    // Tính tổng số lượng vé đã chọn
-    const totalTicketQuantity = selectedTickets.reduce(
-        (total, selectedTicket) => {
-            return total + selectedTicket.quantity;
-        },
-        0
-    );
-
     return (
         <div className="bg-bg-gray px-6 py-8 h-fit flex flex-col rounded-lg">
             <div className="flex justify-between items-center">
@@ -51,7 +39,7 @@ const ToolBarRight = ({
                 >
                     Thông tin đặt vé
                 </Text>
-                <DivClick onClick={() => {}}>
+                <DivClick onClick={handleBackToSelectTicket}>
                     <Text
                         modeColor={MODE_COLOR_TEXT.GREEN}
                         modeSize={MODE_SIZE[18]}
@@ -61,7 +49,7 @@ const ToolBarRight = ({
                     </Text>
                 </DivClick>
             </div>
-            {/* Chi tiết vé */}
+
             <div className="flex-1 flex flex-col gap-5 mt-6">
                 <div className="flex justify-between items-center">
                     <Text
@@ -94,7 +82,7 @@ const ToolBarRight = ({
                                     modeColor={MODE_COLOR_TEXT.YELLOW}
                                     modeWeight={MODE_WEIGHT.MEDIUM}
                                 >
-                                    {totalTicketQuantity}
+                                    {selectedTicket.quantity}
                                 </Text>
                             </div>
 
@@ -119,7 +107,6 @@ const ToolBarRight = ({
                 </div>
             </div>
 
-            {/* Tổng tiền và Button */}
             <div className="mt-auto">
                 <div className="border-t border-white pt-4 mb-4 flex flex-col gap-3">
                     <div className="flex justify-between items-center">
