@@ -65,7 +65,7 @@ const PreviewSection = () => {
         logoUrl: (() => {
             const logoData = createEventForm.watch('logo_data');
             const logoUrl = createEventForm.watch('logo_url');
-            
+
             // Nếu có logo_data mới (File) → dùng file đó
             if (logoData instanceof File && logoData.size > 0) {
                 return URL.createObjectURL(logoData);

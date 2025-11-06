@@ -42,7 +42,9 @@ const EventDetailLayout = () => {
             />
 
             {/* Organizer Section */}
-            <OrganizerSection organizerProfile={organizerProfile?.organizer_profile || null} />
+            <OrganizerSection
+                organizerProfile={organizerProfile?.organizer_profile || null}
+            />
 
             <div className="px-6 bg-bg-black-2 mt-4 pb-10">
                 <SuggestEvent />

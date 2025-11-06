@@ -154,16 +154,14 @@ const InfoEventSection = () => {
             quantity: number;
             type: string;
         }>
-    >([
-        { description: '', id: Date.now(), price: 0, quantity: 0, type: '' },
-    ]);
+    >([{ description: '', id: Date.now(), price: 0, quantity: 0, type: '' }]);
 
     const isSyncingToFormRef = useRef(false);
 
     // Restore tickets từ form khi mount hoặc khi state rỗng
     useEffect(() => {
         const formTickets = createEventForm.getValues('tickets') || [];
-        
+
         // Kiểm tra state có rỗng không (chỉ có 1 item default)
         const isEmptyState =
             ticketTypes.length === 1 &&
@@ -173,7 +171,11 @@ const InfoEventSection = () => {
             !ticketTypes[0].description;
 
         // Nếu form có data và state rỗng → restore
-        if (formTickets.length > 0 && isEmptyState && !isSyncingToFormRef.current) {
+        if (
+            formTickets.length > 0 &&
+            isEmptyState &&
+            !isSyncingToFormRef.current
+        ) {
             const restoredTickets = formTickets.map((ticket, index) => ({
                 description: ticket.description || '',
                 id: Date.now() + index,

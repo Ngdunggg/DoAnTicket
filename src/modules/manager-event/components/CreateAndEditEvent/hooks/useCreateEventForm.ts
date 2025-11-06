@@ -1,6 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { createEventSchema, CreateEventInput } from '@share/schemas/event/createEvent';
+import {
+    createEventSchema,
+    CreateEventInput,
+} from '@share/schemas/event/createEvent';
 import { TICKET_STATUS } from '@share/constants/commons';
 import { PAYMENT_METHOD } from '@share/constants/paymentMethod';
 

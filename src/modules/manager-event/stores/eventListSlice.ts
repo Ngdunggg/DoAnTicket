@@ -32,6 +32,9 @@ const managerEventListSlice = createSlice({
 });
 
 // Exports
-export const { resetManagerEventListState, setActiveFilter, setAllEventsByOrganizer } =
-    managerEventListSlice.actions;
+export const {
+    resetManagerEventListState,
+    setActiveFilter,
+    setAllEventsByOrganizer,
+} = managerEventListSlice.actions;
 export default managerEventListSlice.reducer;

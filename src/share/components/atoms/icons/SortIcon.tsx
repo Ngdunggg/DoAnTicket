@@ -1,7 +1,7 @@
 export const MODE_SORT = {
-    ASC: "asc",
-    DEFAULT: "default",
-    DESC: "desc",
+    ASC: 'asc',
+    DEFAULT: 'default',
+    DESC: 'desc',
 } as const;
 
 export type ModeSortType = (typeof MODE_SORT)[keyof typeof MODE_SORT];
@@ -12,7 +12,11 @@ interface SortIconProps {
     sortable?: boolean;
 }
 
-function SortIcon({ mode = MODE_SORT.DEFAULT, onClick, sortable }: Readonly<SortIconProps>) {
+function SortIcon({
+    mode = MODE_SORT.DEFAULT,
+    onClick,
+    sortable,
+}: Readonly<SortIconProps>) {
     if (mode === MODE_SORT.ASC || mode === MODE_SORT.DESC) {
         const isAsc = mode === MODE_SORT.ASC;
 
@@ -25,10 +29,10 @@ function SortIcon({ mode = MODE_SORT.DEFAULT, onClick, sortable }: Readonly<Sort
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 style={{
-                    transform: isAsc ? "rotate(180deg)" : "none",
+                    transform: isAsc ? 'rotate(180deg)' : 'none',
                 }}
                 onClick={onClick}
-                className={`min-w-[10px] ${sortable ? "cursor-pointer" : "cursor-default"}`}
+                className={`min-w-[10px] ${sortable ? 'cursor-pointer' : 'cursor-default'}`}
             >
                 <g clipPath="url(#clip0_72429_3494)">
                     <path
@@ -61,7 +65,7 @@ function SortIcon({ mode = MODE_SORT.DEFAULT, onClick, sortable }: Readonly<Sort
             viewBox="0 0 16 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className={`min-w-[16px] ${sortable ? "cursor-pointer" : "cursor-default"}`}
+            className={`min-w-[16px] ${sortable ? 'cursor-pointer' : 'cursor-default'}`}
         >
             <path
                 fillRule="evenodd"

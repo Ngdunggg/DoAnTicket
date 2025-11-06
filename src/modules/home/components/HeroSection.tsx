@@ -95,7 +95,7 @@ const HeroSection = ({ featuredEvents, onViewEvent }: HeroSectionProps) => {
                         >
                             {currentEvent?.title || 'Sự kiện sắp diễn ra'}
                         </Text>
-                        <div/>
+                        <div />
                         <Button
                             mode={MODE_BUTTON.DECORATIVE_YELLOW}
                             className="!w-fit !h-12"

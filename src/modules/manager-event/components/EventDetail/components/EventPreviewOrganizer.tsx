@@ -34,9 +34,7 @@ const EventPreviewOrganizer = ({
                         >
                             {organizerProfile.organization_name}
                         </Text>
-                        <Text>
-                            {organizerProfile.description_organization}
-                        </Text>
+                        <Text>{organizerProfile.description_organization}</Text>
                         <Text
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.MEDIUM}

@@ -38,7 +38,7 @@ export const uploadFile = async (file: File): Promise<string> => {
                 },
             }
         );
-        
+
         return response.data.secure_url;
     } catch (error) {
         console.error('Error uploading to Cloudinary:', error);

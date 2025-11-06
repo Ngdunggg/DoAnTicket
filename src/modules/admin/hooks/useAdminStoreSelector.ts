@@ -1,4 +1,4 @@
-import { useAppSelector } from "@configs/store";
+import { useAppSelector } from '@configs/store';
 
 const useAdminStoreSelector = () => {
     return {

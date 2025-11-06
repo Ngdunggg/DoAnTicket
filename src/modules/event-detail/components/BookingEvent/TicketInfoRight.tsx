@@ -12,7 +12,9 @@ import {
     MODE_WEIGHT,
 } from '@share/components/atoms/Text';
 import MapPinIcon from '@share/components/atoms/icons/MapPinIcon';
-import CalendarIcon, { MODE_CALENDAR } from '@share/components/atoms/icons/CalendarIcon';
+import CalendarIcon, {
+    MODE_CALENDAR,
+} from '@share/components/atoms/icons/CalendarIcon';
 import { formatPrice } from '../../utils/eventUtils';
 
 interface EventInfo {

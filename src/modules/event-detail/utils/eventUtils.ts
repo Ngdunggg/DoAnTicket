@@ -34,7 +34,8 @@ export const getEventTypes = (
         .split(',')
         .map(
             categoryId =>
-                categories.find(category => category.id === categoryId.trim())?.name
+                categories.find(category => category.id === categoryId.trim())
+                    ?.name
         )
         .join(', ');
 };

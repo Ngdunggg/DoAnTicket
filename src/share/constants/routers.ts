@@ -17,11 +17,9 @@ export const SCREEN_PATH = {
     EVENT_LIST: '/events',
     EVENT_PAYMENT: '/event-detail/:event_id/payment',
     EVENT_PAYMENT_CALLBACK: '/payment/result',
-    EVENT_QUESTION_FORM:
-        '/event-detail/:event_id/booking/question-form',
+    EVENT_QUESTION_FORM: '/event-detail/:event_id/booking/question-form',
 
-    EVENT_TICKET_SELECTION:
-        '/event-detail/:event_id/booking/selection',
+    EVENT_TICKET_SELECTION: '/event-detail/:event_id/booking/selection',
     // HOME
     HOME: '/',
     // MANAGER EVENT

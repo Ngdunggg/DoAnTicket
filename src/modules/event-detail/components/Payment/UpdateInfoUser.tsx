@@ -104,7 +104,7 @@ const UpdateInfoUser = () => {
                                 full_name: fullName,
                                 id: user?.id || '',
                                 phone,
-                            })
+                            });
                         }}
                     >
                         Cập nhật

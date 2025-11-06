@@ -49,7 +49,7 @@ const ChartsSection = ({
     ];
 
     // Dữ liệu doanh thu theo ngày từ backend
-    const revenueData = dailyStats.revenue 
+    const revenueData = dailyStats.revenue
         .map(item => ({
             count: item.count,
             date: formatDateTime(item.date, DATE_FORMAT_ISO),
@@ -61,18 +61,27 @@ const ChartsSection = ({
         );
 
     // Tính tổng lượt mua theo ngày từ purchasedTickets
-    const purchasesByDay = purchasedTickets.reduce((acc, ticket) => {
-        const key = formatDateTime(new Date(ticket.created_at), DATE_FORMAT_ISO);
-        acc[key] = (acc[key] || 0) + 1;
-        return acc;
-    }, {} as Record<string, number>);
+    const purchasesByDay = purchasedTickets.reduce(
+        (acc, ticket) => {
+            const key = formatDateTime(
+                new Date(ticket.created_at),
+                DATE_FORMAT_ISO
+            );
+            acc[key] = (acc[key] || 0) + 1;
+            return acc;
+        },
+        {} as Record<string, number>
+    );
 
     // Tạo map lượt xem theo ngày từ dailyStats.views
-    const viewsByDay = dailyStats.views.reduce((acc, view) => {
-        const key = formatDateTime(view.date, DATE_FORMAT_ISO);
-        acc[key] = view.count;
-        return acc;
-    }, {} as Record<string, number>);
+    const viewsByDay = dailyStats.views.reduce(
+        (acc, view) => {
+            const key = formatDateTime(view.date, DATE_FORMAT_ISO);
+            acc[key] = view.count;
+            return acc;
+        },
+        {} as Record<string, number>
+    );
 
     // Hợp nhất date và tạo analyticsData gồm views và purchases
     const allDates = Array.from(
@@ -85,7 +94,9 @@ const ChartsSection = ({
             purchases: purchasesByDay[dateKey] || 0,
             views: viewsByDay[dateKey] || 0,
         }))
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
 
     const CustomTooltip = ({ active, label, payload }: any) => {
         if (active && payload && payload.length) {
