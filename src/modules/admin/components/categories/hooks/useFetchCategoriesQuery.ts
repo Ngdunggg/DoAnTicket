@@ -14,4 +14,3 @@ const useFetchCategoriesQuery = () => {
 };
 
 export default useFetchCategoriesQuery;
-

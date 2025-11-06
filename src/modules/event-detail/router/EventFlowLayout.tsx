@@ -15,18 +15,20 @@ const EventFlowLayout = () => {
         prevPathRef.current = curr;
 
         // Allow paths within the current event flow: detail, ticket, question, payment
-        const eventId = params.event_id || params.event_id as string | undefined;
+        const eventId =
+            params.event_id || (params.event_id as string | undefined);
         const allowed = [
             SCREEN_PATH.EVENT_DETAIL.replace(':event_id', eventId || ''),
-            SCREEN_PATH.EVENT_TICKET_SELECTION.replace(':event_id', eventId || ''),
+            SCREEN_PATH.EVENT_TICKET_SELECTION.replace(
+                ':event_id',
+                eventId || ''
+            ),
             SCREEN_PATH.EVENT_QUESTION_FORM.replace(':event_id', eventId || ''),
             SCREEN_PATH.EVENT_PAYMENT.replace(':event_id', eventId || ''),
         ];
 
         const isLeavingFlow =
-            !!eventId &&
-            prev &&
-            allowed.every(p => p !== curr); // current path is not in allowed list
+            !!eventId && prev && allowed.every(p => p !== curr); // current path is not in allowed list
 
         if (isLeavingFlow) {
             setSelectedTicketsStore(null);
@@ -37,5 +39,3 @@ const EventFlowLayout = () => {
 };
 
 export default EventFlowLayout;
-
-

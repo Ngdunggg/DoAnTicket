@@ -118,7 +118,7 @@ function MultiSelectInner<T>(
                         },
                         panel: {
                             className: `shadow-2xl border border-gray-300 rounded-xl text-black ${props.panelClassName ?? ''}`,
-                            style: { zIndex: 10 }
+                            style: { zIndex: 10 },
                         },
                         root: {
                             className: `${ptClassName} ${icon ? '!pl-10' : ''}`,

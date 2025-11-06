@@ -24,7 +24,7 @@ export const userApi = {
     },
 
     updateUserInfo: async (
-        data: UpdateUserInfoRequest,
+        data: UpdateUserInfoRequest
     ): Promise<BaseHttpResponse<UserInfo>> => {
         const response = await httpClient.patch<BaseHttpResponse<UserInfo>>(
             API_PATH.UPDATE_USER_INFO,

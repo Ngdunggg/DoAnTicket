@@ -25,13 +25,15 @@ const useCreateEventStoreAction = () => {
     const setActiveTabStore = (data: string) => {
         dispatch(setActiveTab(data));
     };
-    const setOrganizerProfileStore = (data: OrganizerProfileWithPaymentMethod | null) => {
+    const setOrganizerProfileStore = (
+        data: OrganizerProfileWithPaymentMethod | null
+    ) => {
         dispatch(setOrganizerProfile(data));
     };
     const setEventTypesStore = (data: Category[] | null) => {
         dispatch(setEventTypes(data));
     };
-    
+
     return {
         resetCreateEventStateStore,
         setActiveTabStore,

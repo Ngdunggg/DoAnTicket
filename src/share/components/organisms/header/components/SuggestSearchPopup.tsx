@@ -8,7 +8,9 @@ import {
 import { useEffect, useRef } from 'react';
 import useSearchStoreAction from '../hooks/useSearchStoreAction';
 import useSearchStoreSelector from '../hooks/useSearchStoreSelector';
-import SuggestEvent, { SUGGEST_EVENT_MODE } from '../../SuggestEvent/SuggestEvent';
+import SuggestEvent, {
+    SUGGEST_EVENT_MODE,
+} from '../../SuggestEvent/SuggestEvent';
 import useSuggestedKeywords from '@share/hooks/useSuggestedKeywords';
 import { useNavigate } from 'react-router-dom';
 import { SCREEN_PATH } from '@share/constants/routers';
@@ -48,9 +50,9 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
     const handleKeywordClick = (keyword: string) => {
         // Chuyển đến EventList với filter
         navigate(SCREEN_PATH.EVENT_LIST, {
-            state: { searchKeyword: keyword }
+            state: { searchKeyword: keyword },
         });
-        
+
         // Đóng popup
         setIsSearchPopupOpenStore(false);
     };

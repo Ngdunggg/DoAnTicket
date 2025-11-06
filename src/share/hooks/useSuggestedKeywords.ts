@@ -9,22 +9,28 @@ const useSuggestedKeywords = () => {
         if (!allEvents.length) return [];
 
         const keywordCount = new Map<string, number>();
-        
+
         allEvents.forEach(event => {
             // Extract from title
             event.title.split(' ').forEach(word => {
                 if (word.length > 2) {
                     const normalized = word.toLowerCase();
-                    keywordCount.set(normalized, (keywordCount.get(normalized) || 0) + 1);
+                    keywordCount.set(
+                        normalized,
+                        (keywordCount.get(normalized) || 0) + 1
+                    );
                 }
             });
-            
+
             // Extract from location
             if (event.location) {
                 event.location.split(' ').forEach(word => {
                     if (word.length > 2) {
                         const normalized = word.toLowerCase();
-                        keywordCount.set(normalized, (keywordCount.get(normalized) || 0) + 1);
+                        keywordCount.set(
+                            normalized,
+                            (keywordCount.get(normalized) || 0) + 1
+                        );
                     }
                 });
             }

@@ -156,7 +156,7 @@ const useDashboardHandler = () => {
         const now = new Date();
         const currentYear = now.getFullYear();
         const prevYear = currentYear - 1;
-        
+
         // Group orders by month/year (only paid orders)
         const byMonth: Record<string, number> = {};
         orders.forEach(order => {

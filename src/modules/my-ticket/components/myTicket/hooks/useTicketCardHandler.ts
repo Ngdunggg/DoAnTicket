@@ -1,6 +1,6 @@
-import useMyTicketStoreAction from "@modules/my-ticket/hooks/useMyTicketStoreAction";
-import { MY_TICKET_TAB } from "@share/constants/commons";
-import { Event } from "@share/types/event";
+import useMyTicketStoreAction from '@modules/my-ticket/hooks/useMyTicketStoreAction';
+import { MY_TICKET_TAB } from '@share/constants/commons';
+import { Event } from '@share/types/event';
 import { useState, useEffect, useRef } from 'react';
 
 const useTicketCardHandler = (ticketId: string) => {

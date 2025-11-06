@@ -7,13 +7,16 @@ import {
     MODE_WEIGHT,
     Text,
 } from '@share/components/atoms/Text';
-import { createEventSchema, CreateEventInput } from '@share/schemas/event/createEvent';
+import {
+    createEventSchema,
+    CreateEventInput,
+} from '@share/schemas/event/createEvent';
 import { useFormContext } from 'react-hook-form';
 
 const PaymentSection = () => {
     const createEventForm = useFormContext<CreateEventInput>();
     const schema = createEventSchema();
-    
+
     const logoRef = useRef<HTMLInputElement>(null);
     const [previewLogo, setPreviewLogo] = useState<string | null>(null);
     const logoUrl = createEventForm.watch('logo_url');
@@ -56,11 +59,11 @@ const PaymentSection = () => {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
-        
+
         // Tạo URL để preview
         const imageUrl = URL.createObjectURL(file);
         setPreviewLogo(imageUrl);
-        
+
         // Đồng bộ vào form (lưu File object)
         createEventForm.setValue('logo_data', file, { shouldValidate: true });
         // Clear logo_url khi upload file mới
@@ -159,8 +162,18 @@ const PaymentSection = () => {
                                 name="organization_info"
                                 placeholder="Nhập thông tin ban tổ chức"
                                 className="w-full h-[120px] px-4 py-2 bg-white border rounded-lg outline-none transition-colors border-gray-300 focus:border-bg-yellow"
-                                value={createEventForm.watch('description_organization') || ''}
-                                onChange={e => createEventForm.setValue('description_organization', e.target.value, { shouldValidate: true })}
+                                value={
+                                    createEventForm.watch(
+                                        'description_organization'
+                                    ) || ''
+                                }
+                                onChange={e =>
+                                    createEventForm.setValue(
+                                        'description_organization',
+                                        e.target.value,
+                                        { shouldValidate: true }
+                                    )
+                                }
                             />
                         </div>
                     </div>

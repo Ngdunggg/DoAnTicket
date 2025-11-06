@@ -59,7 +59,9 @@ export const PrivateRoute = ({ allowedRoles, children }: PrivateRouteProps) => {
                 }
             } else {
                 // Nếu đã ở HOME, chỉ hiện popup nếu có flag showAuthPopup và không phải logout
-                const navState = (location.state || {}) as { showAuthPopup?: boolean };
+                const navState = (location.state || {}) as {
+                    showAuthPopup?: boolean;
+                };
                 if (navState.showAuthPopup && !isLoggingOut) {
                     openAuthPopup();
                 }
@@ -77,7 +79,12 @@ export const PrivateRoute = ({ allowedRoles, children }: PrivateRouteProps) => {
 
     // Check role change and redirect if needed
     useEffect(() => {
-        if (allowedRoles && allowedRoles.length > 0 && user && !allowedRoles.includes(user.role)) {
+        if (
+            allowedRoles &&
+            allowedRoles.length > 0 &&
+            user &&
+            !allowedRoles.includes(user.role)
+        ) {
             navigate(SCREEN_PATH.HOME, { replace: true });
         }
     }, [allowedRoles, navigate, user]);
@@ -99,7 +106,11 @@ export const PrivateRoute = ({ allowedRoles, children }: PrivateRouteProps) => {
     }
 
     // Role-based guard: if allowedRoles provided and current user role not included, redirect to home
-    if (allowedRoles && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+    if (
+        allowedRoles &&
+        allowedRoles.length > 0 &&
+        !allowedRoles.includes(user.role)
+    ) {
         navigate(SCREEN_PATH.HOME, { replace: true });
         return null;
     }

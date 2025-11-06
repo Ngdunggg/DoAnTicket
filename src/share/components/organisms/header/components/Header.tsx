@@ -199,7 +199,9 @@ const Header = () => {
                                                     handleClickAdmin();
                                                 }}
                                             >
-                                                <AdminIcon mode={MODE_ADMIN.WHITE} />
+                                                <AdminIcon
+                                                    mode={MODE_ADMIN.WHITE}
+                                                />
                                                 <Text
                                                     modeColor={
                                                         MODE_COLOR_TEXT.WHITE

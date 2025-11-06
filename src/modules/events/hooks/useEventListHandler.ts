@@ -131,7 +131,10 @@ const useEventListHandler = () => {
         navigate(SCREEN_PATH.EVENT_DETAIL.replace(':event_id', eventId));
     };
 
-    const handleDateRangeChange = (start: string | null, end: string | null) => {
+    const handleDateRangeChange = (
+        start: string | null,
+        end: string | null
+    ) => {
         setDateRangeStartStore(start);
         setDateRangeEndStore(end);
     };

@@ -31,7 +31,7 @@ const useDetailEventHandler = () => {
             SCREEN_PATH.EVENT_TICKET_SELECTION.replace(':event_id', eventId)
         );
     };
-    
+
     return {
         eventDetail,
         handlePickTicket,

@@ -1,4 +1,10 @@
-import React, { ForwardedRef, forwardRef, ReactNode, useMemo, useRef } from 'react';
+import React, {
+    ForwardedRef,
+    forwardRef,
+    ReactNode,
+    useMemo,
+    useRef,
+} from 'react';
 import {
     Dropdown,
     DropdownChangeEvent,
@@ -79,15 +85,22 @@ function DropDownInner<T>(
         [className, mode]
     );
 
-    const appendTarget = appendTo ?? (wrapperRef.current as HTMLElement | null) ?? 'self';
+    const appendTarget =
+        appendTo ?? (wrapperRef.current as HTMLElement | null) ?? 'self';
 
     return (
-        <div ref={node => {
-            // keep both refs in sync
-            if (typeof ref === 'function') ref(node as HTMLDivElement);
-            else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-            wrapperRef.current = node as HTMLDivElement | null;
-        }} className={`relative ${wrapClassName ?? ''}`}>
+        <div
+            ref={node => {
+                // keep both refs in sync
+                if (typeof ref === 'function') ref(node as HTMLDivElement);
+                else if (ref)
+                    (
+                        ref as React.MutableRefObject<HTMLDivElement | null>
+                    ).current = node;
+                wrapperRef.current = node as HTMLDivElement | null;
+            }}
+            className={`relative ${wrapClassName ?? ''}`}
+        >
             <div className="relative">
                 {icon && (
                     <div
@@ -114,7 +127,9 @@ function DropDownInner<T>(
                         panel: {
                             className: `shadow-2xl border border-gray-300 rounded-xl text-black ${props.panelClassName ?? ''}`,
                         },
-                        root: { className: `${ptClassName} ${icon ? '!pl-10' : ''}` },
+                        root: {
+                            className: `${ptClassName} ${icon ? '!pl-10' : ''}`,
+                        },
                     }}
                     showClear={false}
                     value={value}

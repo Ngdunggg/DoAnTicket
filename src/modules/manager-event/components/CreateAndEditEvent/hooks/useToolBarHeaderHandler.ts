@@ -219,19 +219,20 @@ const useToolBarHeaderHandler = () => {
         queryKey: ['event-types'],
     });
 
-    const { data: organizerProfile, refetch: refetchOrganizerProfile } = useQuery({
-        enabled: !!userInfo?.id,
-        queryFn: async () => {
-            const response = await organizerApi.getOrganizerProfile(
-                userInfo?.id || ''
-            );
-            if (response.result.code === RESULT_CODE.SUCCESS) {
-                return response.data;
-            }
-            return null;
-        },
-        queryKey: ['organizer-profile', userInfo?.id],
-    });
+    const { data: organizerProfile, refetch: refetchOrganizerProfile } =
+        useQuery({
+            enabled: !!userInfo?.id,
+            queryFn: async () => {
+                const response = await organizerApi.getOrganizerProfile(
+                    userInfo?.id || ''
+                );
+                if (response.result.code === RESULT_CODE.SUCCESS) {
+                    return response.data;
+                }
+                return null;
+            },
+            queryKey: ['organizer-profile', userInfo?.id],
+        });
 
     useEffect(() => {
         setOrganizerProfileStore(organizerProfile ?? null);

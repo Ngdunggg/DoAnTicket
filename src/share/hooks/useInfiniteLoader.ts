@@ -45,5 +45,3 @@ export function useInfiniteLoader({
 }
 
 export default useInfiniteLoader;
-
-

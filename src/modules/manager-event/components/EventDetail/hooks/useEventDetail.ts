@@ -18,7 +18,7 @@ const useEventDetail = () => {
     const eventDetail = allEventsByOrganizer.find(
         event => event.id === eventId
     );
-    
+
     const handleBack = () => {
         navigate(SCREEN_PATH.MANAGER_EVENT);
     };

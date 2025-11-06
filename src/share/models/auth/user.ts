@@ -6,7 +6,7 @@ export type User = {
     created_at: string;
     date_of_birth: string;
     email: string;
-    full_name: string; 
+    full_name: string;
     gender: boolean | null;
     google_id?: string | null;
     id: string;

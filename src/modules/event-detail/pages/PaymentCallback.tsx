@@ -142,4 +142,3 @@ const PaymentCallback: React.FC = () => {
 };
 
 export default PaymentCallback;
-

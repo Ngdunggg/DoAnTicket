@@ -245,17 +245,19 @@ export const convertToCreateEventRequest = async (
             .filter(id => id !== ''), // Convert comma-separated string to array of strings
         description: formData.description,
         end_time: new Date(formData.end_time),
-        event_dates: [{
-            end_at: new Date(formData.end_time),
-            start_at: new Date(formData.start_time)
-        }], 
+        event_dates: [
+            {
+                end_at: new Date(formData.end_time),
+                start_at: new Date(formData.start_time),
+            },
+        ],
         images: uploadedImages, // Cloudinary URLs
         is_online: formData.is_online,
         ...(formData.is_online
             ? {}
             : locationString
-            ? { location: locationString }
-            : {}),
+              ? { location: locationString }
+              : {}),
         organizer_profile: {
             contact_email: formData.contact_email,
             contact_phone: formData.contact_phone,

@@ -5,7 +5,8 @@ import { PaymentMethod } from '@share/constants/paymentMethod';
 // Interface cho Upload Image
 export interface UploadImageRequest {
     // Base64 string hoặc file buffer
-    image_type: ImageType; image_url: string;
+    image_type: ImageType;
+    image_url: string;
 }
 
 // Interface cho Event Date
