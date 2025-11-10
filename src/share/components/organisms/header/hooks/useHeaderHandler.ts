@@ -11,6 +11,7 @@ import useSearchStoreSelector from './useSearchStoreSelector';
 import { authApi } from '@share/api/authApi';
 import { RESULT_CODE, ROLE } from '@share/constants/commons';
 import { toast } from 'react-toastify';
+import useCreateEventStoreAction from '@modules/manager-event/components/CreateAndEditEvent/hooks/useCreateEventStoreAction';
 
 const useHeaderHandler = () => {
     // #region Actions
@@ -35,6 +36,7 @@ const useHeaderHandler = () => {
     const navigate = useNavigate();
     const schemaSearch = searchToolBarSchema;
     const { openAuthPopup } = useAuthPopup();
+    const { setIsOpenCreateEventStore } = useCreateEventStoreAction();
     // #endregion
 
     // #region Handlers
@@ -83,6 +85,7 @@ const useHeaderHandler = () => {
             return;
         }
         navigate(SCREEN_PATH.CREATE_EVENT);
+        setIsOpenCreateEventStore(true);
     };
 
     const handleClickMyTicket = () => {

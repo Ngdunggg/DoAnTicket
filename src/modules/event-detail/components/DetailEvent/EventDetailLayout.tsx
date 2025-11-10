@@ -7,6 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import OrganizerSection from './OrganizerSection';
 import SuggestEvent from '@share/components/organisms/SuggestEvent/SuggestEvent';
+import { isEventFinished } from '../../utils/eventUtils';
+import {
+    MODE_COLOR_TEXT,
+    MODE_SIZE,
+    MODE_WEIGHT,
+    Text,
+} from '@share/components/atoms/Text';
 
 const EventDetailLayout = () => {
     const { eventDetail, handlePickTicket, loading, organizerProfile } =
@@ -27,8 +34,24 @@ const EventDetailLayout = () => {
         return null;
     }
 
+    const eventEnded = isEventFinished(eventDetail);
+
     return (
-        <div className="flex flex-col flex-1 gap-14 bg-gray-200">
+        <div className="flex flex-col flex-1 gap-14 bg-gray-200 relative">
+            {/* Event Ended Overlay Banner */}
+            {eventEnded && (
+                <div className="fixed top-24 left-0 right-0 z-50 bg-black/70 flex items-center justify-center py-6 px-6">
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.WHITE}
+                        modeSize={MODE_SIZE[24]}
+                        modeWeight={MODE_WEIGHT.LARGE}
+                        className="text-center"
+                    >
+                        Sự kiện đã kết thúc
+                    </Text>
+                </div>
+            )}
+
             {/* Hero Section */}
             <EventHero event={eventDetail} onBookNow={handlePickTicket} />
 

@@ -37,9 +37,9 @@ const QRPopup: React.FC<QRPopupProps> = ({ isOpen, onClose, ticket }) => {
 
     // Tạo qr_data giống hệt với backend để đảm bảo QR code khớp với email
     const qrData = JSON.stringify({
-        qr_data: `ticket:${ticketData.id}:${ticketData.serial_number}`,
+        eventId: event.id,
+        serialNumber: ticketData.serial_number,
         ticketId: ticketData.id,
-        ticketTypeName: ticketData.ticket_types?.name || '',
     });
 
     return (

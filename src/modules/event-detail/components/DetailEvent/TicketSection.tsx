@@ -15,7 +15,8 @@ import ChevronIcon, {
 import { Event } from '@share/types/event';
 import { formatDateTime } from '@share/utils/dateTime';
 import { DATE_FORMAT_ISO } from '@share/constants/dateTime';
-import { formatPrice } from '../../utils/eventUtils';
+import { formatPrice, isEventFinished } from '../../utils/eventUtils';
+import { useAppSelector } from '@configs/store';
 
 interface TicketSectionProps {
     event: Event;
@@ -24,6 +25,8 @@ interface TicketSectionProps {
 
 const TicketSection = ({ event, onBuyTickets }: TicketSectionProps) => {
     const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
+    const currentUser = useAppSelector(state => state.user.user);
+    const eventEnded = isEventFinished(event);
 
     const toggleDateExpansion = (dateId: string) => {
         setExpandedDates(prev => {
@@ -97,6 +100,10 @@ const TicketSection = ({ event, onBuyTickets }: TicketSectionProps) => {
                                     mode={MODE_BUTTON.DECORATIVE_YELLOW}
                                     onClick={e => handleBuyTickets(date.id, e)}
                                     icon={<TicketIcon />}
+                                    disabled={
+                                        eventEnded ||
+                                        currentUser?.id === event.organizer_id
+                                    }
                                 >
                                     <Text
                                         modeColor={MODE_COLOR_TEXT.BLACK}
