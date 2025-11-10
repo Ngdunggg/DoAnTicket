@@ -6,6 +6,7 @@ import { Event } from '@share/types/event';
 import { useNavigate } from 'react-router-dom';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { FILTER_STATUS } from '@share/constants/commons';
+import { isEventFinished } from '@modules/event-detail/utils/eventUtils';
 
 const useHomeHandler = () => {
     const { allEvents } = useHomeEventListStoreSelector();
@@ -13,17 +14,23 @@ const useHomeHandler = () => {
     const navigate = useNavigate();
     const { data } = useFetchEventListQuery();
 
+    const filteredEvents = useMemo(() => {
+        if (!data) {
+            return [];
+        }
+        return data.filter(
+            event =>
+                event.status !== FILTER_STATUS.PENDING &&
+                event.status !== FILTER_STATUS.REJECTED &&
+                !isEventFinished(event)
+        );
+    }, [data]);
+
     useEffect(() => {
         if (data) {
-            setAllEventsStore(
-                data.filter(
-                    event =>
-                        event.status !== FILTER_STATUS.PENDING &&
-                        event.status !== FILTER_STATUS.REJECTED
-                )
-            );
+            setAllEventsStore(filteredEvents);
         }
-    }, [data]);
+    }, [data, filteredEvents]);
 
     const eventToTrending = (events: Event[]) => {
         return [...events]

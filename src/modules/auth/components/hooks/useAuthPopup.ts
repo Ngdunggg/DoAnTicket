@@ -206,6 +206,7 @@ export const useAuthPopup = () => {
     const handleNavigateToAdmin = () => {
         if (isAdmin) {
             navigate(SCREEN_PATH.ADMIN_DASHBOARD);
+            closeAuthPopup();
         }
     };
 

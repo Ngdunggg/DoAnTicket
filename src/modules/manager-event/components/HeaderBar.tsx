@@ -30,7 +30,7 @@ const HeaderBar = () => {
     const { isActive, menuItems } = useMenuManager();
     const {
         handleClickAdmin,
-        handleClickCreateEvent,
+        handleClickMyEvents,
         handleClickMyProfile,
         handleClickMyTicket,
         handleLogout,
@@ -154,7 +154,7 @@ const HeaderBar = () => {
                                     <DivClick
                                         onClick={() => {
                                             setIsAccountPopupOpenStore(false);
-                                            handleClickCreateEvent();
+                                            handleClickMyEvents();
                                         }}
                                         className="flex items-center gap-3 px-4 py-3 hover:bg-bg-gray transition-colors duration-200"
                                     >

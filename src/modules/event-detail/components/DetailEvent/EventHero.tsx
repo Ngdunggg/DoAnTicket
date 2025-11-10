@@ -25,6 +25,7 @@ import {
     getEventImage,
     getEventLocation,
     getMinPrice,
+    isEventFinished,
 } from '../../utils/eventUtils';
 import { IMAGE_TYPE } from '@share/constants/commons';
 
@@ -35,9 +36,14 @@ interface EventHeroProps {
 
 const EventHero = ({ event, onBookNow }: EventHeroProps) => {
     const token = useAppSelector(state => state.auth.token);
+    const currentUser = useAppSelector(state => state.user.user);
     const { openAuthPopup } = useAuthPopup();
+    const eventEnded = isEventFinished(event);
 
     const handleBuyTicket = () => {
+        if (eventEnded) {
+            return;
+        }
         if (!token) {
             openAuthPopup();
         } else {
@@ -115,6 +121,10 @@ const EventHero = ({ event, onBookNow }: EventHeroProps) => {
                             icon={<TicketIcon />}
                             mode={MODE_BUTTON.DECORATIVE_YELLOW}
                             onClick={handleBuyTicket}
+                            disabled={
+                                eventEnded ||
+                                currentUser?.id === event.organizer_id
+                            }
                         >
                             <Text
                                 modeWeight={MODE_WEIGHT.MEDIUM}

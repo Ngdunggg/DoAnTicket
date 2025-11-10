@@ -66,8 +66,11 @@ export const authApi = {
      *
      * @returns A promise that resolves to the user info response.
      */
-    getUserInfo: async (): Promise<UserResponse> => {
-        const response = await httpClient.get<UserResponse>(API_PATH.USER_INFO);
+    getUserInfo: async (id: string | undefined): Promise<UserResponse> => {
+        const response = await httpClient.get<UserResponse>(
+            API_PATH.USER_INFO,
+            { params: { id } }
+        );
         return response.data;
     },
 

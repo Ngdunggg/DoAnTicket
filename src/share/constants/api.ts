@@ -32,7 +32,7 @@ export const API_PATH = {
 
     UPLOAD_SIGNATURE: 'uploads/signature',
 
-    USER_INFO: 'auth/user-info',
+    USER_INFO: 'users/user-info',
 
     VERIFY_OTP: 'auth/verify-otp',
 

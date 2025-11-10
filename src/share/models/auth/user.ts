@@ -46,7 +46,18 @@ export type UserInfo = {
 };
 
 export type UserModel = {
-    user: UserInfo;
+    address?: string | null;
+    avatar_url?: string | null;
+    created_at: string;
+    date_of_birth: string;
+    email: string;
+    full_name: string;
+    gender: boolean | null;
+    google_id?: string | null;
+    id: string;
+    phone: string;
+    role: string;
+    status: string;
 };
 
 export type UserResponse = BaseHttpResponse<UserModel>;
