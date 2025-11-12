@@ -55,68 +55,80 @@ const TopEvents = ({ events }: { events: Event[] }) => {
             </Text>
             <div className="mt-3">
                 <div className="flex gap-6 px-10">
-                    <div className="flex flex-col gap-2 mt-12 relative">
+                    <div className="flex flex-col gap-2 mt-12 relative flex-1">
                         {renderRankingNumber(2)}
-                        <Image
-                            src={
-                                getEventImage(topEvents[1], IMAGE_TYPE.CARD) ||
-                                ''
-                            }
-                            alt={topEvents[1]?.title || ''}
-                            className="w-full h-full object-cover rounded-3xl shadow-md"
-                        />
-                        <div className="bg-bg-black/30 absolute inset-0 rounded-3xl w-full h-full shadow-md">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[20]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
-                                className="absolute top-0 left-10 p-4"
-                            >
-                                {topEvents[1]?.title || ''}
-                            </Text>
+                        <div className="w-full aspect-square relative">
+                            <Image
+                                src={
+                                    getEventImage(
+                                        topEvents[1],
+                                        IMAGE_TYPE.CARD
+                                    ) || ''
+                                }
+                                alt={topEvents[1]?.title || ''}
+                                className="w-full h-full object-cover rounded-3xl shadow-md"
+                            />
+                            <div className="bg-bg-black/30 absolute inset-0 rounded-3xl w-full h-full shadow-md">
+                                <Text
+                                    modeColor={MODE_COLOR_TEXT.WHITE}
+                                    modeSize={MODE_SIZE[20]}
+                                    modeWeight={MODE_WEIGHT.MEDIUM}
+                                    className="absolute top-0 left-10 p-4"
+                                >
+                                    {topEvents[1]?.title || ''}
+                                </Text>
+                            </div>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-2 mb-8 relative">
+                    <div className="flex flex-col gap-2 mb-8 relative flex-1">
                         {renderRankingNumber(1)}
 
-                        <Image
-                            src={
-                                getEventImage(topEvents[0], IMAGE_TYPE.CARD) ||
-                                ''
-                            }
-                            alt={topEvents[0]?.title || ''}
-                            className="w-full h-full object-cover rounded-3xl shadow-md"
-                        />
-                        <div className="bg-bg-black/30 absolute inset-0 rounded-3xl w-full h-full shadow-md">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[20]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
-                                className="absolute top-0 left-8 p-4"
-                            >
-                                {topEvents[0]?.title || ''}
-                            </Text>
+                        <div className="w-full aspect-square relative">
+                            <Image
+                                src={
+                                    getEventImage(
+                                        topEvents[0],
+                                        IMAGE_TYPE.CARD
+                                    ) || ''
+                                }
+                                alt={topEvents[0]?.title || ''}
+                                className="w-full h-full object-cover rounded-3xl shadow-md"
+                            />
+                            <div className="bg-bg-black/30 absolute inset-0 rounded-3xl w-full h-full shadow-md">
+                                <Text
+                                    modeColor={MODE_COLOR_TEXT.WHITE}
+                                    modeSize={MODE_SIZE[20]}
+                                    modeWeight={MODE_WEIGHT.MEDIUM}
+                                    className="absolute top-0 left-8 p-4"
+                                >
+                                    {topEvents[0]?.title || ''}
+                                </Text>
+                            </div>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-2 mt-12 relative">
+                    <div className="flex flex-col gap-2 mt-12 relative flex-1">
                         {renderRankingNumber(3)}
-                        <Image
-                            src={
-                                getEventImage(topEvents[2], IMAGE_TYPE.CARD) ||
-                                ''
-                            }
-                            alt={topEvents[2]?.title || ''}
-                            className="w-full h-full object-cover rounded-3xl shadow-md"
-                        />
-                        <div className="bg-bg-black/30 absolute inset-0 rounded-3xl w-full h-full shadow-md">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[20]}
-                                modeWeight={MODE_WEIGHT.MEDIUM}
-                                className="absolute top-0 left-10 p-4"
-                            >
-                                {topEvents[2]?.title || ''}
-                            </Text>
+                        <div className="w-full aspect-square relative">
+                            <Image
+                                src={
+                                    getEventImage(
+                                        topEvents[2],
+                                        IMAGE_TYPE.CARD
+                                    ) || ''
+                                }
+                                alt={topEvents[2]?.title || ''}
+                                className="w-full h-full object-cover rounded-3xl shadow-md"
+                            />
+                            <div className="bg-bg-black/30 absolute inset-0 rounded-3xl w-full h-full shadow-md">
+                                <Text
+                                    modeColor={MODE_COLOR_TEXT.WHITE}
+                                    modeSize={MODE_SIZE[20]}
+                                    modeWeight={MODE_WEIGHT.MEDIUM}
+                                    className="absolute top-0 left-10 p-4"
+                                >
+                                    {topEvents[2]?.title || ''}
+                                </Text>
+                            </div>
                         </div>
                     </div>
                 </div>

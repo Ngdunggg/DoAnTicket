@@ -22,8 +22,12 @@ import CategoryContainer from '../components/categories/CategoryContainer';
 const AdminPage = () => {
     const { activeTab } = useAdminStoreSelector();
     const userInfo = useAppSelector(state => state.user.user);
-    const { setEventListStore, setOrderListStore, setUserListStore } =
-        useAdminStoreAction();
+    const {
+        setActiveTabStore,
+        setEventListStore,
+        setOrderListStore,
+        setUserListStore,
+    } = useAdminStoreAction();
     const { data: listData } = useGetListDataQuery();
     const [isOpenUserInfo, setIsOpenUserInfo] = useState(false);
     const navigate = useNavigate();
@@ -70,6 +74,14 @@ const AdminPage = () => {
         }
     }, [listData]);
 
+    useEffect(() => {
+        return () => {
+            setActiveTabStore(ADMIN_TAB.DASHBOARD);
+            setEventListStore([]);
+            setUserListStore([]);
+            setOrderListStore([]);
+        };
+    }, []);
     return (
         <div className="flex flex-col min-h-screen max-h-screen">
             <div className="sticky top-0 z-20 py-2 px-4 bg-black/5 backdrop-blur-sm flex justify-end items-center">

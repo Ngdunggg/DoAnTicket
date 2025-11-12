@@ -21,7 +21,11 @@ import {
     getEventImage,
 } from '@modules/event-detail/utils/eventUtils';
 import useTicketCardHandler from './hooks/useTicketCardHandler';
-import { IMAGE_TYPE, MY_TICKET_TAB } from '@share/constants/commons';
+import {
+    IMAGE_TYPE,
+    MY_TICKET_TAB,
+    PURCHASED_TICKET_STATUS,
+} from '@share/constants/commons';
 import { TicketWithEvent } from './hooks/useMyTicketHandler';
 import useMyTicketStoreSelector from '@modules/my-ticket/hooks/useMyTicketStoreSelector';
 
@@ -29,6 +33,7 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
     const { event, ticket: ticketData } = ticket;
     const { selectedTicketId } = useMyTicketStoreSelector();
     const {
+        getDisplayStatusText,
         getStatus,
         handleCloseQrPopup,
         handleOpenQrPopup,
@@ -58,21 +63,31 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
                         {/* Status Badge */}
                         <div className="absolute top-1 right-1">
                             <div
-                                className={`px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm ${getStatus(event) === MY_TICKET_TAB.UPCOMING ? 'text-green-400' : 'text-gray-400'}`}
+                                className={`px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm ${
+                                    getStatus(event) ===
+                                        MY_TICKET_TAB.UPCOMING &&
+                                    ticketData.status !==
+                                        PURCHASED_TICKET_STATUS.USED
+                                        ? 'text-green-400'
+                                        : 'text-gray-400'
+                                }`}
                             >
                                 <Text
                                     modeColor={
                                         getStatus(event) ===
-                                        MY_TICKET_TAB.UPCOMING
+                                            MY_TICKET_TAB.UPCOMING &&
+                                        ticketData.status !==
+                                            PURCHASED_TICKET_STATUS.USED
                                             ? MODE_COLOR_TEXT.GREEN
-                                            : MODE_COLOR_TEXT.GRAY
+                                            : MODE_COLOR_TEXT.YELLOW
                                     }
                                     modeSize={MODE_SIZE[14]}
                                     modeWeight={MODE_WEIGHT.MEDIUM}
                                 >
-                                    {getStatus(event) === MY_TICKET_TAB.UPCOMING
-                                        ? 'Sắp diễn ra'
-                                        : 'Đã diễn ra'}
+                                    {getDisplayStatusText(
+                                        event,
+                                        ticketData.status
+                                    )}
                                 </Text>
                             </div>
                         </div>

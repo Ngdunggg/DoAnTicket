@@ -21,8 +21,7 @@ const useHomeHandler = () => {
         return data.filter(
             event =>
                 event.status !== FILTER_STATUS.PENDING &&
-                event.status !== FILTER_STATUS.REJECTED &&
-                !isEventFinished(event)
+                event.status !== FILTER_STATUS.REJECTED
         );
     }, [data]);
 
@@ -34,6 +33,7 @@ const useHomeHandler = () => {
 
     const eventToTrending = (events: Event[]) => {
         return [...events]
+            .filter(event => !isEventFinished(event))
             .sort((a, b) => b.total_views - a.total_views)
             .slice(0, 10);
     };
@@ -52,12 +52,13 @@ const useHomeHandler = () => {
         }
 
         return allEvents
-            .filter(event =>
-                event.categories?.some(
-                    category =>
-                        category.name?.toLowerCase() ===
-                        categoryName.toLowerCase()
-                )
+            .filter(
+                event =>
+                    event.categories?.some(
+                        category =>
+                            category.name?.toLowerCase() ===
+                            categoryName.toLowerCase()
+                    ) && !isEventFinished(event)
             )
             .slice(0, limit);
     };
@@ -70,10 +71,12 @@ const useHomeHandler = () => {
         }
 
         return allEvents.filter(event =>
-            event.categories?.some(category =>
-                categoryNames.some(
-                    name => category.name?.toLowerCase() === name.toLowerCase()
-                )
+            event.categories?.some(
+                category =>
+                    categoryNames.some(
+                        name =>
+                            category.name?.toLowerCase() === name.toLowerCase()
+                    ) && !isEventFinished(event)
             )
         );
     };
@@ -85,6 +88,7 @@ const useHomeHandler = () => {
                     new Date(b.created_at).getTime() -
                     new Date(a.created_at).getTime()
             )
+            .filter(event => !isEventFinished(event))
             .slice(0, limit);
     };
 
@@ -100,6 +104,7 @@ const useHomeHandler = () => {
                     new Date(a.start_time).getTime() -
                     new Date(b.start_time).getTime()
             )
+            .filter(event => !isEventFinished(event))
             .slice(0, limit);
     };
 
@@ -118,6 +123,7 @@ const useHomeHandler = () => {
                     new Date(a.start_time).getTime() -
                     new Date(b.start_time).getTime()
             )
+            .filter(event => !isEventFinished(event))
             .slice(0, limit);
     };
 
@@ -136,6 +142,7 @@ const useHomeHandler = () => {
                     new Date(a.start_time).getTime() -
                     new Date(b.start_time).getTime()
             )
+            .filter(event => !isEventFinished(event))
             .slice(0, limit);
     };
 
