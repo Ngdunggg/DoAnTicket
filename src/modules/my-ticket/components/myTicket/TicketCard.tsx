@@ -99,7 +99,6 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
                             modeSize={MODE_SIZE[20]}
-                            modeWeight={MODE_WEIGHT.LARGE}
                         >
                             {event.title}
                         </Text>
