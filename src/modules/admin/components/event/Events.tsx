@@ -16,6 +16,9 @@ import { searchToolBarSchema } from '@share/schemas/header/searchToolBar';
 import { EventStatus, EVENT_STATUS } from '@share/constants/commons';
 import useEventHandler from './hooks/useEventHandler';
 import EventDetailPreview from './EventDetailPreview';
+import DetailReport from '@modules/manager-event/components/ManagerReport/components/DetailEventReport/DetailReport';
+import { useEffect, useMemo } from 'react';
+import DropDown, { IDropDownOption } from '@share/components/atoms/DropDown';
 
 const EventsPage = () => {
     const {
@@ -24,13 +27,16 @@ const EventsPage = () => {
         handleBackFromDetail,
         handleUpdateEventStatus,
         handleViewEvent,
+        handleViewReport,
         hasMore,
         isLoadingMore,
         pageSize,
         searchFormSchema,
         selectedEventId,
+        selectedReportEventId,
         setIsLoadingMore,
         setSearch,
+        setSelectedReportEventIdStore,
         setSortField,
         setSortOrder,
         setStatusFilter,
@@ -40,6 +46,22 @@ const EventsPage = () => {
         statusFilter,
         visibleRows,
     } = useEventHandler();
+
+    useEffect(() => {
+        return () => {
+            setSelectedReportEventIdStore(null);
+        };
+    }, []);
+
+    const statusOptions: IDropDownOption<EventStatus>[] = useMemo(
+        () => [
+            { label: 'Tất cả sự kiện', value: 'all' },
+            { label: 'Đang chờ phê duyệt', value: EVENT_STATUS.PENDING },
+            { label: 'Đã phê duyệt', value: EVENT_STATUS.APPROVED },
+            { label: 'Đã từ chối', value: EVENT_STATUS.REJECTED },
+        ],
+        []
+    );
 
     // Nếu đang xem detail, hiển thị EventDetail
     if (selectedEventId) {
@@ -81,6 +103,14 @@ const EventsPage = () => {
                         View
                     </button>
                     <button
+                        onClick={() => {
+                            handleViewReport(event.id);
+                        }}
+                        className="rounded-md border border-purple-300 px-3 py-2 text-sm text-purple-700 hover:bg-purple-50 cursor-pointer"
+                    >
+                        Xem doanh thu
+                    </button>
+                    <button
                         onClick={() =>
                             handleUpdateEventStatus(
                                 event.id,
@@ -113,6 +143,17 @@ const EventsPage = () => {
         },
     ];
 
+    if (selectedReportEventId) {
+        return (
+            <div className="bg-bg-black-2 flex flex-col flex-1 max-h-screen overflow-hidden relative">
+                <DetailReport
+                    eventIdPorps={selectedReportEventId}
+                    isAdmin={true}
+                />
+            </div>
+        );
+    }
+
     return (
         <div className="p-6 md:p-10 h-full overflow-y-auto">
             <div className="flex items-center justify-between">
@@ -124,25 +165,18 @@ const EventsPage = () => {
                     Sự kiện
                 </Text>
                 <div className="flex items-center gap-3">
-                    <select
-                        className="rounded-xl border border-gray-300 bg-white px-2 py-2.5"
-                        value={statusFilter}
-                        onChange={e => {
-                            const v = e.target.value as EventStatus;
-                            setStatusFilter(v);
+                    <DropDown
+                        className="!h-11.5 !w-[200px] rounded-xl"
+                        mode="default"
+                        onChange={value => {
+                            if (value !== null && typeof value === 'string') {
+                                setStatusFilter(value as EventStatus);
+                            }
                         }}
-                    >
-                        <option value="all">Tất cả sự kiện</option>
-                        <option value={EVENT_STATUS.PENDING}>
-                            Đang chờ phê duyệt
-                        </option>
-                        <option value={EVENT_STATUS.APPROVED}>
-                            Đã phê duyệt
-                        </option>
-                        <option value={EVENT_STATUS.REJECTED}>
-                            Đã từ chối
-                        </option>
-                    </select>
+                        options={statusOptions}
+                        value={statusFilter}
+                        panelClassName="rounded-xl"
+                    />
                     <InputValidate
                         control={searchFormSchema.control}
                         inputName="search"

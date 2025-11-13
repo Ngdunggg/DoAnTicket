@@ -6,6 +6,9 @@ const useAdminStoreSelector = () => {
         categoryList: useAppSelector(state => state.admin.categoryList),
         eventList: useAppSelector(state => state.admin.eventList),
         orderList: useAppSelector(state => state.admin.orderList),
+        selectedReportEventId: useAppSelector(
+            state => state.admin.selectedReportEventId
+        ),
         userList: useAppSelector(state => state.admin.userList),
     };
 };

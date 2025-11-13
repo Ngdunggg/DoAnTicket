@@ -96,7 +96,7 @@ const QRPopup: React.FC<QRPopupProps> = ({ isOpen, onClose, ticket }) => {
                             modeColor={MODE_COLOR_TEXT.WHITE}
                             className="flex items-center gap-2"
                         >
-                            <MapPinIcon className="w-6 h-6 text-bg-yellow" />{' '}
+                            <MapPinIcon className="w-8 h-8 text-bg-yellow" />{' '}
                             {event.location}
                         </Text>
                         <Text

@@ -10,6 +10,7 @@ type AdminState = {
     categoryList: Category[];
     eventList: Event[];
     orderList: Order[];
+    selectedReportEventId: string | null;
     userList: User[];
 };
 
@@ -18,6 +19,7 @@ const initialState: AdminState = {
     categoryList: [],
     eventList: [],
     orderList: [],
+    selectedReportEventId: null,
     userList: [],
 };
 
@@ -37,6 +39,12 @@ const adminSlice = createSlice({
         setOrderList: (state, action: PayloadAction<Order[]>) => {
             state.orderList = action.payload;
         },
+        setSelectedReportEventId: (
+            state,
+            action: PayloadAction<string | null>
+        ) => {
+            state.selectedReportEventId = action.payload;
+        },
         setUserList: (state, action: PayloadAction<User[]>) => {
             state.userList = action.payload;
         },
@@ -48,6 +56,7 @@ export const {
     setCategoryList,
     setEventList,
     setOrderList,
+    setSelectedReportEventId,
     setUserList,
 } = adminSlice.actions;
 export default adminSlice.reducer;

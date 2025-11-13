@@ -15,6 +15,8 @@ import SearchIcon from '@share/components/atoms/icons/SearchIcon';
 import { MODE_INPUT } from '@share/components/atoms/Input';
 import useUserHandler from './hooks/useUserHandler';
 import { ROLE, Role } from '@share/constants/commons';
+import DropDown, { IDropDownOption } from '@share/components/atoms/DropDown';
+import { useMemo } from 'react';
 
 const UsersPage = () => {
     const {
@@ -34,6 +36,15 @@ const UsersPage = () => {
         sortOrder,
         visibleRows,
     } = useUserHandler();
+
+    const roleOptions: IDropDownOption<Role>[] = useMemo(
+        () => [
+            { label: 'User', value: ROLE.USER },
+            { label: 'Organizer', value: ROLE.ORGANIZER },
+            { label: 'Admin', value: ROLE.ADMIN },
+        ],
+        []
+    );
 
     const columns: Array<DataTableColumn<(typeof filteredList)[number]>> = [
         { header: 'Email', key: 'email', sortable: true },
@@ -57,18 +68,20 @@ const UsersPage = () => {
             key: 'actions',
             render: user => (
                 <div className="flex gap-2 items-center">
-                    <select
-                        value={user.role}
-                        onChange={e =>
-                            handleUpdateRole(user.id, e.target.value as Role)
-                        }
+                    <DropDown
+                        appendTo={null}
+                        className="!w-[150px] rounded-xl"
                         disabled={isLoading === user.id}
-                        className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                    >
-                        <option value={ROLE.USER}>User</option>
-                        <option value={ROLE.ORGANIZER}>Organizer</option>
-                        <option value={ROLE.ADMIN}>Admin</option>
-                    </select>
+                        mode="default"
+                        onChange={value => {
+                            if (value !== null && typeof value === 'string') {
+                                handleUpdateRole(user.id, value as Role);
+                            }
+                        }}
+                        options={roleOptions}
+                        panelClassName="rounded-xl"
+                        value={user.role}
+                    />
                     {/* <button
                         onClick={() => handleDeactivate(user.id)}
                         disabled={isLoading === user.id}

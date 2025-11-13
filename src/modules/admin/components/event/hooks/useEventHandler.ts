@@ -11,8 +11,9 @@ import { toast } from 'react-toastify';
 import useAdminStoreAction from '@modules/admin/hooks/useAdminStoreAction';
 
 const useEventHandler = () => {
-    const { eventList } = useAdminStoreSelector();
-    const { setEventListStore } = useAdminStoreAction();
+    const { eventList, selectedReportEventId } = useAdminStoreSelector();
+    const { setEventListStore, setSelectedReportEventIdStore } =
+        useAdminStoreAction();
     const [visibleRows, setVisibleRows] = useState<typeof eventList>([]);
     const [isLoadingMore, setIsLoadingMore] = useState<boolean>(false);
     const [statusFilter, setStatusFilter] = useState<EventStatus>('all');
@@ -93,20 +94,27 @@ const useEventHandler = () => {
         setSelectedEventId(null);
     };
 
+    const handleViewReport = (id: string) => {
+        setSelectedReportEventIdStore(id);
+    };
+
     return {
         eventList,
         filteredList,
         handleBackFromDetail,
         handleUpdateEventStatus,
         handleViewEvent,
+        handleViewReport,
         hasMore,
         isLoadingMore,
         pageSize,
         searchFormSchema,
         selectedEventId,
+        selectedReportEventId,
         setEventListStore,
         setIsLoadingMore,
         setSearch,
+        setSelectedReportEventIdStore,
         setSortField,
         setSortOrder,
         setStatusFilter,

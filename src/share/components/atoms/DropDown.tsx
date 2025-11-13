@@ -86,7 +86,11 @@ function DropDownInner<T>(
     );
 
     const appendTarget =
-        appendTo ?? (wrapperRef.current as HTMLElement | null) ?? 'self';
+        appendTo === null
+            ? null
+            : (appendTo ??
+              (wrapperRef.current as HTMLElement | null) ??
+              'self');
 
     return (
         <div

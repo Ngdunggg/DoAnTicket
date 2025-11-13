@@ -4,6 +4,7 @@ import {
     setCategoryList,
     setEventList,
     setOrderList,
+    setSelectedReportEventId,
     setUserList,
 } from '../store/adminSlice';
 import { Event } from '@share/types/event';
@@ -27,6 +28,10 @@ const useAdminStoreAction = () => {
         dispatch(setEventList(data));
     };
 
+    const setSelectedReportEventIdStore = (data: string | null) => {
+        dispatch(setSelectedReportEventId(data));
+    };
+
     const setUserListStore = (data: User[]) => {
         dispatch(setUserList(data));
     };
@@ -40,6 +45,7 @@ const useAdminStoreAction = () => {
         setCategoryListStore,
         setEventListStore,
         setOrderListStore,
+        setSelectedReportEventIdStore,
         setUserListStore,
     };
 };

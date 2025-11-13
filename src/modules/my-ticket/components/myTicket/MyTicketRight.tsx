@@ -69,10 +69,30 @@ const MyTicketRight = () => {
 
             {/* Ticket List */}
             <div className="flex flex-col gap-4 max-h-[calc(100vh-150px)] overflow-y-auto">
-                <div className="flex flex-col gap-4">
-                    {activeTab === MY_TICKET_TAB.UPCOMING ? (
-                        upcomingTickets.length > 0 ? (
-                            upcomingTickets.map((item: TicketWithEvent) => (
+                <div className="min-h-[calc(100vh-150px)]">
+                    <div className="flex flex-col gap-4">
+                        {activeTab === MY_TICKET_TAB.UPCOMING ? (
+                            upcomingTickets.length > 0 ? (
+                                upcomingTickets.map((item: TicketWithEvent) => (
+                                    <TicketCard
+                                        key={item.ticket.id}
+                                        ticket={item}
+                                    />
+                                ))
+                            ) : (
+                                <div className="flex-1 flex items-center justify-center">
+                                    <Text
+                                        modeColor={
+                                            MODE_COLOR_TEXT.GRAY_SECONDARY
+                                        }
+                                        modeSize={MODE_SIZE[18]}
+                                    >
+                                        Bạn chưa có vé nào
+                                    </Text>
+                                </div>
+                            )
+                        ) : pastTickets.length > 0 ? (
+                            pastTickets.map((item: TicketWithEvent) => (
                                 <TicketCard
                                     key={item.ticket.id}
                                     ticket={item}
@@ -81,27 +101,14 @@ const MyTicketRight = () => {
                         ) : (
                             <div className="flex-1 flex items-center justify-center">
                                 <Text
-                                    modeColor={MODE_COLOR_TEXT.GRAY_SECONDARY}
+                                    modeColor={MODE_COLOR_TEXT.GRAY}
                                     modeSize={MODE_SIZE[18]}
                                 >
                                     Bạn chưa có vé nào
                                 </Text>
                             </div>
-                        )
-                    ) : pastTickets.length > 0 ? (
-                        pastTickets.map((item: TicketWithEvent) => (
-                            <TicketCard key={item.ticket.id} ticket={item} />
-                        ))
-                    ) : (
-                        <div className="flex-1 flex items-center justify-center">
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.GRAY}
-                                modeSize={MODE_SIZE[18]}
-                            >
-                                Bạn chưa có vé nào
-                            </Text>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,16 +10,19 @@ import { FILTER_STATUS } from '@share/constants/commons';
 import { Event } from '@share/types/event';
 import BackIcon, { MODE_BACK } from '@share/components/atoms/icons/BackIcon';
 import DivClick from '@share/components/atoms/DivClick';
-import { SCREEN_PATH } from '@share/constants/routers';
 import { useNavigate } from 'react-router-dom';
 import { IMAGE_TYPE } from '@share/constants/commons';
 import { getEventImage } from '@modules/event-detail/utils/eventUtils';
+import useAdminStoreAction from '@modules/admin/hooks/useAdminStoreAction';
 interface EventInfoCardProps {
     event: Event;
+    isAdmin?: boolean;
 }
 
-const EventInfoCard = ({ event }: EventInfoCardProps) => {
+const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
     const navigate = useNavigate();
+    const { setSelectedReportEventIdStore } = useAdminStoreAction();
+
     const getStatusText = (status: string) => {
         switch (status) {
             case FILTER_STATUS.APPROVED:
@@ -58,7 +61,13 @@ const EventInfoCard = ({ event }: EventInfoCardProps) => {
             <div className="flex flex-col flex-1 w-full max-w-[60%]">
                 <div className="flex items-center gap-4 mb-6">
                     <DivClick
-                        onClick={() => navigate(SCREEN_PATH.MANAGER_REPORT)}
+                        onClick={() => {
+                            if (isAdmin) {
+                                setSelectedReportEventIdStore(null);
+                            } else {
+                                navigate(-1);
+                            }
+                        }}
                     >
                         <BackIcon mode={MODE_BACK.WHITE} />
                     </DivClick>

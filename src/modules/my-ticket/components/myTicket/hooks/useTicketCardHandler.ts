@@ -4,13 +4,15 @@ import {
     PURCHASED_TICKET_STATUS,
     PurchasedTicketStatus,
 } from '@share/constants/commons';
+import { SCREEN_PATH } from '@share/constants/routers';
 import { Event } from '@share/types/event';
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const useTicketCardHandler = (ticketId: string) => {
     const { setSelectedTicketIdStore } = useMyTicketStoreAction();
     const [showMenu, setShowMenu] = useState(false);
-
+    const navigate = useNavigate();
     const menuRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -61,11 +63,16 @@ const useTicketCardHandler = (ticketId: string) => {
         setSelectedTicketIdStore(null);
     };
 
+    const handleViewTicketDetail = (eventId: string) => {
+        navigate(SCREEN_PATH.EVENT_DETAIL.replace(':event_id', eventId));
+    };
+
     return {
         getDisplayStatusText,
         getStatus,
         handleCloseQrPopup,
         handleOpenQrPopup,
+        handleViewTicketDetail,
         menuRef,
         setShowMenu,
         showMenu,

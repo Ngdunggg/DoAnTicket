@@ -37,6 +37,7 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
         getStatus,
         handleCloseQrPopup,
         handleOpenQrPopup,
+        handleViewTicketDetail,
         menuRef,
         setShowMenu,
         showMenu,
@@ -167,61 +168,21 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
                         {/* Dropdown Menu */}
                         {showMenu && (
                             <div className="absolute right-2 top-7 mt-2 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-10">
-                                {getStatus(event) === MY_TICKET_TAB.UPCOMING ? (
-                                    <>
-                                        <DivClick
-                                            onClick={e => {
-                                                e?.stopPropagation();
-                                                setShowMenu(false);
-                                            }}
-                                            className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors border-b border-bg-gray"
-                                        >
-                                            <Text
-                                                modeColor={
-                                                    MODE_COLOR_TEXT.WHITE
-                                                }
-                                                modeWeight={MODE_WEIGHT.MEDIUM}
-                                            >
-                                                Xem chi tiết
-                                            </Text>
-                                        </DivClick>
-                                    </>
-                                ) : (
-                                    <>
-                                        <DivClick
-                                            onClick={e => {
-                                                e?.stopPropagation();
-                                                setShowMenu(false);
-                                            }}
-                                            className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors border-b border-bg-gray"
-                                        >
-                                            <Text
-                                                modeColor={
-                                                    MODE_COLOR_TEXT.WHITE
-                                                }
-                                                modeWeight={MODE_WEIGHT.MEDIUM}
-                                            >
-                                                Xem lại sự kiện
-                                            </Text>
-                                        </DivClick>
-                                        <DivClick
-                                            onClick={e => {
-                                                e?.stopPropagation();
-                                                setShowMenu(false);
-                                            }}
-                                            className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors"
-                                        >
-                                            <Text
-                                                modeColor={
-                                                    MODE_COLOR_TEXT.YELLOW
-                                                }
-                                                modeWeight={MODE_WEIGHT.MEDIUM}
-                                            >
-                                                Đánh giá
-                                            </Text>
-                                        </DivClick>
-                                    </>
-                                )}
+                                <DivClick
+                                    onClick={e => {
+                                        e?.stopPropagation();
+                                        setShowMenu(false);
+                                        handleViewTicketDetail(event.id);
+                                    }}
+                                    className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors border-b border-bg-gray"
+                                >
+                                    <Text
+                                        modeColor={MODE_COLOR_TEXT.WHITE}
+                                        modeWeight={MODE_WEIGHT.MEDIUM}
+                                    >
+                                        Xem chi tiết
+                                    </Text>
+                                </DivClick>
                             </div>
                         )}
                     </div>

@@ -14,6 +14,7 @@ import {
     XAxis,
     YAxis,
 } from 'recharts';
+import DropDown, { IDropDownOption } from '@share/components/atoms/DropDown';
 
 type MonthRevenue = { month: string; revenue: number; year: number };
 
@@ -52,6 +53,19 @@ const RevenueMonthlyChart = ({
         [sliced]
     );
 
+    const yearOptions: IDropDownOption<number>[] = useMemo(
+        () => years.map(y => ({ label: String(y), value: y })),
+        [years]
+    );
+
+    const rangeOptions: IDropDownOption<RangeKey>[] = useMemo(
+        () => [
+            { label: '6 tháng', value: RANGE.SIX },
+            { label: '12 tháng', value: RANGE.TWELVE },
+        ],
+        []
+    );
+
     const tooltipFormatter = (val: number) => `${val.toLocaleString()} VND`;
 
     return (
@@ -65,31 +79,31 @@ const RevenueMonthlyChart = ({
                     {title}
                 </Text>
                 <div className="flex items-center gap-3">
-                    <Text
-                        modeColor={MODE_COLOR_TEXT.BLACK}
-                        modeSize={MODE_SIZE[14]}
-                    >
-                        Total: {total.toLocaleString()} VND
-                    </Text>
-                    <select
-                        className="rounded border border-gray-300 bg-white px-2 py-1 text-sm"
+                    <Text>Total: {total.toLocaleString()} VND</Text>
+                    <DropDown
+                        className="!w-[120px] rounded-xl"
+                        mode="default"
+                        onChange={value => {
+                            if (value !== null && typeof value === 'number') {
+                                setYear(value);
+                            }
+                        }}
+                        options={yearOptions}
                         value={year}
-                        onChange={e => setYear(Number(e.target.value))}
-                    >
-                        {years.map(y => (
-                            <option key={y} value={y}>
-                                {y}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        className="rounded border border-gray-300 bg-white px-2 py-1 text-sm"
+                        panelClassName="rounded-xl"
+                    />
+                    <DropDown
+                        className="!w-[150px] rounded-xl"
+                        mode="default"
+                        onChange={value => {
+                            if (value !== null && typeof value === 'string') {
+                                setRange(value as RangeKey);
+                            }
+                        }}
+                        options={rangeOptions}
                         value={range}
-                        onChange={e => setRange(e.target.value as RangeKey)}
-                    >
-                        <option value={RANGE.SIX}>Last 6 months</option>
-                        <option value={RANGE.TWELVE}>Last 12 months</option>
-                    </select>
+                        panelClassName="rounded-xl"
+                    />
                 </div>
             </div>
             <div className="mt-3 h-[300px] w-full">

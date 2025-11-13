@@ -8,11 +8,18 @@ import { SCREEN_PATH } from '@share/constants/routers';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getCurrentEventId } from '@share/utils/path';
 
-const DetailReport = () => {
+interface DetailReportProps {
+    eventIdPorps?: string;
+    isAdmin?: boolean;
+}
+
+const DetailReport = ({ eventIdPorps, isAdmin = false }: DetailReportProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const eventId = getCurrentEventId(location.pathname);
-    const { data: eventReport, isLoading } = useGetEventReport(eventId || '');
+    const { data: eventReport, isLoading } = useGetEventReport(
+        eventIdPorps || eventId || ''
+    );
 
     if (isLoading) {
         return <LoadingContent />;
@@ -26,7 +33,7 @@ const DetailReport = () => {
     return (
         <div className=" flex flex-col gap-6 max-h-screen overflow-y-auto py-8 pb-10 px-10">
             <div className="flex flex-col gap-6">
-                <EventInfoCard event={eventReport.event} />
+                <EventInfoCard event={eventReport.event} isAdmin={isAdmin} />
 
                 <div className="flex gap-6">
                     <TicketTypesList ticketTypes={eventReport.ticket_types} />
