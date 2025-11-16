@@ -39,4 +39,14 @@ export const eventApi = {
         );
         return response.data;
     },
+
+    updateEvent: async (
+        id: string,
+        data: CreateEventRequest
+    ): Promise<BaseHttpResponse<CreateEventResponse>> => {
+        const response = await httpClient.patch<
+            BaseHttpResponse<CreateEventResponse>
+        >(API_PATH.UPDATE_EVENT.replace(':id', id), data);
+        return response.data;
+    },
 };

@@ -10,6 +10,7 @@ export type User = {
     gender: boolean | null;
     google_id?: string | null;
     id: string;
+    is_active: boolean;
     phone: string;
     role: string;
     status: string;
@@ -25,6 +26,7 @@ export type UserStore = {
     gender: boolean | null;
     google_id?: string | null;
     id: string;
+    is_active: boolean;
     phone: string;
     role: string;
     status: string;
@@ -40,6 +42,7 @@ export type UserInfo = {
     gender: boolean | null;
     google_id?: string | null;
     id: string;
+    is_active: boolean;
     phone: string;
     role: string;
     status: string;
@@ -55,6 +58,7 @@ export type UserModel = {
     gender: boolean | null;
     google_id?: string | null;
     id: string;
+    is_active: boolean;
     phone: string;
     role: string;
     status: string;

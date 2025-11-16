@@ -31,7 +31,7 @@ const EventPreviewTickets = ({ event }: { event: Event }) => {
             return newSet;
         });
     };
-    console.log(event);
+
     return (
         <div className="px-4">
             <div className="flex flex-col bg-white rounded-2xl p-2 box-shadow-ticket border border-gray-200">

@@ -12,6 +12,8 @@ import {
     QuestionInput,
     questionSchema,
 } from '@modules/event-detail/models/QuestionForm';
+import { useAppSelector } from '@configs/store';
+import { useEffect } from 'react';
 
 interface FormBookingProps {
     questionForm: UseFormReturn<QuestionInput>;
@@ -19,7 +21,15 @@ interface FormBookingProps {
 
 const FormBooking = ({ questionForm }: FormBookingProps) => {
     const schemaQuestion = questionSchema();
+    const userInfo = useAppSelector(state => state.user.user);
     const agreeToTerms = questionForm.watch('agreeToTerms');
+
+    useEffect(() => {
+        if (userInfo) {
+            questionForm.setValue('email', userInfo.email);
+            questionForm.setValue('phone', userInfo.phone);
+        }
+    }, [userInfo]);
 
     return (
         <div className="flex flex-col gap-8 px-6">

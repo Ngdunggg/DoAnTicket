@@ -14,17 +14,20 @@ const MyEvent = () => {
     const currentPath = location.pathname;
     const { setIsOpenCreateEventStore } = useCreateEventStoreAction();
     const { isOpenCreateEvent } = useCreateEventStoreSelector();
+    const isEditMode = currentPath.includes('/organizer/events/edit');
+    const isCreateOrEditPath =
+        currentPath === SCREEN_PATH.CREATE_EVENT || isEditMode;
 
     useEffect(() => {
-        if (currentPath !== SCREEN_PATH.CREATE_EVENT) {
+        if (!isCreateOrEditPath) {
             setIsOpenCreateEventStore(false);
         }
-    }, [currentPath]);
+    }, [currentPath, isCreateOrEditPath]);
 
     return (
         <div className="flex flex-col flex-1 max-h-screen overflow-hidden">
             <HeaderBar />
-            {isOpenCreateEvent ? (
+            {isOpenCreateEvent || isCreateOrEditPath ? (
                 <CreateEvent />
             ) : currentPath === SCREEN_PATH.MANAGER_REPORT ? (
                 <ManagerReport />

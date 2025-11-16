@@ -16,11 +16,16 @@ import useCreateEventMutation from '@modules/manager-event/hooks/useCreateEventM
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import useFetchEventList from '@modules/manager-event/hooks/useFetchEventList';
+import { eventApi } from '@share/api/eventApi';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { SCREEN_PATH } from '@share/constants/routers';
 
-const useToolBarHeaderHandler = () => {
-    const { activeTab, isLoading, isOpenCreateEvent } =
+const useToolBarHeaderHandler = (eventId = '') => {
+    const { activeTab, isEditMode, isLoading, isOpenCreateEvent } =
         useCreateEventStoreSelector();
     const {
+        resetCreateEventStateStore,
         setActiveTabStore,
         setEventTypesStore,
         setIsLoadingStore,
@@ -30,6 +35,7 @@ const useToolBarHeaderHandler = () => {
     const userInfo = useAppSelector(state => state.user.user);
     const createEventForm = useFormContext<CreateEventInput>();
     const { refetch } = useFetchEventList();
+    const navigate = useNavigate();
 
     const createEventMutation = useCreateEventMutation({
         onError: (error: AxiosError) => {
@@ -41,7 +47,30 @@ const useToolBarHeaderHandler = () => {
         },
         onSuccess: async () => {
             toast.success('Tạo sự kiện thành công!');
+            navigate(SCREEN_PATH.MANAGER_EVENT);
+            resetCreateEventStateStore();
             setIsOpenCreateEventStore(false);
+            await refetchOrganizerProfile();
+            await refetch();
+            setIsLoadingStore(false);
+        },
+    });
+
+    const updateEventMutation = useMutation({
+        mutationFn: async (data: any) => {
+            if (!eventId) throw new Error('Event ID is required');
+            return await eventApi.updateEvent(eventId, data);
+        },
+        onError: (error: AxiosError) => {
+            toast.error(
+                (error.response?.data as any).result.error_msg_id ||
+                    'Có lỗi xảy ra khi cập nhật sự kiện'
+            );
+            setIsLoadingStore(false);
+        },
+        onSuccess: async () => {
+            toast.success('Cập nhật sự kiện thành công!');
+            navigate(SCREEN_PATH.MANAGER_EVENT);
             await refetchOrganizerProfile();
             await refetch();
             setIsLoadingStore(false);
@@ -51,6 +80,8 @@ const useToolBarHeaderHandler = () => {
     const handleCreateEvent = async () => {
         if (activeTab === CREATE_EVENT_TAB.INFO) {
             // Validate InfoEventSection - chỉ validate các field bắt buộc
+            // Note: Tickets sync is handled by InfoEventSection's useEffect
+            // which syncs ticketTypes to form automatically
             const isOnline = createEventForm.watch('is_online');
 
             let isInfoValid: boolean;
@@ -164,6 +195,7 @@ const useToolBarHeaderHandler = () => {
                     images: createEventForm.watch('images'),
                     is_online: isOnline,
                     logo_data: createEventForm.watch('logo_data'),
+                    logo_url: createEventForm.watch('logo_url'),
                     organization_name:
                         createEventForm.watch('organization_name'),
                     payment_method: createEventForm.watch('payment_method'),
@@ -188,7 +220,11 @@ const useToolBarHeaderHandler = () => {
                 try {
                     const requestData =
                         await convertToCreateEventRequest(formData);
-                    await createEventMutation.mutateAsync(requestData);
+                    if (isEditMode) {
+                        await updateEventMutation.mutateAsync(requestData);
+                    } else {
+                        await createEventMutation.mutateAsync(requestData);
+                    }
                 } catch (error) {
                     console.error(
                         'Error uploading images or converting form data:',
@@ -242,6 +278,7 @@ const useToolBarHeaderHandler = () => {
     return {
         activeTab,
         handleCreateEvent,
+        isEditMode,
         isLoading,
         isOpenCreateEvent,
         setActiveTabStore,

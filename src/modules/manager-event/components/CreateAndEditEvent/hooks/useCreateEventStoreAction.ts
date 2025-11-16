@@ -6,6 +6,7 @@ import {
     setOrganizerProfile,
     setEventTypes,
     setIsLoading,
+    setIsEditMode,
 } from '../../../stores/createEventSlice';
 import { OrganizerProfileWithPaymentMethod } from '@share/types/organizer';
 import { Category } from '@share/api/categoriesApi';
@@ -33,11 +34,15 @@ const useCreateEventStoreAction = () => {
     const setEventTypesStore = (data: Category[] | null) => {
         dispatch(setEventTypes(data));
     };
+    const setIsEditModeStore = (data: boolean) => {
+        dispatch(setIsEditMode(data));
+    };
 
     return {
         resetCreateEventStateStore,
         setActiveTabStore,
         setEventTypesStore,
+        setIsEditModeStore,
         setIsLoadingStore,
         setIsOpenCreateEventStore,
         setOrganizerProfileStore,

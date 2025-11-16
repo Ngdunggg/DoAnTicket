@@ -38,7 +38,8 @@ const HeaderBar = () => {
         setIsAccountPopupOpenStore,
         user,
     } = useHeaderHandler();
-    const { setIsOpenCreateEventStore } = useCreateEventStoreAction();
+    const { setIsEditModeStore, setIsOpenCreateEventStore } =
+        useCreateEventStoreAction();
     const navigate = useNavigate();
 
     return (
@@ -64,6 +65,7 @@ const HeaderBar = () => {
                     icon={<PlusIcon mode={MODE_PLUS.BLACK} />}
                     onClick={() => {
                         setIsOpenCreateEventStore(true);
+                        setIsEditModeStore(false);
                         navigate(SCREEN_PATH.CREATE_EVENT);
                     }}
                 >

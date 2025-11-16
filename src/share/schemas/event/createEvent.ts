@@ -87,11 +87,12 @@ export const createEventSchema = () =>
                 z.object({
                     description: z.string().optional(),
                     filename: z.string().optional(),
-                    image_data: z
-                        .instanceof(File)
-                        .refine(file => file instanceof File, {
-                            message: 'Dữ liệu hình ảnh phải là một file',
-                        }),
+                    image_data: z.union([
+                        z.instanceof(File),
+                        z
+                            .string()
+                            .url({ message: 'URL hình ảnh không hợp lệ' }),
+                    ]),
                     image_type: z.enum([IMAGE_TYPE.BANNER, IMAGE_TYPE.CARD], {
                         required_error: 'Loại hình ảnh là bắt buộc',
                     }),
@@ -236,7 +237,7 @@ export const convertToCreateEventRequest = async (
         formData.ward,
         formData.street_address,
     ].filter(part => !!part && String(part).trim() !== '');
-    const locationString = locationParts.join(' ').trim();
+    const locationString = locationParts.join(', ').trim();
 
     return {
         category_id: formData.category_id

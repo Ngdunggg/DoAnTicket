@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch } from '@configs/store';
 import { setToken } from '@share/auth/stores/authSlice';
 import { setUserInfo } from '@share/auth/stores/userSlice';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { toast } from 'react-toastify';
+import { authApi } from '@share/api/authApi';
 
 /**
  * Auth callback page for handling Google OAuth redirect
@@ -13,9 +14,16 @@ const AuthCallback = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const hasProcessedRef = useRef(false);
 
     useEffect(() => {
-        const handleAuthCallback = () => {
+        // Prevent double execution in React StrictMode
+        if (hasProcessedRef.current) {
+            return;
+        }
+
+        const handleAuthCallback = async () => {
+            hasProcessedRef.current = true;
             try {
                 // Get token and user from URL parameters
                 const token = searchParams.get('token');
@@ -32,6 +40,17 @@ const AuthCallback = () => {
 
                 // Decode user data
                 const user = JSON.parse(decodeURIComponent(userParam));
+
+                if (user.is_active) {
+                    try {
+                        await authApi.logout();
+                    } catch (error) {
+                        console.error('Error logging out blocked user:', error);
+                    }
+                    toast.error('Tài khoản của bạn đã bị khóa');
+                    navigate(SCREEN_PATH.HOME);
+                    return;
+                }
 
                 // Set token and user in Redux store
                 dispatch(setToken(token));

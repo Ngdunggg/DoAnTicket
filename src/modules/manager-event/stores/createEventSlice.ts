@@ -6,6 +6,7 @@ import { Category } from '@share/api/categoriesApi';
 type CreateEventState = {
     active_tab: string;
     event_types: Category[] | null;
+    is_edit_mode: boolean;
     is_loading: boolean;
     is_open_create_event: boolean;
     organizer_profile: OrganizerProfileWithPaymentMethod | null;
@@ -17,6 +18,7 @@ type CreateEventState = {
 const initialState: CreateEventState = {
     active_tab: CREATE_EVENT_TAB.INFO,
     event_types: null,
+    is_edit_mode: false,
     is_loading: false,
     is_open_create_event: false,
     organizer_profile: null,
@@ -34,6 +36,9 @@ const createEventSlice = createSlice({
         },
         setEventTypes: (state, action: PayloadAction<Category[] | null>) => {
             state.event_types = action.payload;
+        },
+        setIsEditMode: (state, action: PayloadAction<boolean>) => {
+            state.is_edit_mode = action.payload;
         },
         setIsLoading: (state, action: PayloadAction<boolean>) => {
             state.is_loading = action.payload;
@@ -55,6 +60,7 @@ export const {
     resetCreateEventState,
     setActiveTab,
     setEventTypes,
+    setIsEditMode,
     setIsLoading,
     setIsOpenCreateEvent,
     setOrganizerProfile,

@@ -17,15 +17,16 @@ export const API_PATH = {
     GET_ALL_USERS: 'users',
     GET_EVENT_DATA: 'events/event-by-admin',
     LOGIN: 'auth/login',
-
     LOGIN_GOOGLE: 'auth/google',
-    LOGOUT: 'auth/logout',
 
+    LOGOUT: 'auth/logout',
     MY_TICKETS: 'purchased-tickets/my-tickets',
+
     // ORGANIZER
     ORGANIZER_PROFILE: 'organizers/profile/:id',
     REGISTER: 'auth/register',
     SEND_OTP: 'auth/send-otp',
+    UPDATE_EVENT: 'events/update-event/:id',
     UPDATE_EVENT_STATUS: 'events/update-event-status/:id',
     // USER
     UPDATE_USER_INFO: 'users/profile',

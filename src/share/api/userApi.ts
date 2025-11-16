@@ -11,6 +11,7 @@ export type UpdateUserInfoRequest = {
     full_name?: string;
     gender?: boolean;
     id: string;
+    is_active?: boolean;
     phone?: string;
     role?: Role;
 };

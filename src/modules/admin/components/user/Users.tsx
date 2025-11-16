@@ -22,6 +22,7 @@ const UsersPage = () => {
     const {
         filteredList,
         handleUpdateRole,
+        handleUpdateStatus,
         hasMore,
         isLoading,
         isLoadingMore,
@@ -46,6 +47,14 @@ const UsersPage = () => {
         []
     );
 
+    const statusOptions: IDropDownOption<string>[] = useMemo(
+        () => [
+            { label: 'Active', value: 'active' },
+            { label: 'Inactive', value: 'inactive' },
+        ],
+        []
+    );
+
     const columns: Array<DataTableColumn<(typeof filteredList)[number]>> = [
         { header: 'Email', key: 'email', sortable: true },
         { header: 'Họ và tên', key: 'full_name', sortable: true },
@@ -62,36 +71,47 @@ const UsersPage = () => {
             sortable: true,
         },
         { header: 'Số điện thoại', key: 'phone', sortable: true },
-        { header: 'Quyền', key: 'role', sortable: true },
         {
-            header: 'Thao tác',
-            key: 'actions',
+            header: 'Quyền',
+            key: 'role',
             render: user => (
-                <div className="flex gap-2 items-center">
-                    <DropDown
-                        appendTo={null}
-                        className="!w-[150px] rounded-xl"
-                        disabled={isLoading === user.id}
-                        mode="default"
-                        onChange={value => {
-                            if (value !== null && typeof value === 'string') {
-                                handleUpdateRole(user.id, value as Role);
-                            }
-                        }}
-                        options={roleOptions}
-                        panelClassName="rounded-xl"
-                        value={user.role}
-                    />
-                    {/* <button
-                        onClick={() => handleDeactivate(user.id)}
-                        disabled={isLoading === user.id}
-                        className="rounded-md border border-red-300 px-4 py-2 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                    >
-                        {user.status === 'active' ? 'Khóa' : 'Mở khóa'}
-                    </button> */}
-                </div>
+                <DropDown
+                    appendTo={null}
+                    className="!w-[150px] rounded-xl"
+                    disabled={isLoading === user.id}
+                    mode="default"
+                    onChange={value => {
+                        if (value !== null && typeof value === 'string') {
+                            handleUpdateRole(user.id, value as Role);
+                        }
+                    }}
+                    options={roleOptions}
+                    panelClassName="rounded-xl"
+                    value={user.role}
+                />
             ),
-            sortable: false,
+            sortable: true,
+        },
+        {
+            header: 'Trạng thái',
+            key: 'is_active',
+            render: user => (
+                <DropDown
+                    appendTo={null}
+                    className="!w-[150px] rounded-xl"
+                    disabled={isLoading === user.id}
+                    mode="default"
+                    onChange={value => {
+                        if (value !== null && typeof value === 'string') {
+                            handleUpdateStatus(user.id, value === 'inactive');
+                        }
+                    }}
+                    options={statusOptions}
+                    panelClassName="rounded-xl"
+                    value={user.is_active ? 'inactive' : 'active'}
+                />
+            ),
+            sortable: true,
         },
     ];
 

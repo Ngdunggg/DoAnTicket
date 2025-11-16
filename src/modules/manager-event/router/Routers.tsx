@@ -46,6 +46,15 @@ const myEventRouters: RouteObject[] = [
     {
         children: [
             {
+                element: <MyEvent />,
+                index: true,
+            },
+        ],
+        path: SCREEN_PATH.MANAGER_EVENT_EDIT,
+    },
+    {
+        children: [
+            {
                 element: <DetailEvent />,
                 index: true,
             },

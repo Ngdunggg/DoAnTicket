@@ -5,6 +5,63 @@ import axios, {
     AxiosHeaders,
 } from 'axios';
 import envConfig from './env';
+import { clearToken, setLoggingOut } from '@share/auth/stores/authSlice';
+import { clearUserInfo } from '@share/auth/stores/userSlice';
+import { SCREEN_PATH } from '@share/constants/routers';
+import { store } from '../configs/store';
+
+/**
+ * Decode JWT token and check if it's expired
+ * @param token - JWT token string
+ * @returns true if token is expired, false otherwise
+ */
+export const isTokenExpired = (token: string): boolean => {
+    try {
+        // JWT format: header.payload.signature
+        const parts = token.split('.');
+        if (parts.length !== 3) {
+            return true; // Invalid token format
+        }
+
+        // Decode payload (base64url)
+        const payload = parts[1];
+        const decodedPayload = JSON.parse(
+            atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
+        );
+
+        // Check if exp (expiration time) exists and is expired
+        if (decodedPayload.exp) {
+            const expirationTime = decodedPayload.exp * 1000; // Convert to milliseconds
+            const currentTime = Date.now();
+            // Add 5 seconds buffer to account for clock skew
+            return currentTime >= expirationTime - 5000;
+        }
+
+        // If no exp field, consider it expired for safety
+        return true;
+    } catch (error) {
+        console.error('Error decoding token:', error);
+        return true; // If can't decode, consider expired
+    }
+};
+
+/**
+ * Handle logout when token is expired
+ */
+export const handleTokenExpired = () => {
+    // Set logout flag
+    store.dispatch(setLoggingOut(true));
+
+    // Clear Redux store
+    store.dispatch(clearToken());
+    store.dispatch(clearUserInfo());
+
+    // Clear localStorage
+    localStorage.removeItem('token');
+
+    // Navigate to home
+    window.location.href = SCREEN_PATH.HOME;
+};
 
 // Extend the request config type to include additional properties
 interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -35,9 +92,18 @@ const setupAxiosInterceptors = () => {
         // Ensure cookies are sent to backend (JWT in cookies per backend strategy)
         config.withCredentials = true;
 
-        // Add token from localStorage if available
+        // Check token expiration before making request
         const token = localStorage.getItem('token');
         if (token) {
+            // Check if token is expired
+            if (isTokenExpired(token)) {
+                // Token expired, logout user
+                handleTokenExpired();
+                // Reject the request
+                return Promise.reject(
+                    new Error('Token expired. Please login again.')
+                );
+            }
             config.headers['Authorization'] = `Bearer ${token}`;
         }
 
@@ -62,12 +128,12 @@ const setupAxiosInterceptors = () => {
      * @returns The error
      */
     const onResponseError = async (error: AxiosError) => {
-        // Handle 401 errors
-        // if (error.response?.status === 401) {
-        //     // Clear token and redirect to login
-        //     localStorage.removeItem('token');
-        //     window.location.href = '/login';
-        // }
+        // Handle 401 errors (Unauthorized - token invalid or expired)
+        if (error.response?.status === 401) {
+            // Clear token and logout
+            handleTokenExpired();
+            return Promise.reject(error);
+        }
 
         // Handle network errors
         if (

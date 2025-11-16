@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { searchToolBarSchema } from '@share/schemas/header/searchToolBar';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+import { User } from '@share/models/auth/user';
 
 const useUserHandler = () => {
     //* Selector
@@ -63,17 +64,30 @@ const useUserHandler = () => {
     const handleUpdateRole = async (userId: string, role: Role) => {
         setIsLoading(userId);
         try {
-            const response = await userApi.updateUserInfo({ id: userId, role });
+            const response = await userApi.updateUserInfo({
+                id: userId,
+                role,
+            });
             if (response.result.code === RESULT_CODE.SUCCESS) {
                 toast.success('Cập nhật quyền thành công');
                 // Update user list in store
                 const updatedList = userList.map(user =>
-                    user.id === userId ? { ...user, role } : user
+                    user.id === userId
+                        ? {
+                              ...user,
+                              role,
+                          }
+                        : user
                 );
-                setUserListStore(updatedList);
+                setUserListStore(updatedList as User[]);
 
                 if (currentUser && currentUser.id === userId) {
-                    dispatch(setUserInfo({ ...currentUser, role }));
+                    dispatch(
+                        setUserInfo({
+                            ...currentUser,
+                            role,
+                        })
+                    );
                 }
             } else {
                 toast.error(
@@ -88,34 +102,53 @@ const useUserHandler = () => {
         }
     };
 
-    // const handleDeactivate = async (userId: string) => {
-    //     setIsLoading(userId);
-    //     try {
-    //         const response = await adminApi.deactivateUser(userId);
-    //         if (response.result.code === RESULT_CODE.SUCCESS) {
-    //             toast.success('Khóa tài khoản thành công');
-    //             // Update user status in store
-    //             const updatedList = userList.map(user =>
-    //                 user.id === userId
-    //                     ? { ...user, status: user.status === 'active' ? 'inactive' : 'active' }
-    //                     : user
-    //             );
-    //             setUserListStore(updatedList);
-    //         } else {
-    //             toast.error(response.result.error_msg_id || 'Khóa tài khoản thất bại');
-    //         }
-    //     } catch (error) {
-    //         console.error('Deactivate user error:', error);
-    //         toast.error('Khóa tài khoản thất bại');
-    //     } finally {
-    //         setIsLoading(null);
-    //     }
-    // };
+    const handleUpdateStatus = async (userId: string, isActive: boolean) => {
+        setIsLoading(userId);
+        try {
+            const response = await userApi.updateUserInfo({
+                id: userId,
+                is_active: isActive,
+            });
+            if (response.result.code === RESULT_CODE.SUCCESS) {
+                toast.success('Cập nhật trạng thái thành công');
+                // Update user list in store
+                const updatedList = userList.map(user =>
+                    user.id === userId
+                        ? {
+                              ...user,
+                              is_active: isActive,
+                          }
+                        : user
+                );
+                setUserListStore(updatedList as User[]);
+
+                if (currentUser && currentUser.id === userId) {
+                    dispatch(
+                        setUserInfo({
+                            ...currentUser,
+                            is_active: isActive,
+                        })
+                    );
+                }
+            } else {
+                toast.error(
+                    response.result.error_msg_id ||
+                        'Cập nhật trạng thái thất bại'
+                );
+            }
+        } catch (error) {
+            console.error('Update status error:', error);
+            toast.error('Cập nhật trạng thái thất bại');
+        } finally {
+            setIsLoading(null);
+        }
+    };
 
     return {
         filteredList,
         //handleDeactivate,
         handleUpdateRole,
+        handleUpdateStatus,
         hasMore,
         isLoading,
         isLoadingMore,

@@ -25,7 +25,7 @@ export const SCREEN_PATH = {
     // MANAGER EVENT
     MANAGER_EVENT: '/organizer/events',
     MANAGER_EVENT_DETAIL: '/organizer/events/:event_id',
-    MANAGER_EVENT_EDIT: '/organizer/events/:event_id/edit',
+    MANAGER_EVENT_EDIT: '/organizer/events/edit/:event_id',
     MANAGER_LEGAL: '/organizer/legal-document',
     MANAGER_LEGAL_BUSINESS: '/organizer/legal-document/business',
     MANAGER_LEGAL_IMAGE: '/organizer/legal-document/contentImage',
@@ -48,6 +48,7 @@ export const EVENT_PATH_PATTERNS = [
     SCREEN_PATH.EVENT_QUESTION_FORM,
     SCREEN_PATH.EVENT_PAYMENT,
     SCREEN_PATH.MANAGER_EVENT_DETAIL,
+    SCREEN_PATH.MANAGER_EVENT_EDIT,
     SCREEN_PATH.MANAGER_REPORT_DETAIL,
 ];
 

@@ -52,7 +52,16 @@ const EventsPage = () => {
             setSelectedReportEventIdStore(null);
         };
     }, []);
-
+    const getStatusText = (status: string) => {
+        switch (status) {
+            case EVENT_STATUS.PENDING:
+                return 'Chờ phê duyệt';
+            case EVENT_STATUS.APPROVED:
+                return 'Chấp nhận';
+            case EVENT_STATUS.REJECTED:
+                return 'Từ chối';
+        }
+    };
     const statusOptions: IDropDownOption<EventStatus>[] = useMemo(
         () => [
             { label: 'Tất cả sự kiện', value: 'all' },
@@ -90,7 +99,12 @@ const EventsPage = () => {
                 formatDateTime(event.end_time, DATE_TIME_FORMAT_ISO),
             sortable: true,
         },
-        { header: 'Trạng thái', key: 'status', sortable: true },
+        {
+            header: 'Trạng thái',
+            key: 'status',
+            render: event => <Text>{getStatusText(event.status)}</Text>,
+            sortable: true,
+        },
         {
             header: 'Thao tác',
             key: 'actions',
@@ -100,7 +114,7 @@ const EventsPage = () => {
                         onClick={() => handleViewEvent(event.id)}
                         className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50 cursor-pointer"
                     >
-                        View
+                        Xem sự kiện
                     </button>
                     <button
                         onClick={() => {
@@ -120,7 +134,7 @@ const EventsPage = () => {
                         disabled={event.status === EVENT_STATUS.APPROVED}
                         className="rounded-md border border-emerald-300 px-3 py-2 text-sm text-emerald-700 hover:bg-emerald-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
-                        Approve
+                        Đồng ý
                     </button>
                     <button
                         onClick={() =>
@@ -135,7 +149,7 @@ const EventsPage = () => {
                         }
                         className="rounded-md border border-blue-300 px-3 py-2 text-sm text-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                     >
-                        Reject
+                        Từ chối
                     </button>
                 </div>
             ),

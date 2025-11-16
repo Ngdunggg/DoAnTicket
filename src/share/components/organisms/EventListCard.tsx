@@ -16,6 +16,7 @@ import { formatDateTime } from '@share/utils/dateTime';
 import MapPinIcon from '../atoms/icons/MapPinIcon';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useNavigate } from 'react-router-dom';
+import useCreateEventStoreAction from '@modules/manager-event/components/CreateAndEditEvent/hooks/useCreateEventStoreAction';
 
 interface EventListCardProps {
     className?: string;
@@ -35,6 +36,7 @@ const EventListCard = ({
     const [showDropdownMenu, setShowDropdownMenu] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+    const { setIsEditModeStore } = useCreateEventStoreAction();
     // Đóng menu khi click ra ngoài
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -117,6 +119,7 @@ const EventListCard = ({
 
     const handleEditEventClick = () => {
         setShowDropdownMenu(false);
+        setIsEditModeStore(true);
         navigate(SCREEN_PATH.MANAGER_EVENT_EDIT.replace(':event_id', event.id));
     };
 
@@ -210,7 +213,10 @@ const EventListCard = ({
                             {showDropdownMenu && (
                                 <div className="absolute right-0 top-8 mt-2 w-48 bg-bg-black-2 border border-bg-gray rounded-lg shadow-lg z-10">
                                     <DivClick
-                                        onClick={handleEditEventClick}
+                                        onClick={e => {
+                                            e?.stopPropagation();
+                                            handleEditEventClick();
+                                        }}
                                         className="w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3"
                                     >
                                         <Text

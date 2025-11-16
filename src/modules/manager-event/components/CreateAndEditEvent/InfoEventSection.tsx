@@ -26,7 +26,7 @@ import {
     createEventSchema,
     CreateEventInput,
 } from '@share/schemas/event/createEvent';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 const InfoEventSection = () => {
     const createEventForm = useFormContext<CreateEventInput>();
@@ -36,16 +36,19 @@ const InfoEventSection = () => {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     // Sync selectedCategories với form state khi component mount
+    const categoryId = createEventForm.watch('category_id');
     useEffect(() => {
-        const categoryId = createEventForm.getValues('category_id');
         if (categoryId && categoryId.trim()) {
             const categories = categoryId
                 .split(',')
                 .map(cat => cat.trim())
                 .filter(cat => cat);
             setSelectedCategories(categories);
+        } else {
+            // Reset categories when form is reset
+            setSelectedCategories([]);
         }
-    }, [createEventForm.watch('category_id')]);
+    }, [categoryId]);
 
     const editorRef = useRef(null);
 
@@ -62,8 +65,9 @@ const InfoEventSection = () => {
     });
 
     // Sync selectedImages với form values khi component mount hoặc form images thay đổi
+    const formImages = createEventForm.watch('images');
     useEffect(() => {
-        const images = createEventForm.getValues('images') || [];
+        const images = formImages || [];
         const newPreview: { banner: string | null; card: string | null } = {
             banner: null,
             card: null,
@@ -76,6 +80,13 @@ const InfoEventSection = () => {
                     newPreview.banner = imageUrl;
                 } else if (image.image_type === IMAGE_TYPE.CARD) {
                     newPreview.card = imageUrl;
+                }
+            } else if (typeof image.image_data === 'string') {
+                // Handle URL string (for edit mode)
+                if (image.image_type === IMAGE_TYPE.BANNER) {
+                    newPreview.banner = image.image_data;
+                } else if (image.image_type === IMAGE_TYPE.CARD) {
+                    newPreview.card = image.image_data;
                 }
             }
         });
@@ -90,7 +101,7 @@ const InfoEventSection = () => {
             }
             return newPreview;
         });
-    }, [createEventForm.watch('images')]);
+    }, [formImages]);
 
     const handleFileChange = (
         event: React.ChangeEvent<HTMLInputElement>,
@@ -158,11 +169,30 @@ const InfoEventSection = () => {
 
     const isSyncingToFormRef = useRef(false);
 
-    // Restore tickets từ form khi mount hoặc khi state rỗng
-    useEffect(() => {
-        const formTickets = createEventForm.getValues('tickets') || [];
+    const hasRestoredTicketsRef = useRef(false);
+    const previousFormTicketsRef = useRef<string>('');
 
-        // Kiểm tra state có rỗng không (chỉ có 1 item default)
+    // Watch form tickets để restore khi có data - sử dụng useWatch để reactive hơn
+    const formTickets = useWatch({
+        control: createEventForm.control,
+        defaultValue: [],
+        name: 'tickets',
+    });
+
+    // Reset restore flag khi component mount
+    useEffect(() => {
+        hasRestoredTicketsRef.current = false;
+        previousFormTicketsRef.current = '';
+    }, []);
+
+    // Restore tickets từ form khi mount hoặc khi form có data mới
+    useEffect(() => {
+        if (isSyncingToFormRef.current) return;
+
+        const tickets = formTickets || [];
+        const formTicketsKey = JSON.stringify(tickets);
+
+        // Kiểm tra state có rỗng không
         const isEmptyState =
             ticketTypes.length === 1 &&
             !ticketTypes[0].type &&
@@ -170,33 +200,79 @@ const InfoEventSection = () => {
             ticketTypes[0].quantity === 0 &&
             !ticketTypes[0].description;
 
-        // Nếu form có data và state rỗng → restore
+        // Reset flag nếu form tickets thay đổi
         if (
-            formTickets.length > 0 &&
-            isEmptyState &&
-            !isSyncingToFormRef.current
+            previousFormTicketsRef.current !== formTicketsKey &&
+            previousFormTicketsRef.current !== ''
         ) {
-            const restoredTickets = formTickets.map((ticket, index) => ({
+            hasRestoredTicketsRef.current = false;
+        }
+
+        // Reset tickets state when form is reset (empty tickets array or default ticket)
+        const isFormReset =
+            tickets.length === 0 ||
+            (tickets.length === 1 &&
+                !tickets[0].name &&
+                tickets[0].price === 0 &&
+                tickets[0].initial_quantity === 0 &&
+                !tickets[0].description);
+
+        if (isFormReset && !isEmptyState) {
+            // Reset to default state
+            setTicketTypes([
+                {
+                    description: '',
+                    id: Date.now(),
+                    price: 0,
+                    quantity: 0,
+                    type: '',
+                },
+            ]);
+            hasRestoredTicketsRef.current = false;
+            previousFormTicketsRef.current = formTicketsKey;
+            return;
+        }
+
+        // Nếu form có data và state rỗng → restore
+        // Cho phép restore ngay khi form tickets có data (không cần đợi thay đổi)
+        if (
+            tickets.length > 0 &&
+            isEmptyState &&
+            !hasRestoredTicketsRef.current &&
+            !isFormReset
+        ) {
+            const restoredTickets = tickets.map((ticket, index) => ({
                 description: ticket.description || '',
                 id: Date.now() + index,
                 price: Number(ticket.price) || 0,
                 quantity: Number(ticket.initial_quantity) || 0,
                 type: ticket.name || '',
             }));
+            hasRestoredTicketsRef.current = true;
+            previousFormTicketsRef.current = formTicketsKey;
             isSyncingToFormRef.current = true;
             setTicketTypes(restoredTickets);
             setTimeout(() => {
                 isSyncingToFormRef.current = false;
             }, 0);
         }
-    }, [ticketTypes.length]); // Chỉ watch length để detect khi state reset
+    }, [formTickets, ticketTypes.length]); // Watch form tickets và ticketTypes.length để restore khi có data
 
     // Đồng bộ ticketTypes với form khi user thay đổi
+    const previousTicketTypesRef = useRef<string>('');
     useEffect(() => {
-        // Bỏ qua nếu đang restore
         if (isSyncingToFormRef.current) {
             return;
         }
+
+        const ticketTypesKey = JSON.stringify(ticketTypes);
+
+        // Chỉ sync nếu ticketTypes thực sự thay đổi
+        if (previousTicketTypesRef.current === ticketTypesKey) {
+            return;
+        }
+
+        previousTicketTypesRef.current = ticketTypesKey;
 
         const formTickets = createEventForm.getValues('tickets') || [];
         const currentFormTickets = ticketTypes.map(t => ({
@@ -231,7 +307,7 @@ const InfoEventSection = () => {
                 isSyncingToFormRef.current = false;
             }, 0);
         }
-    }, [ticketTypes, createEventForm]);
+    }, [ticketTypes, formTickets]);
 
     // Cleanup URLs khi component unmount
     useEffect(() => {
