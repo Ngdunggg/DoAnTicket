@@ -67,7 +67,7 @@ const EventHeaderInfo = ({
     };
 
     return (
-        <div className="relative h-80 w-full overflow-hidden px-20 py-10 rounded-lg">
+        <div className="relative h-fit w-full overflow-hidden px-4 md:px-20 py-5 md:py-10 rounded-lg">
             {/* Background Image */}
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -85,7 +85,7 @@ const EventHeaderInfo = ({
             </div>
 
             {/* Content */}
-            <div className="relative z-5 flex h-full justify-between gap-10 p-8">
+            <div className="relative z-5 flex flex-col md:flex-row h-full justify-between gap-5 md:gap-10 p-8">
                 {/* Event Info */}
                 <div className="flex flex-col gap-6 flex-1">
                     <div className="border-b border-white pb-3">

@@ -63,6 +63,7 @@ const FormBooking = ({ questionForm }: FormBookingProps) => {
                             inputName="email"
                             schema={schemaQuestion}
                             placeholder="Nhập email"
+                            className="!w-full"
                         />
                     </div>
 
@@ -78,6 +79,7 @@ const FormBooking = ({ questionForm }: FormBookingProps) => {
                             inputName="phone"
                             schema={schemaQuestion}
                             placeholder="Nhập số điện thoại"
+                            className="!w-full"
                         />
                     </div>
                 </div>

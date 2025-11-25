@@ -17,6 +17,7 @@ import { formatDateTime } from '@share/utils/dateTime';
 import { DATE_FORMAT_ISO } from '@share/constants/dateTime';
 import { formatPrice, isEventFinished } from '../../utils/eventUtils';
 import { useAppSelector } from '@configs/store';
+import useDetectMobile from '@share/hooks/useDetectMobile';
 
 interface TicketSectionProps {
     event: Event;
@@ -27,6 +28,7 @@ const TicketSection = ({ event, onBuyTickets }: TicketSectionProps) => {
     const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
     const currentUser = useAppSelector(state => state.user.user);
     const eventEnded = isEventFinished(event);
+    const isMobile = useDetectMobile();
 
     const toggleDateExpansion = (dateId: string) => {
         setExpandedDates(prev => {
@@ -80,7 +82,7 @@ const TicketSection = ({ event, onBuyTickets }: TicketSectionProps) => {
                                     />
                                     <Text
                                         modeColor={MODE_COLOR_TEXT.BLACK}
-                                        modeSize={MODE_SIZE[18]}
+                                        modeSize={MODE_SIZE[isMobile ? 16 : 18]}
                                         modeWeight={MODE_WEIGHT.MEDIUM}
                                     >
                                         {formatDateTime(
@@ -91,7 +93,7 @@ const TicketSection = ({ event, onBuyTickets }: TicketSectionProps) => {
                                     <Text
                                         modeColor={MODE_COLOR_TEXT.BLACK}
                                         modeSize={MODE_SIZE[14]}
-                                        className="px-2 py-1 rounded-full"
+                                        className="px-2 py-1 rounded-full hidden md:block"
                                     >
                                         {event.ticket_types.length} hạng vé
                                     </Text>
@@ -107,7 +109,7 @@ const TicketSection = ({ event, onBuyTickets }: TicketSectionProps) => {
                                 >
                                     <Text
                                         modeColor={MODE_COLOR_TEXT.BLACK}
-                                        modeSize={MODE_SIZE[14]}
+                                        modeSize={MODE_SIZE[isMobile ? 12 : 14]}
                                         modeWeight={MODE_WEIGHT.MEDIUM}
                                     >
                                         Mua vé

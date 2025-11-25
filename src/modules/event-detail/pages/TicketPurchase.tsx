@@ -9,6 +9,7 @@ import {
     MODE_COLOR_TEXT,
     MODE_SIZE,
     MODE_WEIGHT,
+    MODE_LEADING,
 } from '@share/components/atoms/Text';
 import { MODE_BACK } from '@share/components/atoms/icons/BackIcon';
 import DivClick from '@share/components/atoms/DivClick';
@@ -92,8 +93,8 @@ const TicketPurchase = () => {
     }
 
     return (
-        <div className="min-h-screen bg-bg-black-2 flex flex-1 w-full  gap-10">
-            <div className="flex-1 p-10 mt-5 flex flex-col gap-10">
+        <div className="min-h-screen bg-bg-black-2 flex flex-col md:flex-row flex-1 w-full md:gap-10 gap-5">
+            <div className="flex-1 px-4 py-10 md:p-10 mt-5 flex flex-col gap-10">
                 {/* Header */}
                 <div className="flex w-full items-center justify-between gap-4">
                     <DivClick onClick={handleBack} className="hover:scale-105">
@@ -103,6 +104,8 @@ const TicketPurchase = () => {
                         modeColor={MODE_COLOR_TEXT.WHITE}
                         modeSize={MODE_SIZE[24]}
                         modeWeight={MODE_WEIGHT.LARGE}
+                        modeLeading={MODE_LEADING.LARGE}
+                        isAllowLineBreaks
                     >
                         Chọn vé - {eventDetail?.title}
                     </Text>

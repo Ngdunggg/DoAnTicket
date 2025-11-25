@@ -59,14 +59,14 @@ const QuestionForm = () => {
                 <EventHeaderInfo eventInfo={eventDetail} />
 
                 {/* Main Content */}
-                <div className="flex gap-10 px-20 py-10">
+                <div className="flex flex-col md:flex-row md:gap-10 px-4 md:px-20 py-10">
                     {/* Left Side - Form */}
                     <div className="flex-1">
                         <FormBooking questionForm={questionForm} />
                     </div>
 
                     {/* Right Side - Booking Info */}
-                    <div className="w-96 mt-13">
+                    <div className="w-full md:w-96 mt-13 px-6 md:px-0">
                         <ToolBarRight
                             handleBackToSelectTicket={handleBackToSelectTicket}
                             selectedTickets={selectedTickets.selectedTickets}

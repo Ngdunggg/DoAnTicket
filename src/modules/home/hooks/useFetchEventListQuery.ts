@@ -10,6 +10,7 @@ const useFetchEventListQuery = (enabled?: boolean) => {
             return response.data;
         },
         queryKey: ['home-event-list'],
+        retry: 5,
         staleTime: 5 * 60 * 1000,
     });
 };
