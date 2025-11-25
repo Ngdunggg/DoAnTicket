@@ -78,12 +78,15 @@ const HeroSection = ({ featuredEvents, onViewEvent }: HeroSectionProps) => {
                                       currentEvent.start_time,
                                       DATE_FORMAT_ISO
                                   )
-                                : 'TBA'}{' '}
-                            <span className="text-text-yellow">
-                                {currentEvent
-                                    ? getEventLocation(currentEvent)
-                                    : 'TBA'}
-                            </span>
+                                : 'TBA'}
+                        </Text>
+                        <Text
+                            modeColor={MODE_COLOR_TEXT.YELLOW}
+                            modeSize={MODE_SIZE[20]}
+                        >
+                            {currentEvent
+                                ? getEventLocation(currentEvent)
+                                : 'TBA'}
                         </Text>
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}

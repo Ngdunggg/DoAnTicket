@@ -26,7 +26,7 @@ const ToolBarHeader = ({ eventId = '' }: ToolBarHeaderProps) => {
             value: CREATE_EVENT_TAB.INFO,
         },
         {
-            label: 'Thanh toán',
+            label: 'Thông tin ban tổ chức',
             value: CREATE_EVENT_TAB.PAYMENT,
         },
         {

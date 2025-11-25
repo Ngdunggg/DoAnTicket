@@ -2,12 +2,8 @@ export const SCREEN_PATH = {
     // ADMIN
     ADMIN_DASHBOARD: '/admin/dashboard',
 
-    AUTH_CALLBACK: '/auth/callback',
     // AUTH
-    AUTH_LOGIN: '/login',
-    AUTH_REGISTER: '/register',
-
-    AUTH_RESET_PASSWORD: '/reset-password',
+    AUTH_CALLBACK: '/auth/callback',
 
     // MANAGER EVENT
     CREATE_EVENT: '/organizer/create-event',
@@ -52,12 +48,7 @@ export const EVENT_PATH_PATTERNS = [
     SCREEN_PATH.MANAGER_REPORT_DETAIL,
 ];
 
-export const AUTH_PATH_PATTERNS = [
-    SCREEN_PATH.AUTH_LOGIN,
-    SCREEN_PATH.AUTH_REGISTER,
-    SCREEN_PATH.AUTH_RESET_PASSWORD,
-    SCREEN_PATH.AUTH_CALLBACK,
-];
+export const AUTH_PATH_PATTERNS = [SCREEN_PATH.AUTH_CALLBACK];
 
 export const MY_TICKET_PATH_PATTERNS = [
     SCREEN_PATH.MY_TICKET,

@@ -58,6 +58,7 @@ const TicketInfoRight = ({
                     modeSize={MODE_SIZE[28]}
                     modeWeight={MODE_WEIGHT.LARGE}
                     modeLeading={MODE_LEADING.LARGE}
+                    isAllowLineBreaks
                 >
                     {eventInfo.title}
                 </Text>
@@ -98,7 +99,7 @@ const TicketInfoRight = ({
                     {ticketTypes.map(ticketType => (
                         <div
                             key={ticketType.id}
-                            className="flex flex-1 justify-between min-w-[400px] items-center py-2"
+                            className="flex flex-1 justify-between items-center py-2"
                         >
                             <Text
                                 modeColor={MODE_COLOR_TEXT.WHITE}

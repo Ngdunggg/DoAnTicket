@@ -46,7 +46,7 @@ const PreviewSection = () => {
         image: createEventForm.watch('images'),
         location: createEventForm.watch('is_online')
             ? 'Sự kiện trực tuyến'
-            : `${createEventForm.watch('street_address')}, ${createEventForm.watch('ward')}, ${createEventForm.watch('district')}, ${createEventForm.watch('city')}`,
+            : `${createEventForm.watch('location')}, ${createEventForm.watch('street_address')}, ${createEventForm.watch('ward')}, ${createEventForm.watch('district')}, ${createEventForm.watch('city')}`,
         title: createEventForm.watch('title'),
         type: createEventForm.watch('category_id'),
     };

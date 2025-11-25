@@ -17,6 +17,7 @@ import ScrollToTop from '@share/components/ScrollToTop';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { Outlet, RouteObject } from 'react-router-dom';
 import { ROLE } from '@share/constants/commons';
+import NotFound from '@modules/main/pages/NotFound';
 // import ErrorBoundary from "../components/ErrorBoundary";
 // import { ErrorHandler } from "../components/ErrorHandler";
 // import { GlobalErrorHandler } from "../components/GlobalErrorHandler";
@@ -115,6 +116,11 @@ const mainRoutes: RouteObject[] = [
         ],
         // errorElement: <ErrorPage />,
         path: SCREEN_PATH.ROOT,
+    },
+    // 404 Not Found route - must be last to catch all unmatched routes
+    {
+        element: <NotFound />,
+        path: '*',
     },
 ];
 

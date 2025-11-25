@@ -7,7 +7,6 @@ import {
     MODE_WEIGHT,
 } from '@share/components/atoms/Text';
 import { formatPrice } from '../../utils/eventUtils';
-import useEventDetailStoreSelector from '@modules/event-detail/hooks/useEventDetailStoreSelector';
 
 interface TicketSelectionLeftProps {
     onTicketChange: (_tickets: SelectedTicket[]) => void;

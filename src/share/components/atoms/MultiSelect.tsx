@@ -46,7 +46,7 @@ const modeStyles: Record<ModeInputType, string> = {
 
 function MultiSelectInner<T>(
     {
-        appendTo: _appendTo = 'self',
+        appendTo = null,
         className = '',
         emptyMessage = 'Không có dữ liệu',
         error,
@@ -77,8 +77,6 @@ function MultiSelectInner<T>(
         [mode, className]
     );
 
-    // Remove unused appendTarget since we're using appendTo="self"
-
     return (
         <div className={`relative ${wrapClassName}`} ref={ref}>
             <div
@@ -97,7 +95,7 @@ function MultiSelectInner<T>(
                     {...props}
                     className={`${isError ? 'input-invalid' : ''} ${classNames}`}
                     emptyMessage={emptyMessage}
-                    appendTo="self"
+                    appendTo={appendTo}
                     options={options}
                     placeholder={placeholder}
                     selectedItemsLabel={`{0} thể loại đã chọn`}

@@ -39,17 +39,18 @@ const TrendingEventsSection = ({
     // Render ranking number với CountUp animation
     const renderRankingNumber = (rank: number) => {
         return (
-            <div className="absolute -left-1 bottom-[-10px]">
+            <div className="absolute z-5 -left-1 bottom-[-10px]">
                 <span
                     className="
                         text-[120px] font-black leading-none
                         text-text-yellow
                         drop-shadow-[2px_4px_6px_rgba(0,0,0,0.7)]
-                        font-mono tracking-wider
+                        font-mono
                     "
                     style={{
                         filter: 'drop-shadow(0 0 8px rgba(245, 158, 11, 0.4))', // viền chữ vàng đậm
                         fontFamily: "'Orbitron', 'Arial Black', sans-serif",
+                        letterSpacing: '-0.02em',
                         WebkitTextStroke: '2px #92400e',
                     }}
                 >

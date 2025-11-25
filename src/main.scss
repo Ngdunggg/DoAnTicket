@@ -595,3 +595,72 @@ input[type='password'] {
         display: none !important;
     }
 }
+
+/* ==========================================================================
+  Not Found page styles
+  ========================================================================== */
+.perspective-container {
+    perspective: 1000px;
+}
+
+.floating-box {
+    transform-style: preserve-3d;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-box .front {
+    transform: translateZ(20px);
+}
+
+.floating-box .back {
+    transform: translateZ(-20px) rotateY(180deg);
+}
+
+.floating-box .right {
+    transform: rotateY(90deg) translateZ(20px);
+}
+
+.floating-box .left {
+    transform: rotateY(-90deg) translateZ(20px);
+}
+
+.floating-box .top {
+    transform: rotateX(90deg) translateZ(20px);
+}
+
+.floating-box .bottom {
+    transform: rotateX(-90deg) translateZ(20px);
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotateX(5deg) rotateY(5deg);
+    }
+    100% {
+        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+    }
+}
+
+.glow {
+    text-shadow: 0 0 10px rgba(252, 203, 98, 0.7);
+}
+
+@keyframes particle {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.3;
+    }
+    90% {
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(50px);
+        opacity: 0;
+    }
+}

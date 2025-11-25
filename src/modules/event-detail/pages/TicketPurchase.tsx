@@ -117,7 +117,7 @@ const TicketPurchase = () => {
             </div>
 
             {/* Payment Summary */}
-            <div className="bg-bg-gray">
+            <div className="max-w-1/3 bg-bg-gray">
                 <TicketInfoRight
                     eventInfo={{
                         date: eventDetail?.dates[0]?.start_at
