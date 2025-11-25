@@ -15,7 +15,7 @@ const Footer = () => {
                         modeSize={MODE_SIZE[24]}
                         modeWeight={MODE_WEIGHT.LARGE}
                     >
-                        TicketBox
+                        TicketVN
                     </Text>
                     <Text
                         modeColor={MODE_COLOR_TEXT.WHITE}

@@ -2,6 +2,7 @@ import DivClick from '@share/components/atoms/DivClick';
 import TrendingUpIcon from '@share/components/atoms/icons/TrendingUpIcon';
 import {
     MODE_COLOR_TEXT,
+    MODE_SIZE,
     MODE_WEIGHT,
     Text,
 } from '@share/components/atoms/Text';
@@ -14,6 +15,7 @@ import SuggestEvent, {
 import useSuggestedKeywords from '@share/hooks/useSuggestedKeywords';
 import { useNavigate } from 'react-router-dom';
 import { SCREEN_PATH } from '@share/constants/routers';
+import useDetectMobile from '@share/hooks/useDetectMobile';
 
 type SuggestSearchPopupProps = {
     isOpen: boolean;
@@ -25,6 +27,7 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
     const { isSearchPopupOpen } = useSearchStoreSelector();
     const { setIsSearchPopupOpenStore } = useSearchStoreAction();
     const { eventKeywords } = useSuggestedKeywords();
+    const isMobile = useDetectMobile();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -62,9 +65,17 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
     return (
         <div
             ref={popupRef}
-            className="fixed inset-0 top-18 left-62 lg:left-66 xl:left-80 [@media(min-width:1390px)]:left-90 min-w-[350px] max-h-[calc(100%-100px)] max-w-[calc(100%-550px)] rounded-2xl bg-bg-gray-2 z-20"
+            className={`fixed ${
+                isMobile
+                    ? 'inset-x-0 top-20 max-h-[calc(100vh-80px)] rounded-t-2xl overflow-y-auto scrollbar-hide'
+                    : 'inset-0 top-18 left-62 lg:left-66 xl:left-80 [@media(min-width:1390px)]:left-90 min-w-[350px] max-h-[calc(100%-100px)] max-w-[calc(100%-550px)] rounded-2xl'
+            } bg-bg-gray-2 z-20`}
         >
-            <div className="flex flex-col gap-4 px-6 py-4 w-full h-full overflow-y-auto scrollbar-hide">
+            <div
+                className={`flex flex-col gap-4 ${
+                    isMobile ? 'px-4 py-3' : 'px-6 py-4'
+                } w-full h-full overflow-y-auto scrollbar-hide`}
+            >
                 {/* Từ khóa từ sự kiện */}
                 {eventKeywords.length > 0 && (
                     <div className="flex flex-col gap-2">
@@ -77,14 +88,21 @@ const SuggestSearchPopup = ({ isOpen }: SuggestSearchPopupProps) => {
                         </Text>
                         {eventKeywords.map((keyword, index) => (
                             <DivClick
-                                className="flex items-center gap-6 px-4 py-2 hover:bg-bg-black/50 rounded-full transition-colors"
+                                className={`flex items-center ${
+                                    isMobile
+                                        ? 'gap-3 px-3 py-2'
+                                        : 'gap-6 px-4 py-2'
+                                } hover:bg-bg-black/50 rounded-full transition-colors`}
                                 key={`event-${keyword}-${index}`}
                                 onClick={() => {
                                     handleKeywordClick(keyword);
                                 }}
                             >
-                                <TrendingUpIcon size={22} />
-                                <Text modeColor={MODE_COLOR_TEXT.WHITE}>
+                                <TrendingUpIcon size={isMobile ? 18 : 22} />
+                                <Text
+                                    modeColor={MODE_COLOR_TEXT.WHITE}
+                                    modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                >
                                     {keyword}
                                 </Text>
                             </DivClick>

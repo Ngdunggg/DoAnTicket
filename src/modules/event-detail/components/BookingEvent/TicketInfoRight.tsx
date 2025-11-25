@@ -98,7 +98,7 @@ const TicketInfoRight = ({
                     {ticketTypes.map(ticketType => (
                         <div
                             key={ticketType.id}
-                            className="flex flex-1 justify-between min-w-[400px] items-center py-2"
+                            className="flex flex-1 justify-between items-center py-2"
                         >
                             <Text
                                 modeColor={MODE_COLOR_TEXT.WHITE}
