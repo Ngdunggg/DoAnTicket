@@ -147,7 +147,7 @@ const EventListContainer = () => {
 
     return (
         <>
-            <div className="w-full min-h-screen bg-bg-black-2 py-16 px-12">
+            <div className="w-full min-h-screen bg-bg-black-2 py-16 md:px-12">
                 <div className="flex items-center w-full gap-2 justify-between mb-8">
                     {/* Hiển thị search keyword nếu có */}
                     {searchKeyword ? (
@@ -170,7 +170,7 @@ const EventListContainer = () => {
                         <div />
                     )}
 
-                    <div className="flex items-center gap-2 justify-end mb-8">
+                    <div className="flex flex-col md:flex-row items-end md:items-center px-2 gap-2 justify-end mb-8">
                         <div className="relative">
                             <DivClick
                                 onClick={() => {

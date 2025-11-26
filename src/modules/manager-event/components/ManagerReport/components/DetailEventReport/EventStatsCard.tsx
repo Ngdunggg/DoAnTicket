@@ -23,7 +23,7 @@ const EventStatsCard = ({ stats }: EventStatsCardProps) => {
             : 0;
 
     return (
-        <div className="flex flex-col flex-1 h-fit max-w-[40%] bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+        <div className="flex flex-col flex-1 h-fit w-full md:max-w-[40%] bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
             <Text
                 modeSize={MODE_SIZE[20]}
                 modeWeight={MODE_WEIGHT.LARGE}

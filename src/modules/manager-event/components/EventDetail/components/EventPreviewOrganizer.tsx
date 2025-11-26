@@ -21,7 +21,7 @@ const EventPreviewOrganizer = ({
                     Ban tổ chức
                 </Text>
                 <div className="w-full bg-black h-px mb-2" />
-                <div className="flex gap-6">
+                <div className="flex flex-col md:flex-row gap-6">
                     <Image
                         src={organizerProfile.logo_url}
                         alt={organizerProfile.organization_name}
@@ -31,14 +31,18 @@ const EventPreviewOrganizer = ({
                         <Text
                             modeSize={MODE_SIZE[20]}
                             modeWeight={MODE_WEIGHT.LARGE}
+                            isAllowLineBreaks
                         >
                             {organizerProfile.organization_name}
                         </Text>
-                        <Text>{organizerProfile.description_organization}</Text>
+                        <Text isAllowLineBreaks>
+                            {organizerProfile.description_organization}
+                        </Text>
                         <Text
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.MEDIUM}
                             className="flex items-center gap-2"
+                            isAllowLineBreaks
                         >
                             <MailIcon /> {organizerProfile.contact_email}
                         </Text>
@@ -46,6 +50,7 @@ const EventPreviewOrganizer = ({
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.MEDIUM}
                             className="flex items-center gap-2"
+                            isAllowLineBreaks
                         >
                             <PhoneIcon /> {organizerProfile.contact_phone}
                         </Text>
@@ -53,6 +58,7 @@ const EventPreviewOrganizer = ({
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.MEDIUM}
                             className="flex items-center gap-2"
+                            isAllowLineBreaks
                         >
                             <WebsiteIcon /> {organizerProfile.website}
                         </Text>

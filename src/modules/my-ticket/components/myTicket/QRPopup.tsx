@@ -43,33 +43,35 @@ const QRPopup: React.FC<QRPopupProps> = ({ isOpen, onClose, ticket }) => {
     });
 
     return (
-        <div className="fixed inset-0 top-2 h-screen bg-bg-black-2/20 flex items-center justify-center z-50">
-            <div className="bg-bg-black-2 rounded-2xl w-full max-w-[500px] border border-bg-gray">
+        <div className="fixed inset-0 bg-bg-black-2/40 flex items-center justify-center z-50">
+            <div className="bg-bg-black-2 rounded-2xl w-full max-w-[500px] border border-bg-gray max-h-[90vh] flex flex-col">
                 {/* Header */}
-                <div className="flex flex-col bg-bg-yellow rounded-t-2xl relative">
-                    <div className="flex items-center gap-2 justify-between px-6 py-6 ">
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.BLACK}
-                            modeSize={MODE_SIZE[24]}
-                            modeWeight={MODE_WEIGHT.LARGE}
-                        >
-                            Mã QR Vé
-                        </Text>
-                        <DivClick onClick={onClose}>
-                            <XCircleIcon
-                                mode={MODE_X_CIRCLE_ICON.BLACK}
-                                size={24}
-                            />
-                        </DivClick>
+                <div className="w-full bg-bg-yellow rounded-t-2xl relative">
+                    <div className="overflow-hidden w-full">
+                        <div className="flex items-center gap-2 justify-between px-6 py-6">
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.BLACK}
+                                modeSize={MODE_SIZE[24]}
+                                modeWeight={MODE_WEIGHT.LARGE}
+                            >
+                                Mã QR Vé
+                            </Text>
+                            <DivClick onClick={onClose}>
+                                <XCircleIcon
+                                    mode={MODE_X_CIRCLE_ICON.BLACK}
+                                    size={24}
+                                />
+                            </DivClick>
+                        </div>
+                        <WavyLineIcon
+                            mode={MODE_WAVY_LINE.YELLOW}
+                            className="w-[1032px] absolute bottom-[-17px] h-10"
+                        />
                     </div>
-                    <WavyLineIcon
-                        mode={MODE_WAVY_LINE.YELLOW}
-                        className="w-[1032px] absolute bottom-[-10px]"
-                    />
                 </div>
 
                 {/* Content */}
-                <div className="p-6 flex flex-col gap-6">
+                <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
                     {/* Event Info */}
                     <div className="flex flex-col gap-4">
                         <Text

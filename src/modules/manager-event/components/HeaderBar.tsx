@@ -25,6 +25,13 @@ import { useNavigate } from 'react-router-dom';
 import Image from '@share/components/atoms/Image';
 import { ROLE } from '@share/constants/commons';
 import AdminIcon, { MODE_ADMIN } from '@share/components/atoms/icons/AdminIcon';
+import useDetectMobile from '@share/hooks/useDetectMobile';
+import MenuIcon from '@share/components/atoms/icons/MenuIcon';
+import { useState } from 'react';
+import LayerIcon, { MODE_LAYER } from '@share/components/atoms/icons/LayerIcon';
+import XCircleIcon, {
+    MODE_X_CIRCLE_ICON,
+} from '@share/components/atoms/icons/XCircleIcon';
 
 const HeaderBar = () => {
     const { isActive, menuItems } = useMenuManager();
@@ -41,36 +48,41 @@ const HeaderBar = () => {
     const { setIsEditModeStore, setIsOpenCreateEventStore } =
         useCreateEventStoreAction();
     const navigate = useNavigate();
+    const isMobile = useDetectMobile();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <div className="flex justify-between items-center bg-bg-gray py-3 px-4">
-            <div className="flex items-center gap-2">
-                {menuItems.map(
-                    item =>
-                        isActive(item.path) && (
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[26]}
-                                modeWeight={MODE_WEIGHT.LARGE}
-                                key={item.id}
-                            >
-                                {item.label}
-                            </Text>
-                        )
-                )}
-            </div>
+            {menuItems.map(
+                item =>
+                    isActive(item.path) && (
+                        <Text
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            modeSize={MODE_SIZE[26]}
+                            modeWeight={MODE_WEIGHT.LARGE}
+                            key={item.id}
+                            className="max-w-[200px] md:max-w-full"
+                            isAllowLineBreaks
+                        >
+                            {item.label}
+                        </Text>
+                    )
+            )}
             <div className="flex items-center gap-4">
-                <Button
-                    mode={MODE_BUTTON.YELLOW}
-                    icon={<PlusIcon mode={MODE_PLUS.BLACK} />}
-                    onClick={() => {
-                        setIsOpenCreateEventStore(true);
-                        setIsEditModeStore(false);
-                        navigate(SCREEN_PATH.CREATE_EVENT);
-                    }}
-                >
-                    Tạo sự kiện
-                </Button>
+                {!isMobile && (
+                    <Button
+                        mode={MODE_BUTTON.YELLOW}
+                        icon={<PlusIcon mode={MODE_PLUS.BLACK} />}
+                        onClick={() => {
+                            setIsOpenCreateEventStore(true);
+                            setIsEditModeStore(false);
+                            navigate(SCREEN_PATH.CREATE_EVENT);
+                        }}
+                    >
+                        Tạo sự kiện
+                    </Button>
+                )}
+
                 {user && (
                     <div className="relative">
                         <DivClick
@@ -89,13 +101,15 @@ const HeaderBar = () => {
                                     className="w-9 h-9 rounded-full object-cover p-0.5"
                                 />
                             </div>
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[15]}
-                                className="hover:text-text-yellow transition-colors duration-200"
-                            >
-                                Tài khoản
-                            </Text>
+                            {!isMobile && (
+                                <Text
+                                    modeColor={MODE_COLOR_TEXT.WHITE}
+                                    modeSize={MODE_SIZE[15]}
+                                    className="hover:text-text-yellow transition-colors duration-200"
+                                >
+                                    Tài khoản
+                                </Text>
+                            )}
                             <ChevronIcon
                                 direction={MODE_CHEVRON_DIRECTION.DOWN}
                                 mode={MODE_CHEVRON.WHITE}
@@ -204,6 +218,48 @@ const HeaderBar = () => {
                             </div>
                         )}
                     </div>
+                )}
+
+                {isMobile && (
+                    <>
+                        <DivClick onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                            <MenuIcon size={26} />
+                        </DivClick>
+
+                        {/* Mobile Menu Drawer */}
+                        {isMenuOpen && (
+                            <div className="fixed right-0 left-0 top-18 bg-bg-black-2 z-50">
+                                <div className="flex flex-1 flex-col w-full">
+                                    {/* Menu Items */}
+                                    <div className="flex flex-col w-full gap-2 mt-2 px-4 py-4">
+                                        {menuItems.map(item => (
+                                            <DivClick
+                                                key={item.id}
+                                                className={`flex w-full items-center gap-2 p-6 rounded-md hover:bg-bg-black/50 ${
+                                                    isActive(item.path)
+                                                        ? 'bg-bg-black/50'
+                                                        : ''
+                                                }`}
+                                                onClick={() => {
+                                                    item.onClick?.();
+                                                    setIsMenuOpen(false);
+                                                }}
+                                            >
+                                                {item.icon}
+                                                <Text
+                                                    modeColor={
+                                                        MODE_COLOR_TEXT.WHITE
+                                                    }
+                                                >
+                                                    {item.label}
+                                                </Text>
+                                            </DivClick>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

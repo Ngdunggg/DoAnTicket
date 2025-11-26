@@ -22,8 +22,74 @@ import {
     getMinPrice,
 } from '@modules/event-detail/utils/eventUtils';
 import { IMAGE_TYPE } from '@share/constants/commons';
+import useDetectMobile from '@share/hooks/useDetectMobile';
 
 const EventPreviewHero = ({ event }: { event: Event }) => {
+    const isMobile = useDetectMobile();
+
+    if (isMobile) {
+        return (
+            <div className="bg-bg-black w-full flex flex-col py-10 px-4">
+                <div className="w-full h-[300px] relative">
+                    <Image
+                        src={getEventImage(event, IMAGE_TYPE.BANNER)}
+                        alt={event.title}
+                        className="w-full h-full object-cover rounded-t-2xl"
+                    />
+                </div>
+                <div className="w-full flex flex-col gap-4 bg-bg-gray px-10 py-5 rounded-b-2xl">
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.WHITE}
+                        modeSize={MODE_SIZE[24]}
+                        modeWeight={MODE_WEIGHT.LARGE}
+                    >
+                        {event.title}
+                    </Text>
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.YELLOW}
+                        modeSize={MODE_SIZE[16]}
+                    >
+                        {formatDateTime(
+                            event.start_time,
+                            DATE_TIME_FORMAT_ISO
+                        )}{' '}
+                    </Text>
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.YELLOW}
+                        modeSize={MODE_SIZE[16]}
+                    >
+                        {getEventLocation(event)}
+                    </Text>
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.WHITE}
+                        modeSize={MODE_SIZE[16]}
+                    >
+                        Giá từ
+                    </Text>
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.YELLOW}
+                        modeSize={MODE_SIZE[16]}
+                    >
+                        {getMinPrice(event)}
+                    </Text>
+                    <Button
+                        icon={<TicketIcon />}
+                        mode={MODE_BUTTON.DECORATIVE_YELLOW}
+                        disabled
+                    >
+                        <Text
+                            modeColor={MODE_COLOR_TEXT.BLACK}
+                            modeSize={MODE_SIZE[16]}
+                            modeWeight={MODE_WEIGHT.MEDIUM}
+                        >
+                            Mua vé ngay
+                        </Text>
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-bg-black w-full min-h-[600px] flex items-center justify-center px-10">
             <div className="flex w-full h-[450px] relative">

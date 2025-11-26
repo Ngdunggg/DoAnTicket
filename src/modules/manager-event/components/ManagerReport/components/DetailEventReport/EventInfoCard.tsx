@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { IMAGE_TYPE } from '@share/constants/commons';
 import { getEventImage } from '@modules/event-detail/utils/eventUtils';
 import useAdminStoreAction from '@modules/admin/hooks/useAdminStoreAction';
+import useDetectMobile from '@share/hooks/useDetectMobile';
 interface EventInfoCardProps {
     event: Event;
     isAdmin?: boolean;
@@ -22,6 +23,7 @@ interface EventInfoCardProps {
 const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
     const navigate = useNavigate();
     const { setSelectedReportEventIdStore } = useAdminStoreAction();
+    const isMobile = useDetectMobile();
 
     const getStatusText = (status: string) => {
         switch (status) {
@@ -57,29 +59,33 @@ const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
     };
 
     return (
-        <div className="flex gap-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
-            <div className="flex flex-col flex-1 w-full max-w-[60%]">
-                <div className="flex items-center gap-4 mb-6">
-                    <DivClick
-                        onClick={() => {
-                            if (isAdmin) {
-                                setSelectedReportEventIdStore(null);
-                            } else {
-                                navigate(-1);
-                            }
-                        }}
-                    >
-                        <BackIcon mode={MODE_BACK.WHITE} />
-                    </DivClick>
-                    <Text
-                        modeSize={MODE_SIZE[24]}
-                        modeWeight={MODE_WEIGHT.LARGE}
-                        modeColor={MODE_COLOR_TEXT.WHITE}
-                    >
-                        {event.title}
-                    </Text>
+        <div className="flex flex-col md:flex-row gap-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-4 md:p-6">
+            <div className="flex flex-col flex-1 w-full md:max-w-[60%]">
+                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                    <div className="flex items-center gap-3 md:gap-4">
+                        <DivClick
+                            onClick={() => {
+                                if (isAdmin) {
+                                    setSelectedReportEventIdStore(null);
+                                } else {
+                                    navigate(-1);
+                                }
+                            }}
+                        >
+                            <BackIcon mode={MODE_BACK.WHITE} />
+                        </DivClick>
+                        <Text
+                            modeSize={MODE_SIZE[isMobile ? 20 : 24]}
+                            modeWeight={MODE_WEIGHT.LARGE}
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            isAllowLineBreaks
+                            className="flex-1"
+                        >
+                            {event.title}
+                        </Text>
+                    </div>
                     <div
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                        className={`px-3 py-1 rounded-full text-sm font-medium w-fit ${getStatusColor(
                             event.status
                         )}`}
                     >
@@ -87,18 +93,23 @@ const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4 md:gap-6">
                     {/* Thông tin cơ bản */}
-                    <div className="flex flex-col gap-4">
-                        <div className="flex items-center gap-3">
+                    <div className="flex flex-col gap-3 md:gap-4">
+                        <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
                             <Text
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                                 modeColor={MODE_COLOR_TEXT.WHITE}
-                                className="w-30"
+                                modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                className="md:w-30"
                             >
                                 Ngày bắt đầu:
                             </Text>
-                            <Text modeColor={MODE_COLOR_TEXT.GRAY}>
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.GRAY}
+                                modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                isAllowLineBreaks
+                            >
                                 {formatDateTime(
                                     event.start_time.toString(),
                                     DATE_TIME_FORMAT_ISO
@@ -106,15 +117,20 @@ const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
                             </Text>
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
                             <Text
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                                 modeColor={MODE_COLOR_TEXT.WHITE}
-                                className="w-30"
+                                modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                className="md:w-30"
                             >
                                 Ngày kết thúc:
                             </Text>
-                            <Text modeColor={MODE_COLOR_TEXT.GRAY}>
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.GRAY}
+                                modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                isAllowLineBreaks
+                            >
                                 {formatDateTime(
                                     event.end_time.toString(),
                                     DATE_TIME_FORMAT_ISO
@@ -122,28 +138,38 @@ const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
                             </Text>
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
                             <Text
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                                 modeColor={MODE_COLOR_TEXT.WHITE}
-                                className="w-30"
+                                modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                className="md:w-30"
                             >
                                 Địa điểm:
                             </Text>
-                            <Text modeColor={MODE_COLOR_TEXT.GRAY}>
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.GRAY}
+                                modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                isAllowLineBreaks
+                            >
                                 {event.location || 'Online'}
                             </Text>
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
                             <Text
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                                 modeColor={MODE_COLOR_TEXT.WHITE}
-                                className="w-30"
+                                modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                className="md:w-30"
                             >
                                 Danh mục:
                             </Text>
-                            <Text modeColor={MODE_COLOR_TEXT.GRAY}>
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.GRAY}
+                                modeSize={MODE_SIZE[isMobile ? 14 : 16]}
+                                isAllowLineBreaks
+                            >
                                 {getCategories()}
                             </Text>
                         </div>
@@ -152,7 +178,7 @@ const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
             </div>
             {/* Hình ảnh sự kiện */}
             {event.images.length > 0 && (
-                <div className="flex flex-1 justify-center max-h-[350px]">
+                <div className="flex flex-1 justify-center max-h-[250px] md:max-h-[350px] w-full md:w-auto">
                     <img
                         src={getEventImage(event, IMAGE_TYPE.BANNER) || ''}
                         alt={event.title}

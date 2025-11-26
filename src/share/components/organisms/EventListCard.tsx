@@ -134,7 +134,7 @@ const EventListCard = ({
             onClick={handleViewEventClick}
         >
             {/* Event Image */}
-            <div className="relative w-76 h-50 rounded-l-lg overflow-hidden flex-shrink-0">
+            <div className="relative w-full md:w-76 h-50 rounded-l-lg overflow-hidden flex-shrink-0">
                 <Image
                     src={event.images[0]?.image_url || ''}
                     alt={event.title}
@@ -160,7 +160,7 @@ const EventListCard = ({
             </div>
 
             {/* Event Info */}
-            <div className="flex-1 ml-4 pt-4 flex flex-col gap-2.5">
+            <div className="hidden md:flex flex-1 ml-4 pt-4 flex-col gap-2.5">
                 {/* Event Name */}
                 <Text
                     modeColor={MODE_COLOR_TEXT.WHITE}
@@ -196,7 +196,7 @@ const EventListCard = ({
             {showMenu &&
                 (event.status === FILTER_STATUS.PENDING ||
                     event.status === FILTER_STATUS.REJECTED) && (
-                    <div className="flex gap-2 mt-2 pr-2">
+                    <div className="hidden md:flex gap-2 mt-2 pr-2">
                         {/* Three Dots Menu Button */}
                         <div className="relative" ref={menuRef}>
                             <DivClick

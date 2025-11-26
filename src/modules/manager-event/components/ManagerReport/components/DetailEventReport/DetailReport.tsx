@@ -35,7 +35,7 @@ const DetailReport = ({ eventIdPorps, isAdmin = false }: DetailReportProps) => {
             <div className="flex flex-col gap-6">
                 <EventInfoCard event={eventReport.event} isAdmin={isAdmin} />
 
-                <div className="flex gap-6">
+                <div className="flex flex-col md:flex-row gap-6">
                     <TicketTypesList ticketTypes={eventReport.ticket_types} />
 
                     <EventStatsCard stats={eventReport.summary} />

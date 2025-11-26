@@ -148,7 +148,7 @@ const ChartsSection = ({
     };
 
     return (
-        <div className="flex flex-col bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
+        <div className="flex flex-col w-full bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6">
             <Text
                 modeSize={MODE_SIZE[20]}
                 modeWeight={MODE_WEIGHT.LARGE}
@@ -158,10 +158,10 @@ const ChartsSection = ({
                 📊 Biểu đồ thống kê
             </Text>
 
-            <div className="flex flex-col gap-6">
-                <div className="flex flex-1 w-full gap-6">
+            <div className="flex flex-col w-full gap-6">
+                <div className="flex flex-col md:flex-row flex-1 w-full gap-6">
                     {/* Biểu đồ tròn - Tổng số vé */}
-                    <div className="flex flex-col flex-1 max-w-[30%] gap-2 bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex flex-col flex-1 w-full md:max-w-[30%] gap-2 bg-white/5 rounded-lg p-4 border border-white/10">
                         <Text
                             modeSize={MODE_SIZE[16]}
                             modeWeight={MODE_WEIGHT.MEDIUM}

@@ -5,6 +5,7 @@ import { MODE_WEIGHT, Text } from '@share/components/atoms/Text';
 import DivClick from '@share/components/atoms/DivClick';
 import useToolBarEvent from './hooks/useToolBarEvent';
 import { FILTER_STATUS } from '@share/constants/commons';
+import useDetectMobile from '@share/hooks/useDetectMobile';
 
 const ToolBar = () => {
     const {
@@ -14,6 +15,7 @@ const ToolBar = () => {
         setActiveFilterStore,
         setSearchTextStore,
     } = useToolBarEvent();
+    const isMobile = useDetectMobile();
 
     return (
         <div className="flex items-center justify-between px-8 mt-8">
@@ -22,7 +24,7 @@ const ToolBar = () => {
                 inputName="search"
                 schema={schemaSearch}
                 placeholder="Tìm kiếm sự kiện"
-                className="!h-10.5 !w-[400px] flex items-center justify-center"
+                className="!h-10.5 !w-full md:!w-[400px] flex items-center justify-center"
                 iconClassName="bottom-2.5"
                 icon={<SearchIcon />}
                 onKeyDown={e => {
@@ -53,7 +55,9 @@ const ToolBar = () => {
                 // TODO
             />
 
-            <div className="flex items-center gap-2 bg-white rounded-full p-1">
+            <div
+                className={`${!isMobile ? 'flex' : 'hidden'} items-center gap-2 bg-white rounded-full p-1`}
+            >
                 <DivClick
                     className={`flex items-center px-3 py-3 rounded-full transition-all duration-200 ${
                         activeFilter === FILTER_STATUS.ALL

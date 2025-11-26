@@ -53,7 +53,7 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
             >
                 <div className="flex">
                     {/* Event Image */}
-                    <div className="relative w-76 h-50 rounded-l-lg overflow-hidden flex-shrink-0">
+                    <div className="relative w-full md:w-76 h-50 rounded-l-lg overflow-hidden flex-shrink-0">
                         <img
                             src={getEventImage(event, IMAGE_TYPE.CARD)}
                             alt={event.title}
@@ -95,7 +95,7 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
                     </div>
 
                     {/* Event Info */}
-                    <div className="flex-1 ml-4 pt-4 flex flex-col gap-4">
+                    <div className="hidden md:flex flex-1 ml-4 pt-4 flex-col gap-4">
                         {/* Event Name */}
                         <Text
                             modeColor={MODE_COLOR_TEXT.WHITE}
@@ -154,7 +154,10 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
                     </div>
 
                     {/* Three Dots Menu Button */}
-                    <div className="relative ml-4 mr-px top-1" ref={menuRef}>
+                    <div
+                        className="hidden md:block relative ml-4 mr-px top-1"
+                        ref={menuRef}
+                    >
                         <DivClick
                             onClick={e => {
                                 e?.stopPropagation();

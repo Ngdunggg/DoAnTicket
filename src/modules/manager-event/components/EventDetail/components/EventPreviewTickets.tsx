@@ -16,9 +16,11 @@ import { Event } from '@share/types/event';
 import { formatDateTime } from '@share/utils/dateTime';
 import { DATE_FORMAT_ISO } from '@share/constants/dateTime';
 import { formatPrice } from '@modules/event-detail/utils/eventUtils';
+import useDetectMobile from '@share/hooks/useDetectMobile';
 
 const EventPreviewTickets = ({ event }: { event: Event }) => {
     const [expandedDates, setExpandedDates] = useState<Set<string>>(new Set());
+    const isMobile = useDetectMobile();
 
     const toggleDateExpansion = (dateId: string) => {
         setExpandedDates(prev => {
@@ -67,7 +69,7 @@ const EventPreviewTickets = ({ event }: { event: Event }) => {
                                     />
                                     <Text
                                         modeColor={MODE_COLOR_TEXT.BLACK}
-                                        modeSize={MODE_SIZE[18]}
+                                        modeSize={MODE_SIZE[isMobile ? 16 : 18]}
                                         modeWeight={MODE_WEIGHT.MEDIUM}
                                     >
                                         {formatDateTime(
@@ -78,7 +80,7 @@ const EventPreviewTickets = ({ event }: { event: Event }) => {
                                     <Text
                                         modeColor={MODE_COLOR_TEXT.BLACK}
                                         modeSize={MODE_SIZE[14]}
-                                        className="px-2 py-1 rounded-full"
+                                        className="px-2 py-1 rounded-full hidden md:block"
                                     >
                                         {event.ticket_types.length} hạng vé
                                     </Text>
@@ -90,7 +92,7 @@ const EventPreviewTickets = ({ event }: { event: Event }) => {
                                 >
                                     <Text
                                         modeColor={MODE_COLOR_TEXT.BLACK}
-                                        modeSize={MODE_SIZE[14]}
+                                        modeSize={MODE_SIZE[isMobile ? 12 : 14]}
                                         modeWeight={MODE_WEIGHT.MEDIUM}
                                     >
                                         Mua vé

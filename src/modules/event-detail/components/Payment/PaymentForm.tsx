@@ -13,6 +13,7 @@ import AlertCircleIcon from '@share/components/atoms/icons/AlertCircleIcon';
 import RadioButton from '@share/components/atoms/RaddioButton';
 import { PAYMENT_METHOD } from '@share/constants/paymentMethod';
 import useUpdateInfoUser from './hooks/useUpdateInfoUser';
+import { VNPAY_ICON, MOMO_ICON, ZALOPAY_ICON } from '@share/constants/image';
 
 interface BookingFormData {
     agreeToTerms: boolean;
@@ -35,17 +36,17 @@ const PaymentForm = ({
     const { handleOpenUpdateInfoUser } = useUpdateInfoUser();
     const paymentMethods = [
         {
-            icon: '🏦',
+            icon: VNPAY_ICON,
             id: PAYMENT_METHOD.VNPAY,
             label: 'VNPAY/Ứng dụng ngân hàng',
         },
         {
-            icon: '📱',
+            icon: MOMO_ICON,
             id: PAYMENT_METHOD.MOMO,
             label: 'Momo',
         },
         {
-            icon: '💳',
+            icon: ZALOPAY_ICON,
             id: PAYMENT_METHOD.ZALOPAY,
             label: 'Zalopay',
         },
@@ -156,9 +157,22 @@ const PaymentForm = ({
                                 onChange={() => {}}
                             />
                             <div className="flex items-center gap-3">
-                                <Text modeSize={MODE_SIZE[20]}>
-                                    {method.icon}
-                                </Text>
+                                {method.id !== PAYMENT_METHOD.MOMO ? (
+                                    <div className="w-14 h-14 flex items-center justify-center bg-white rounded-2xl p-1">
+                                        <img
+                                            src={method.icon}
+                                            alt={method.label}
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </div>
+                                ) : (
+                                    <img
+                                        src={method.icon}
+                                        alt={method.label}
+                                        className="w-14 h-14 object-contain"
+                                    />
+                                )}
+
                                 <Text
                                     modeColor={MODE_COLOR_TEXT.WHITE}
                                     modeSize={MODE_SIZE[14]}

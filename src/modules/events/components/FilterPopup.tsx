@@ -10,6 +10,7 @@ import RadioButton from '@share/components/atoms/RaddioButton';
 import DivClick from '@share/components/atoms/DivClick';
 import ToggleButton from '@share/components/atoms/ToggleButton';
 import Button, { MODE_BUTTON } from '@share/components/atoms/Button';
+import useDetectMobile from '@share/hooks/useDetectMobile';
 
 interface FilterPopupProps {
     filterButtonRef: RefObject<HTMLDivElement>;
@@ -26,13 +27,14 @@ const FilterPopup = ({ filterButtonRef }: FilterPopupProps) => {
         setFilterOptions,
     } = useEventListHandler();
 
+    const isMobile = useDetectMobile();
     const [position, setPosition] = useState({ right: 0, top: 0 });
 
     useEffect(() => {
         if (isOpenFilterPopup && filterButtonRef.current) {
             const rect = filterButtonRef.current.getBoundingClientRect();
             setPosition({
-                right: window.innerWidth - rect.right - 10,
+                right: isMobile ? 0 : window.innerWidth - rect.right - 10,
                 top: rect.bottom + window.scrollY + 8,
             });
         }
@@ -63,7 +65,6 @@ const FilterPopup = ({ filterButtonRef }: FilterPopupProps) => {
                                             ...filterOptions,
                                             location: option.value,
                                         });
-                                        // TODO
                                     }}
                                 >
                                     <RadioButton
@@ -105,7 +106,7 @@ const FilterPopup = ({ filterButtonRef }: FilterPopupProps) => {
                     {/* Type */}
                     <div className="flex flex-col mt-4 gap-2 border-b border-dashed border-bg-gray pb-4">
                         <Text modeWeight={MODE_WEIGHT.MEDIUM}>Thể loại</Text>
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                             {OPTIONS_TYPE.map(option => (
                                 <DivClick
                                     className={`flex w-fit items-center gap-2 rounded-full px-4 py-2 box-shadow-ticket border border-bg-gray ${

@@ -26,13 +26,13 @@ const ListEventReport = () => {
     };
     return (
         <div className="flex flex-col gap-6 max-h-screen overflow-y-auto py-4 px-10">
-            <div className="flex items-center justify-end">
+            <div className="flex w-full items-center justify-end">
                 <InputValidate
                     control={searchForm.control}
                     inputName="search"
                     schema={schemaSearch}
                     placeholder="Tìm kiếm sự kiện"
-                    className="!h-10.5 !w-[450px] flex items-center justify-center"
+                    className="!h-10.5 !w-full md:!w-[450px] flex items-center justify-center"
                     iconClassName="bottom-2.5"
                     mode={MODE_INPUT.ROUNDED}
                     icon={<SearchIcon />}

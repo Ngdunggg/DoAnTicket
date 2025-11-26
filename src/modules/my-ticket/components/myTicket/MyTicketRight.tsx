@@ -70,7 +70,7 @@ const MyTicketRight = () => {
             {/* Ticket List */}
             <div className="flex flex-col gap-4 max-h-[calc(100vh-150px)] overflow-y-auto">
                 <div className="min-h-[calc(100vh-150px)]">
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 px-2 md:px-0">
                         {activeTab === MY_TICKET_TAB.UPCOMING ? (
                             upcomingTickets.length > 0 ? (
                                 upcomingTickets.map((item: TicketWithEvent) => (
