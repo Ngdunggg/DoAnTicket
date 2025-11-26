@@ -28,10 +28,6 @@ import AdminIcon, { MODE_ADMIN } from '@share/components/atoms/icons/AdminIcon';
 import useDetectMobile from '@share/hooks/useDetectMobile';
 import MenuIcon from '@share/components/atoms/icons/MenuIcon';
 import { useState } from 'react';
-import LayerIcon, { MODE_LAYER } from '@share/components/atoms/icons/LayerIcon';
-import XCircleIcon, {
-    MODE_X_CIRCLE_ICON,
-} from '@share/components/atoms/icons/XCircleIcon';
 
 const HeaderBar = () => {
     const { isActive, menuItems } = useMenuManager();
