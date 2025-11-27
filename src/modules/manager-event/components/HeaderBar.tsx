@@ -49,21 +49,23 @@ const HeaderBar = () => {
 
     return (
         <div className="flex justify-between items-center bg-bg-gray py-3 px-4">
-            {menuItems.map(
-                item =>
-                    isActive(item.path) && (
-                        <Text
-                            modeColor={MODE_COLOR_TEXT.WHITE}
-                            modeSize={MODE_SIZE[26]}
-                            modeWeight={MODE_WEIGHT.LARGE}
-                            key={item.id}
-                            className="max-w-[200px] md:max-w-full"
-                            isAllowLineBreaks
-                        >
-                            {item.label}
-                        </Text>
-                    )
-            )}
+            <div>
+                {menuItems.map(
+                    item =>
+                        isActive(item.path) && (
+                            <Text
+                                modeColor={MODE_COLOR_TEXT.WHITE}
+                                modeSize={MODE_SIZE[26]}
+                                modeWeight={MODE_WEIGHT.LARGE}
+                                key={item.id}
+                                className="max-w-[200px] md:max-w-full"
+                                isAllowLineBreaks
+                            >
+                                {item.label}
+                            </Text>
+                        )
+                )}
+            </div>
             <div className="flex items-center gap-4">
                 {!isMobile && (
                     <Button

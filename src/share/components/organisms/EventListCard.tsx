@@ -17,6 +17,7 @@ import MapPinIcon from '../atoms/icons/MapPinIcon';
 import { SCREEN_PATH } from '@share/constants/routers';
 import { useNavigate } from 'react-router-dom';
 import useCreateEventStoreAction from '@modules/manager-event/components/CreateAndEditEvent/hooks/useCreateEventStoreAction';
+import WebsiteIcon, { MODE_WEBSITE_ICON } from '../atoms/icons/WebsiteIcon';
 
 interface EventListCardProps {
     className?: string;
@@ -181,15 +182,28 @@ const EventListCard = ({
                         {formatDateTime(event.start_time, DATE_TIME_FORMAT_ISO)}
                     </Text>
                 </div>
-                <div className="flex items-center gap-2">
-                    <Text
-                        modeColor={MODE_COLOR_TEXT.WHITE}
-                        modeSize={MODE_SIZE[14]}
-                        className="flex items-center gap-2"
-                    >
-                        <MapPinIcon /> {event.location}
-                    </Text>
-                </div>
+                {!event.is_online ? (
+                    <div className="flex items-center gap-2">
+                        <Text
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            modeSize={MODE_SIZE[14]}
+                            className="flex items-center gap-2"
+                        >
+                            <MapPinIcon /> {event.location}
+                        </Text>
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <Text
+                            modeColor={MODE_COLOR_TEXT.WHITE}
+                            modeSize={MODE_SIZE[14]}
+                            className="flex items-center gap-2"
+                        >
+                            <WebsiteIcon mode={MODE_WEBSITE_ICON.WHITE} />
+                            Sự kiện Online
+                        </Text>
+                    </div>
+                )}
             </div>
 
             {/* Actions */}

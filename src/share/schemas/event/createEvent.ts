@@ -195,21 +195,69 @@ import { uploadFile } from '@share/hooks/cloudinaryUploader';
 export const convertToCreateEventRequest = async (
     formData: CreateEventInput
 ): Promise<CreateEventRequest> => {
+    // Map để track các file/URL đã upload để tránh upload trùng
+    const uploadedUrlMap = new Map<string, string>();
+
+    // Helper function để tạo key unique cho file hoặc URL
+    const getImageKey = (imageData: File | string): string => {
+        if (imageData instanceof File) {
+            // Tạo key từ file properties để identify cùng một file
+            return `${imageData.name}-${imageData.size}-${imageData.lastModified}`;
+        }
+        // Nếu là URL string, dùng chính URL đó làm key
+        return imageData;
+    };
+
     // Upload images to Cloudinary first
+    // Tạo map để track các upload promises đang chạy để tránh upload trùng
+    const uploadingPromisesMap = new Map<string, Promise<string>>();
+
     const uploadedImages = await Promise.all(
         formData.images.map(async image => {
-            if (image.image_data instanceof File) {
-                const uploadedUrl = await uploadFile(
-                    image.image_data as unknown as File
-                );
+            const imageKey = getImageKey(image.image_data);
+
+            // Kiểm tra xem đã upload file/URL này chưa
+            if (uploadedUrlMap.has(imageKey)) {
+                // Nếu đã upload rồi, dùng lại URL
+                return {
+                    image_type: image.image_type,
+                    image_url: uploadedUrlMap.get(imageKey)!,
+                };
+            }
+
+            // Kiểm tra xem đang có upload promise nào đang chạy cho key này không
+            if (uploadingPromisesMap.has(imageKey)) {
+                // Nếu đang upload, đợi promise đó hoàn thành
+                const uploadedUrl = await uploadingPromisesMap.get(imageKey)!;
+                uploadedUrlMap.set(imageKey, uploadedUrl);
                 return {
                     image_type: image.image_type,
                     image_url: uploadedUrl,
                 };
             }
+
+            // Nếu chưa upload và chưa có promise nào đang chạy, tạo promise mới
+            let uploadPromise: Promise<string>;
+            if (image.image_data instanceof File) {
+                uploadPromise = uploadFile(image.image_data as unknown as File);
+            } else {
+                // Nếu là URL string, không cần upload, trả về URL ngay
+                uploadPromise = Promise.resolve(image.image_data);
+            }
+
+            // Lưu promise vào map để các request khác có thể đợi
+            uploadingPromisesMap.set(imageKey, uploadPromise);
+
+            // Đợi upload hoàn thành
+            const uploadedUrl = await uploadPromise;
+
+            // Lưu URL vào map và xóa promise khỏi map
+            uploadedUrlMap.set(imageKey, uploadedUrl);
+            uploadingPromisesMap.delete(imageKey);
+
             return {
                 image_type: image.image_type,
-                image_url: image.image_data,
+                image_url: uploadedUrl,
             };
         })
     );

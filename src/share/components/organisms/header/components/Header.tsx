@@ -292,7 +292,7 @@ const Header = () => {
                                                         }
                                                         modeSize={MODE_SIZE[14]}
                                                     >
-                                                        Quản lý sự kiện
+                                                        Quản lý hệ thống
                                                     </Text>
                                                 </DivClick>
                                             )}

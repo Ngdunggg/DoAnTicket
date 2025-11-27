@@ -69,9 +69,9 @@ const HomeLayout = () => {
                 />
 
                 <OtherEventsSection
-                    title="Giáo dục"
-                    category={['Giáo dục']}
-                    events={getEventsByCategory('Giáo dục', 10)}
+                    title="Công nghệ"
+                    category={['Công nghệ']}
+                    events={getEventsByCategory('Công nghệ', 10)}
                     onViewEvent={handleViewEvent}
                 />
             </div>

@@ -125,6 +125,7 @@ const useToolBarHeaderHandler = (eventId = '') => {
             // Validate PaymentSection - chỉ validate các field bắt buộc
             const isPaymentValid = await createEventForm.trigger([
                 'organization_name',
+                'description_organization',
                 'logo_data',
                 'full_name',
                 'contact_email',
@@ -163,6 +164,61 @@ const useToolBarHeaderHandler = (eventId = '') => {
             }
             // Validate toàn bộ form và tạo sự kiện
             const isFormValid = await createEventForm.trigger();
+
+            // Log các trường bị lỗi nếu form không hợp lệ
+            if (!isFormValid) {
+                const errors = createEventForm.formState.errors;
+
+                // Helper function để extract errors từ nested objects
+                const extractErrors = (
+                    obj: any,
+                    prefix = ''
+                ): Array<{ field: string; message: string }> => {
+                    const result: Array<{ field: string; message: string }> =
+                        [];
+                    for (const key in obj) {
+                        const fieldName = prefix ? `${prefix}.${key}` : key;
+                        const error = obj[key];
+
+                        if (error?.message) {
+                            result.push({
+                                field: fieldName,
+                                message: error.message,
+                            });
+                        } else if (error && typeof error === 'object') {
+                            // Nested object (như tickets[0], images[0])
+                            if (Array.isArray(error)) {
+                                error.forEach((item, index) => {
+                                    if (item && typeof item === 'object') {
+                                        result.push(
+                                            ...extractErrors(
+                                                item,
+                                                `${fieldName}[${index}]`
+                                            )
+                                        );
+                                    }
+                                });
+                            } else {
+                                result.push(...extractErrors(error, fieldName));
+                            }
+                        }
+                    }
+                    return result;
+                };
+
+                const allErrors = extractErrors(errors);
+                console.group('❌ Form Validation Errors:');
+                if (allErrors.length > 0) {
+                    allErrors.forEach(({ field, message }) => {
+                        console.error(`  • ${field}: ${message}`);
+                    });
+                } else {
+                    console.error(
+                        'Có lỗi validation nhưng không thể xác định chi tiết'
+                    );
+                }
+                console.groupEnd();
+            }
 
             // Validate logo: phải có logo_data hoặc logo_url
             const logoData = createEventForm.watch('logo_data');
