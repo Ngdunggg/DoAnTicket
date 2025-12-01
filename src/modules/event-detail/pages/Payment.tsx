@@ -69,12 +69,23 @@ const Payment = () => {
             if (orderResponse.result.code !== RESULT_CODE.SUCCESS) {
                 toast.error(
                     orderResponse.result.error_msg_id ||
-                        'Thanh toán thất bại. Vui lòng thử lại.'
+                        'Không thể tạo đơn hàng. Vui lòng thử lại sau.'
                 );
+                // Clear selected tickets và navigate về event detail sau khi hiển thị error
+                setSelectedTicketsStore(null);
+                // Delay nhỏ để user có thể đọc được error message
+                setTimeout(() => {
+                    navigate(
+                        SCREEN_PATH.EVENT_DETAIL.replace(
+                            ':event_id',
+                            eventDetail.id
+                        )
+                    );
+                }, 2000);
                 return;
             }
             const orderId = orderResponse.data.order_id;
-            console.log('orderId', orderId);
+
             const paymentUrlResponse = await orderApi.createPaymentUrl({
                 order_id: orderId,
                 payment_method: selectedPaymentMethod,
@@ -82,20 +93,21 @@ const Payment = () => {
             if (paymentUrlResponse.result.code !== RESULT_CODE.SUCCESS) {
                 toast.error(
                     paymentUrlResponse.result.error_msg_id ||
-                        'Thanh toán thất bại. Vui lòng thử lại.'
+                        'Thanh toán thất bại. Vui lòng thử lại sau.'
                 );
                 return;
             }
             console.log('paymentUrlResponse', paymentUrlResponse);
             const paymentUrl = paymentUrlResponse.data.payment_url;
+            // Clear selected tickets trước khi chuyển đến payment gateway
+            setSelectedTicketsStore(null);
             window.location.href = paymentUrl;
         } catch (error) {
             console.error('Payment failed:', error);
-            toast.error('Thanh toán thất bại. Vui lòng thử lại.');
+            toast.error('Thanh toán thất bại. Vui lòng thử lại sau.');
         } finally {
             setIsLoading(false);
         }
-        setSelectedTicketsStore(null);
     };
 
     const handlePaymentMethodSelect = (method: string) => {
