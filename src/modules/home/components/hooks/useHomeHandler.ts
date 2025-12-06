@@ -12,7 +12,7 @@ const useHomeHandler = () => {
     const { allEvents } = useHomeEventListStoreSelector();
     const { setAllEventsStore } = useHomeEventListStoreAction();
     const navigate = useNavigate();
-    const { data } = useFetchEventListQuery();
+    const { data, isLoading } = useFetchEventListQuery();
 
     const filteredEvents = useMemo(() => {
         if (!data) {
@@ -159,6 +159,7 @@ const useHomeHandler = () => {
         getFeaturedEvents,
         getUpcomingEvents,
         handleViewEvent,
+        isLoading,
         trendingEvents,
     };
 };

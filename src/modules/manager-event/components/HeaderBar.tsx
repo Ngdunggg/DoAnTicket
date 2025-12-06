@@ -28,6 +28,7 @@ import AdminIcon, { MODE_ADMIN } from '@share/components/atoms/icons/AdminIcon';
 import useDetectMobile from '@share/hooks/useDetectMobile';
 import MenuIcon from '@share/components/atoms/icons/MenuIcon';
 import { useState } from 'react';
+import useCreateEventStoreSelector from './CreateAndEditEvent/hooks/useCreateEventStoreSelector';
 
 const HeaderBar = () => {
     const { isActive, menuItems } = useMenuManager();
@@ -43,6 +44,7 @@ const HeaderBar = () => {
     } = useHeaderHandler();
     const { setIsEditModeStore, setIsOpenCreateEventStore } =
         useCreateEventStoreAction();
+    const { isEditMode, isOpenCreateEvent } = useCreateEventStoreSelector();
     const navigate = useNavigate();
     const isMobile = useDetectMobile();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,24 +52,46 @@ const HeaderBar = () => {
     return (
         <div className="flex justify-between items-center bg-bg-gray py-3 px-4">
             <div>
-                {menuItems.map(
-                    item =>
-                        isActive(item.path) && (
-                            <Text
-                                modeColor={MODE_COLOR_TEXT.WHITE}
-                                modeSize={MODE_SIZE[26]}
-                                modeWeight={MODE_WEIGHT.LARGE}
-                                key={item.id}
-                                className="max-w-[200px] md:max-w-full"
-                                isAllowLineBreaks
-                            >
-                                {item.label}
-                            </Text>
-                        )
+                {isOpenCreateEvent ? (
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.WHITE}
+                        modeSize={MODE_SIZE[26]}
+                        modeWeight={MODE_WEIGHT.LARGE}
+                        className="max-w-[200px] md:max-w-full"
+                        isAllowLineBreaks
+                    >
+                        {isEditMode ? 'Cập nhật sự kiện' : 'Tạo sự kiện'}
+                    </Text>
+                ) : isEditMode ? (
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.WHITE}
+                        modeSize={MODE_SIZE[26]}
+                        modeWeight={MODE_WEIGHT.LARGE}
+                        className="max-w-[200px] md:max-w-full"
+                        isAllowLineBreaks
+                    >
+                        Cập nhật sự kiện
+                    </Text>
+                ) : (
+                    menuItems.map(
+                        item =>
+                            isActive(item.path) && (
+                                <Text
+                                    modeColor={MODE_COLOR_TEXT.WHITE}
+                                    modeSize={MODE_SIZE[26]}
+                                    modeWeight={MODE_WEIGHT.LARGE}
+                                    key={item.id}
+                                    className="max-w-[200px] md:max-w-full"
+                                    isAllowLineBreaks
+                                >
+                                    {item.label}
+                                </Text>
+                            )
+                    )
                 )}
             </div>
             <div className="flex items-center gap-4">
-                {!isMobile && (
+                {!isMobile && !isOpenCreateEvent && !isEditMode && (
                     <Button
                         mode={MODE_BUTTON.YELLOW}
                         icon={<PlusIcon mode={MODE_PLUS.BLACK} />}

@@ -32,10 +32,10 @@ interface HeroSectionProps {
     onViewEvent: (_eventId: string) => void;
 }
 
-const AUTO_PLAY_INTERVAL = 15000;
+const AUTO_PLAY_INTERVAL = 5000;
 const GAP = 16;
-const MIN_EVENT_WIDTH = 300; // Chiều rộng tối thiểu cho 1 event
-const PADDING = 16; // Padding của container (px-2 = 8px mỗi bên)
+const MIN_EVENT_WIDTH = 300;
+const PADDING = 16;
 
 const HeroSection = ({ featuredEvents, onViewEvent }: HeroSectionProps) => {
     const [currentIndex, setCurrentIndex] = useState(0);

@@ -9,7 +9,7 @@ const useGetUserInfoQuery = () => {
 
     return useQuery({
         enabled: !!token && !!currentUser?.id,
-        gcTime: 5 * 60 * 1000,
+        gcTime: 60 * 60 * 1000,
         queryFn: async () => {
             if (!currentUser?.id) {
                 return null;

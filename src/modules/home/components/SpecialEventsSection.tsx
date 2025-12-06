@@ -13,6 +13,8 @@ import ChevronIcon, {
 import { useHorizontalScroll } from '@share/hooks/useHorizontalScroll';
 import { Event } from '@share/types/event';
 import Image from '@share/components/atoms/Image';
+import { getEventImage } from '@modules/event-detail/utils/eventUtils';
+import { IMAGE_TYPE } from '@share/constants/commons';
 
 interface EventSectionProps {
     events: Event[];
@@ -89,7 +91,7 @@ const EventSection = ({ events, onViewEvent }: EventSectionProps) => {
                             className="flex-shrink-0"
                         >
                             <Image
-                                src={event.images[0].image_url}
+                                src={getEventImage(event, IMAGE_TYPE.CARD)}
                                 alt={event.title}
                                 className="object-cover rounded-xl w-[350px] h-[400px]"
                             />

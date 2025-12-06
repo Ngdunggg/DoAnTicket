@@ -4,6 +4,7 @@ export const API_PATH = {
     // AUTH
     CHANGE_PASSWORD: 'auth/change-password',
     CHECK_EMAIL: 'auth/check-email',
+    COMPLETE_FREE_ORDER: 'payments/complete-free-order',
     CREATE_EVENT: 'events/create-event',
     // ORDER
     CREATE_ORDER: 'orders',

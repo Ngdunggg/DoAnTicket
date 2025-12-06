@@ -34,9 +34,9 @@ const useDashboardHandler = () => {
     const dailyVisits = useMemo(() => {
         const events = eventList ?? [];
         if (events.length === 0) {
-            return Array.from({ length: 14 }, (_, i) => {
+            return Array.from({ length: 15 }, (_, i) => {
                 const d = new Date();
-                d.setDate(d.getDate() - (13 - i));
+                d.setDate(d.getDate() - (14 - i));
                 return {
                     date: d.toISOString().slice(5, 10),
                     value: 0,
@@ -44,7 +44,7 @@ const useDashboardHandler = () => {
             });
         }
 
-        const days = 14;
+        const days = 15;
         const end = new Date();
         end.setHours(23, 59, 59, 999);
         const start = new Date(end);

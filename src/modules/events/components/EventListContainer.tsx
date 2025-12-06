@@ -56,11 +56,13 @@ const EventListContainer = () => {
         const date = new Date(dateStr);
         return date.toLocaleDateString('vi-VN');
     };
+
     // Filter events by search keyword and filters
     const normalizedKeyword = searchKeyword.toLowerCase();
     const filteredEvents = useMemo(
         () =>
-            allEvents
+            [...allEvents]
+                .reverse()
                 .filter(event => {
                     if (!searchKeyword) return true;
                     const inTitle = event.title
@@ -78,11 +80,9 @@ const EventListContainer = () => {
                     return inTitle || inLocation || inDescription || inCategory;
                 })
                 .filter(event => {
-                    // Location filter
                     if (filterLocation === LOCATION.ALL) return true;
                     if (!event.location) return false;
                     if (filterLocation === LOCATION.OTHER) {
-                        // Not in predefined cities
                         const knownCities = [
                             LOCATION.HANOI,
                             LOCATION.HCM,
@@ -99,7 +99,6 @@ const EventListContainer = () => {
                         .includes(filterLocation.toLowerCase());
                 })
                 .filter(event => {
-                    // Type filter by category name
                     if (!filterType) return true;
                     return filterType === TYPE.OTHER
                         ? event.categories?.some(
@@ -115,14 +114,14 @@ const EventListContainer = () => {
                           ) || false;
                 })
                 .filter(event => {
-                    // Price free filter: at least one ticket price === 0
                     if (!filterPriceFree) return true;
                     return (
-                        event.ticket_types?.some(tt => tt.price === 0) || false
+                        event.ticket_types?.some(
+                            tt => Number(tt.price) === 0
+                        ) || false
                     );
                 })
                 .filter(event => {
-                    // Date range filter based on start_time
                     if (!dateRangeStart || !dateRangeEnd) return true;
 
                     const eventStartTime = new Date(event.start_time).getTime();

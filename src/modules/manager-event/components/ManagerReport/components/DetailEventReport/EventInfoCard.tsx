@@ -3,6 +3,7 @@ import {
     MODE_SIZE,
     MODE_WEIGHT,
     MODE_COLOR_TEXT,
+    MODE_LEADING,
 } from '@share/components/atoms/Text';
 import { formatDateTime } from '@share/utils/dateTime';
 import { DATE_TIME_FORMAT_ISO } from '@share/constants/dateTime';
@@ -61,7 +62,7 @@ const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
     return (
         <div className="flex flex-col md:flex-row gap-4 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-4 md:p-6">
             <div className="flex flex-col flex-1 w-full md:max-w-[60%]">
-                <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <div className="flex flex-col md:flex-row md:items-center gap-2 mb-4 md:mb-6">
                     <div className="flex items-center gap-3 md:gap-4">
                         <DivClick
                             onClick={() => {
@@ -78,6 +79,7 @@ const EventInfoCard = ({ event, isAdmin = false }: EventInfoCardProps) => {
                             modeSize={MODE_SIZE[isMobile ? 20 : 24]}
                             modeWeight={MODE_WEIGHT.LARGE}
                             modeColor={MODE_COLOR_TEXT.WHITE}
+                            modeLeading={MODE_LEADING.LARGE}
                             isAllowLineBreaks
                             className="flex-1"
                         >

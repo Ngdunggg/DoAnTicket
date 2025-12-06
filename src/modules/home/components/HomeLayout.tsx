@@ -3,6 +3,7 @@ import SpecialEventsSection from './SpecialEventsSection';
 import OtherEventsSection from './OtherEventsSection';
 import TrendingEventsSection from './TrendingEventsSection';
 import useHomeHandler from './hooks/useHomeHandler';
+import LoadingContent from '@share/components/molecules/LoadingContent';
 
 const HomeLayout = () => {
     const {
@@ -11,8 +12,17 @@ const HomeLayout = () => {
         getEventsThisWeek,
         getFeaturedEvents,
         handleViewEvent,
+        isLoading,
         trendingEvents,
     } = useHomeHandler();
+
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-bg-black-2">
+                <LoadingContent message="Đang tải sự kiện..." />
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col bg-bg-black-2">

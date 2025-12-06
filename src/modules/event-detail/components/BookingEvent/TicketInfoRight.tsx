@@ -111,7 +111,9 @@ const TicketInfoRight = ({
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeWeight={MODE_WEIGHT.MEDIUM}
                             >
-                                {formatPrice(ticketType.price)}
+                                {ticketType.price === 0
+                                    ? 'Miễn phí'
+                                    : formatPrice(ticketType.price)}
                             </Text>
                         </div>
                     ))}

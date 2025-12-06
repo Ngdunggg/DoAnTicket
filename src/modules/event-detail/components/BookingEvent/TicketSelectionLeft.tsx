@@ -19,7 +19,38 @@ const TicketSelectionLeft = ({
     selectedTickets,
     ticketTypes,
 }: TicketSelectionLeftProps) => {
+    const MAX_TOTAL_TICKETS = 5;
+
+    const getTotalSelectedTickets = () => {
+        return selectedTickets.reduce(
+            (total, ticket) => total + ticket.quantity,
+            0
+        );
+    };
+
     const updateTicketQuantity = (ticketType: TicketType, quantity: number) => {
+        const currentTotal = getTotalSelectedTickets();
+        const currentQuantity = getTicketQuantity(ticketType.id);
+        const newTotal = currentTotal - currentQuantity + quantity;
+
+        // Kiểm tra giới hạn tổng số vé
+        if (quantity > currentQuantity && newTotal > MAX_TOTAL_TICKETS) {
+            // Nếu vượt quá giới hạn, chỉ cho phép tăng đến mức tối đa
+            const maxAllowedQuantity =
+                currentQuantity + (MAX_TOTAL_TICKETS - currentTotal);
+            if (maxAllowedQuantity <= 0) return;
+
+            const updatedTickets = selectedTickets.filter(
+                t => t.ticketType.id !== ticketType.id
+            );
+            updatedTickets.push({
+                quantity: maxAllowedQuantity,
+                ticketType,
+            });
+            onTicketChange(updatedTickets);
+            return;
+        }
+
         const updatedTickets = selectedTickets.filter(
             t => t.ticketType.id !== ticketType.id
         );
@@ -48,18 +79,35 @@ const TicketSelectionLeft = ({
                 >
                     Loại vé
                 </Text>
-                <Text
-                    modeColor={MODE_COLOR_TEXT.GRAY}
-                    modeSize={MODE_SIZE[20]}
-                    modeWeight={MODE_WEIGHT.MEDIUM}
-                >
-                    Số lượng
-                </Text>
+                <div className="flex flex-col items-end gap-1">
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.GRAY}
+                        modeSize={MODE_SIZE[20]}
+                        modeWeight={MODE_WEIGHT.MEDIUM}
+                    >
+                        Số lượng
+                    </Text>
+                    <Text
+                        modeColor={
+                            getTotalSelectedTickets() >= MAX_TOTAL_TICKETS
+                                ? MODE_COLOR_TEXT.YELLOW
+                                : MODE_COLOR_TEXT.GRAY
+                        }
+                        modeSize={MODE_SIZE[12]}
+                    >
+                        {getTotalSelectedTickets()}/{MAX_TOTAL_TICKETS} vé
+                    </Text>
+                </div>
             </div>
 
             {ticketTypes.map(ticketType => {
                 const quantity = getTicketQuantity(ticketType.id);
                 const isAvailable = ticketType.available > 0;
+                const totalSelected = getTotalSelectedTickets();
+                const canIncrease =
+                    totalSelected < MAX_TOTAL_TICKETS &&
+                    quantity < ticketType.maxPerOrder &&
+                    quantity < ticketType.available;
 
                 return (
                     <div
@@ -128,11 +176,7 @@ const TicketSelectionLeft = ({
                                                 quantity + 1
                                             )
                                         }
-                                        disabled={
-                                            quantity >=
-                                                ticketType.maxPerOrder ||
-                                            quantity >= ticketType.available
-                                        }
+                                        disabled={!canIncrease}
                                         className="w-10 h-10 rounded-full bg-bg-gray hover:bg-bg-gray-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Text

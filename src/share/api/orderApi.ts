@@ -11,6 +11,15 @@ import {
 } from '@share/models/order/payment';
 
 export const orderApi = {
+    completeFreeOrder: async (
+        orderId: string
+    ): Promise<BaseHttpResponse<{ order_id: string; success: boolean }>> => {
+        const response = await httpClient.post<
+            BaseHttpResponse<{ order_id: string; success: boolean }>
+        >(API_PATH.COMPLETE_FREE_ORDER, { order_id: orderId });
+        return response.data;
+    },
+
     createOrder: async (
         data: CreateOrderRequest
     ): Promise<BaseHttpResponse<CreateOrderResponseData>> => {

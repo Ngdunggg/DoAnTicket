@@ -17,6 +17,9 @@ const PaymentCallback: React.FC = () => {
         null
     );
     const [isVerified, setIsVerified] = useState(false);
+    const orderId = searchParams.get('orderId') || searchParams.get('order_id');
+    const status = searchParams.get('status');
+    const isFree = searchParams.get('isFree');
 
     useEffect(() => {
         const handlePaymentCallback = async () => {
@@ -24,21 +27,16 @@ const PaymentCallback: React.FC = () => {
                 // Backend has already processed the payment and inserted the data
                 // Backend redirects to: /payment/result?status=success&orderId=xxx
                 // But our route is /payment/callback
-                const orderId =
-                    searchParams.get('orderId') || searchParams.get('order_id');
-                const status = searchParams.get('status');
-
-                console.log('Payment callback params:', {
-                    allParams: Object.fromEntries(searchParams),
-                    orderId,
-                    status,
-                });
 
                 // Determine payment status from backend redirect
                 const paymentStatus =
                     status === 'success' ? 'success' : 'failed';
 
-                if (orderId && paymentStatus === 'success') {
+                if (
+                    orderId &&
+                    paymentStatus === 'success' &&
+                    (isFree === 'false' || isFree === null)
+                ) {
                     setPaymentResult({
                         message: 'Thanh toán thành công',
                         order_id: orderId,
@@ -46,6 +44,18 @@ const PaymentCallback: React.FC = () => {
                     });
                     setIsVerified(true);
                     toast.success('Thanh toán thành công!');
+                    console.log('paymentResult 1', paymentResult);
+                } else if (
+                    orderId &&
+                    paymentStatus === 'success' &&
+                    isFree === 'true'
+                ) {
+                    setPaymentResult({
+                        message: 'Thanh toán thành công',
+                        order_id: orderId,
+                        status: 'success',
+                    });
+                    setIsVerified(true);
                 } else {
                     setPaymentResult({
                         message: 'Thanh toán thất bại',
@@ -63,7 +73,7 @@ const PaymentCallback: React.FC = () => {
         };
 
         handlePaymentCallback();
-    }, [searchParams]);
+    }, [orderId, status, isFree]);
 
     const handleBackToHome = () => {
         navigate(SCREEN_PATH.HOME);

@@ -28,6 +28,7 @@ const useToolBarHeaderHandler = (eventId = '') => {
         resetCreateEventStateStore,
         setActiveTabStore,
         setEventTypesStore,
+        setIsEditModeStore,
         setIsLoadingStore,
         setIsOpenCreateEventStore,
         setOrganizerProfileStore,
@@ -338,6 +339,7 @@ const useToolBarHeaderHandler = (eventId = '') => {
         isLoading,
         isOpenCreateEvent,
         setActiveTabStore,
+        setIsEditModeStore,
         setIsOpenCreateEventStore,
     };
 };

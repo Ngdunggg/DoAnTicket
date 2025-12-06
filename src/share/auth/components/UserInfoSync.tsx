@@ -36,6 +36,7 @@ const UserInfoSync = () => {
                     gender: userInfo.gender ?? null,
                     google_id: userInfo.google_id ?? null,
                     id: userInfo.id,
+                    is_active: userInfo.is_active ?? false,
                     phone: userInfo.phone,
                     role: userInfo.role,
                     status: userInfo.status,
@@ -48,7 +49,7 @@ const UserInfoSync = () => {
             dispatch(clearUserInfo());
             lastSyncTimeRef.current = 0;
         }
-    }, [token, userInfo, isError, isSuccess, dispatch]);
+    }, [token, userInfo, isError, isSuccess]);
 
     return null;
 };

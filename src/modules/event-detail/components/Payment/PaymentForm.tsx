@@ -25,13 +25,16 @@ interface PaymentFormProps {
     bookingForm: BookingFormData;
     onPaymentMethodSelect: (_method: string) => void;
     selectedPaymentMethod: string;
+    totalAmount: number;
 }
 
 const PaymentForm = ({
     bookingForm,
     onPaymentMethodSelect,
     selectedPaymentMethod,
+    totalAmount,
 }: PaymentFormProps) => {
+    const isFree = totalAmount === 0;
     const [isShowWarning, setIsShowWarning] = useState(true);
     const { handleOpenUpdateInfoUser } = useUpdateInfoUser();
     const paymentMethods = [
@@ -133,58 +136,80 @@ const PaymentForm = ({
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col gap-4 bg-bg-gray border border-bg-gray rounded-lg px-4 py-6">
-                <Text
-                    modeColor={MODE_COLOR_TEXT.YELLOW}
-                    modeSize={MODE_SIZE[18]}
-                    modeWeight={MODE_WEIGHT.LARGE}
-                >
-                    Phương thức thanh toán
-                </Text>
+            {!isFree && (
+                <div className="flex flex-col gap-4 bg-bg-gray border border-bg-gray rounded-lg px-4 py-6">
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.YELLOW}
+                        modeSize={MODE_SIZE[18]}
+                        modeWeight={MODE_WEIGHT.LARGE}
+                    >
+                        Phương thức thanh toán
+                    </Text>
 
-                <div className="flex flex-col gap-3">
-                    {paymentMethods.map(method => (
-                        <DivClick
-                            key={method.id}
-                            className="flex items-center gap-3 p-3 rounded-lg hover:bg-bg-black/30 cursor-pointer"
-                            onClick={() => onPaymentMethodSelect(method.id)}
-                        >
-                            <RadioButton
-                                inputId={method.id}
-                                name="payment-method"
-                                value={method.id}
-                                checked={selectedPaymentMethod === method.id}
-                                onChange={() => {}}
-                            />
-                            <div className="flex items-center gap-3">
-                                {method.id !== PAYMENT_METHOD.MOMO ? (
-                                    <div className="w-14 h-14 flex items-center justify-center bg-white rounded-2xl p-1">
+                    <div className="flex flex-col gap-3">
+                        {paymentMethods.map(method => (
+                            <DivClick
+                                key={method.id}
+                                className="flex items-center gap-3 p-3 rounded-lg hover:bg-bg-black/30 cursor-pointer"
+                                onClick={() => onPaymentMethodSelect(method.id)}
+                            >
+                                <RadioButton
+                                    inputId={method.id}
+                                    name="payment-method"
+                                    value={method.id}
+                                    checked={
+                                        selectedPaymentMethod === method.id
+                                    }
+                                    onChange={() => {}}
+                                />
+                                <div className="flex items-center gap-3">
+                                    {method.id !== PAYMENT_METHOD.MOMO ? (
+                                        <div className="w-14 h-14 flex items-center justify-center bg-white rounded-2xl p-1">
+                                            <img
+                                                src={method.icon}
+                                                alt={method.label}
+                                                className="w-full h-full object-contain"
+                                            />
+                                        </div>
+                                    ) : (
                                         <img
                                             src={method.icon}
                                             alt={method.label}
-                                            className="w-full h-full object-contain"
+                                            className="w-14 h-14 object-contain"
                                         />
-                                    </div>
-                                ) : (
-                                    <img
-                                        src={method.icon}
-                                        alt={method.label}
-                                        className="w-14 h-14 object-contain"
-                                    />
-                                )}
+                                    )}
 
-                                <Text
-                                    modeColor={MODE_COLOR_TEXT.WHITE}
-                                    modeSize={MODE_SIZE[14]}
-                                    modeWeight={MODE_WEIGHT.MEDIUM}
-                                >
-                                    {method.label}
-                                </Text>
-                            </div>
-                        </DivClick>
-                    ))}
+                                    <Text
+                                        modeColor={MODE_COLOR_TEXT.WHITE}
+                                        modeSize={MODE_SIZE[14]}
+                                        modeWeight={MODE_WEIGHT.MEDIUM}
+                                    >
+                                        {method.label}
+                                    </Text>
+                                </div>
+                            </DivClick>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
+            {isFree && (
+                <div className="flex flex-col gap-2 bg-yellow-500/20 border border-yellow-500/50 rounded-lg px-4 py-6">
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.YELLOW}
+                        modeSize={MODE_SIZE[18]}
+                        modeWeight={MODE_WEIGHT.LARGE}
+                    >
+                        Vé miễn phí
+                    </Text>
+                    <Text
+                        modeColor={MODE_COLOR_TEXT.WHITE}
+                        modeSize={MODE_SIZE[14]}
+                    >
+                        Bạn sẽ nhận vé ngay sau khi xác nhận đặt vé. Vé sẽ được
+                        gửi đến email của bạn.
+                    </Text>
+                </div>
+            )}
         </div>
     );
 };

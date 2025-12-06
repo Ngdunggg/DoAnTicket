@@ -148,7 +148,9 @@ const TicketCard = ({ ticket }: { ticket: TicketWithEvent }) => {
                                 modeColor={MODE_COLOR_TEXT.YELLOW}
                                 modeWeight={MODE_WEIGHT.LARGE}
                             >
-                                {formatPrice(Number(ticketData.price))}
+                                {Number(ticketData.price) === 0
+                                    ? 'Miễn phí'
+                                    : formatPrice(Number(ticketData.price))}
                             </Text>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import { eventApi } from '@share/api/eventApi';
-import { RESULT_CODE } from '@share/constants/commons';
+import { EVENT_STATUS, RESULT_CODE } from '@share/constants/commons';
 import useHomeEventListStoreSelector from '@modules/home/hooks/useHomeEventListStoreSelector';
 import useHomeEventListStoreAction from '@modules/home/hooks/useHomeEventListStoreAction';
 import { useEffect, useState } from 'react';
@@ -31,9 +31,19 @@ const useSuggestEvent = (limit: number) => {
                 }
 
                 if (eventsToUse.length > 0) {
-                    const shuffled = [...eventsToUse].sort(
-                        () => 0.5 - Math.random()
+                    const filtered = eventsToUse.filter(
+                        event => event.status === EVENT_STATUS.APPROVED
                     );
+
+                    // Duyệt từ cuối mảng về đầu
+                    // Với mỗi phần tử tại vị trí i, chọn ngẫu nhiên một vị trí j từ 0 đến i
+                    // Đổi chỗ phần tử tại i và j để đảm bảo tính ngẫu nhiên
+                    const shuffled = [...filtered];
+                    for (let i = shuffled.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                    }
+
                     setSuggestedEvents(shuffled.slice(0, limit));
                 }
             } catch (error) {

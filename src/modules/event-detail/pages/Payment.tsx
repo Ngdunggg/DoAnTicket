@@ -69,11 +69,35 @@ const Payment = () => {
             if (orderResponse.result.code !== RESULT_CODE.SUCCESS) {
                 toast.error(
                     orderResponse.result.error_msg_id ||
-                        'Thanh toán thất bại. Vui lòng thử lại.'
+                        'Đặt vé thất bại. Vui lòng thử lại.'
                 );
                 return;
             }
             const orderId = orderResponse.data.order_id;
+            const isFree = paymentState.totalAmount === 0;
+
+            if (isFree) {
+                const completeResponse =
+                    await orderApi.completeFreeOrder(orderId);
+                if (completeResponse.result.code !== RESULT_CODE.SUCCESS) {
+                    toast.error(
+                        completeResponse.result.error_msg_id ||
+                            'Đặt vé thất bại. Vui lòng thử lại.'
+                    );
+                    return;
+                }
+                toast.success(
+                    'Đặt vé thành công! Vé đã được gửi đến email của bạn.'
+                );
+                // Redirect đến payment callback với status success
+                navigate(
+                    `${SCREEN_PATH.EVENT_PAYMENT_CALLBACK}?status=success&orderId=${orderId}&isFree=true`
+                );
+                setSelectedTicketsStore(null);
+                return;
+            }
+
+            // Vé có phí - tạo payment URL
             console.log('orderId', orderId);
             const paymentUrlResponse = await orderApi.createPaymentUrl({
                 order_id: orderId,
@@ -119,6 +143,7 @@ const Payment = () => {
                                     handlePaymentMethodSelect
                                 }
                                 selectedPaymentMethod={selectedPaymentMethod}
+                                totalAmount={paymentState.totalAmount}
                             />
                         </div>
 
